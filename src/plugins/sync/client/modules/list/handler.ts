@@ -7,7 +7,9 @@ import { toMD5 } from '@/utils/tools'
 import { registerEvent, unregisterEvent } from './localEvent'
 
 const logInfo = (eventName: string, success = false) => {
-  log.info(`[${eventName}]${eventName.replace('list:sync:list_sync_', '').replace(/_/g, ' ')}${success ? ' success' : ''}`)
+  log.info(
+    `[${eventName}]${eventName.replace('list:sync:list_sync_', '').replace(/_/g, ' ')}${success ? ' success' : ''}`
+  )
 }
 // const logError = (eventName: string, err: Error) => {
 //   log.error(`[${eventName}]${eventName.replace('list:sync:list_sync_', '').replace(/_/g, ' ')} error: ${err.message}`)
@@ -52,7 +54,6 @@ const handler: LX.Sync.ClientSyncHandlerListActions<LX.Sync.Socket> = {
 }
 
 export default handler
-
 
 // export default async(socket: LX.Sync.Socket) => new Promise<void>((resolve, reject) => {
 //   let listenEvents: Array<() => void> = []

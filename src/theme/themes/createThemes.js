@@ -234,7 +234,6 @@ const defaultThemes = [
       'bg-image-position': 'center',
       'bg-image-size': 'cover',
 
-
       'c-badge-primary': 'var(c-primary)',
       'c-badge-secondary': '#af9479',
       'c-badge-tertiary': '#af9479',
@@ -270,7 +269,6 @@ const defaultThemes = [
       'bg-image': 'china_ink.jpg',
       'bg-image-position': 'center',
       'bg-image-size': 'cover',
-
 
       'c-badge-primary': 'rgba(137, 70, 70, 1)',
       'c-badge-secondary': 'rgba(67, 139, 65, 1)',
@@ -308,5 +306,7 @@ const themes = defaultThemes.map(({ config: { primary, font, ...extInfo }, ...th
   }
 })
 
-fs.writeFileSync(path.join(__dirname, 'themes.ts'), `/* eslint-disable */\n//! 此文件由 createThemes.js 生成\n\nexport default ${JSON.stringify(themes, null, 2)} as const`)
-
+fs.writeFileSync(
+  path.join(__dirname, 'themes.ts'),
+  `//! 此文件由 createThemes.js 生成\n\nexport default ${JSON.stringify(themes, null, 2)} as const`
+)

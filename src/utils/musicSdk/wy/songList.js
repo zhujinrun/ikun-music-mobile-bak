@@ -1,8 +1,3 @@
-// https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/module/playlist_catlist.js
-// https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/module/playlist_hot.js
-// https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/module/top_playlist.js
-// https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/module/playlist_detail.js
-
 import { weapi, linuxapi } from './utils/crypto'
 import { httpFetch } from '../../request'
 import { formatPlayTime, sizeFormate, dateFormat, formatPlayCount } from '../../index'
@@ -24,11 +19,6 @@ export default {
       tid: 'hot',
       id: 'hot',
     },
-    // {
-    //   name: '最新',
-    //   tid: 'new',
-    //   id: 'new',
-    // },
   ],
   regExps: {
     listDetailLink: /^.+(?:\?|&)id=(\d+)(?:&.*$|#.*$|$)/,
@@ -54,7 +44,7 @@ export default {
       id = url
       cookie = `MUSIC_U=${token}`
     }
-    if ((/[?&:/]/.test(id))) {
+    if (/[?&:/]/.test(id)) {
       if (this.regExps.listDetailLink.test(id)) {
         id = id.replace(this.regExps.listDetailLink, '$1')
       } else if (this.regExps.listDetailLink2.test(id)) {
@@ -66,7 +56,8 @@ export default {
     }
     return { id, cookie }
   },
-  async getListDetail(rawId, page, tryNum = 0) { // 获取歌曲列表内的音乐
+  async getListDetail(rawId, page, tryNum = 0) {
+    // 获取歌曲列表内的音乐
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
 
     const { id, cookie } = await this.getListId(rawId)
@@ -75,7 +66,8 @@ export default {
     const requestObj_listDetail = httpFetch('https://music.163.com/api/linux/forward', {
       method: 'post',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
+        'User-Agent':
+          'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
         Cookie: this.cookie,
       },
       credentials: 'omit',
@@ -91,7 +83,8 @@ export default {
       }),
     })
     const { statusCode, body } = await requestObj_listDetail.promise
-    if (statusCode !== 200 || body.code !== this.successCode) return this.getListDetail(id, page, ++tryNum)
+    if (statusCode !== 200 || body.code !== this.successCode)
+      return this.getListDetail(id, page, ++tryNum)
     let limit = 1000
     let rangeStart = (page - 1) * limit
     // console.log(body)
@@ -100,7 +93,11 @@ export default {
       list = this.filterListDetail(body)
     } else {
       try {
-        list = (await musicDetailApi.getList(body.playlist.trackIds.slice(rangeStart, limit * page).map(trackId => trackId.id))).list
+        list = (
+          await musicDetailApi.getList(
+            body.playlist.trackIds.slice(rangeStart, limit * page).map((trackId) => trackId.id)
+          )
+        ).list
       } catch (err) {
         console.log(err)
         if (err.message == 'try max num') {
@@ -134,7 +131,7 @@ export default {
       const _types = {}
       let size
       let privilege = privileges[index]
-      if (privilege.id !== item.id) privilege = privileges.find(p => p.id === item.id)
+      if (privilege.id !== item.id) privilege = privileges.find((p) => p.id === item.id)
       if (!privilege) return
 
       if (privilege.maxBrLevel == 'hires') {
@@ -233,7 +230,7 @@ export default {
   },
   filterList(rawData) {
     // console.log(rawData)
-    return rawData.map(item => ({
+    return rawData.map((item) => ({
       play_count: formatPlayCount(item.playCount),
       id: String(item.id),
       author: item.creator.nickname,
@@ -300,7 +297,7 @@ export default {
     })
   },
   filterHotTagInfo(rawList) {
-    return rawList.map(item => ({
+    return rawList.map((item) => ({
       id: item.playlistTag.name,
       name: item.playlistTag.name,
       source: 'wy',
@@ -308,7 +305,11 @@ export default {
   },
 
   getTags() {
-    return Promise.all([this.getTag(), this.getHotTag()]).then(([tags, hotTag]) => ({ tags, hotTag, source: 'wy' }))
+    return Promise.all([this.getTag(), this.getHotTag()]).then(([tags, hotTag]) => ({
+      tags,
+      hotTag,
+      source: 'wy',
+    }))
   },
 
   async getDetailPageUrl(rawId) {
@@ -323,17 +324,16 @@ export default {
       limit,
       total: page == 1,
       offset: limit * (page - 1),
+    }).promise.then(({ body }) => {
+      if (body.code != this.successCode) throw new Error('filed')
+      // console.log(body)
+      return {
+        list: this.filterList(body.result.playlists),
+        limit,
+        total: body.result.playlistCount,
+        source: 'wy',
+      }
     })
-      .promise.then(({ body }) => {
-        if (body.code != this.successCode) throw new Error('filed')
-        // console.log(body)
-        return {
-          list: this.filterList(body.result.playlists),
-          limit,
-          total: body.result.playlistCount,
-          source: 'wy',
-        }
-      })
   },
 }
 

@@ -28,7 +28,7 @@ export interface ScriptImportExportType {
 export default forwardRef<ScriptImportExportType, {}>((props, ref) => {
   const [visible, setVisible] = useState(false)
   const choosePathRef = useRef<ChoosePathType>(null)
-  const selectInfoRef = useRef<SelectInfo>((initSelectInfo as SelectInfo))
+  const selectInfoRef = useRef<SelectInfo>(initSelectInfo as SelectInfo)
   // console.log('render import export')
 
   useImperativeHandle(ref, () => ({
@@ -78,7 +78,6 @@ export default forwardRef<ScriptImportExportType, {}>((props, ref) => {
     // },
   }))
 
-
   const onConfirmPath = (path: string) => {
     switch (selectInfoRef.current.action) {
       case 'import':
@@ -90,9 +89,5 @@ export default forwardRef<ScriptImportExportType, {}>((props, ref) => {
     }
   }
 
-  return (
-    visible
-      ? <ChoosePath ref={choosePathRef} onConfirm={onConfirmPath} />
-      : null
-  )
+  return visible ? <ChoosePath ref={choosePathRef} onConfirm={onConfirmPath} /> : null
 })

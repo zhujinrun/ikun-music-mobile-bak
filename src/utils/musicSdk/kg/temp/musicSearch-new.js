@@ -8,19 +8,26 @@ export default {
   page: 0,
   allPage: 1,
   musicSearch(str, page, limit) {
-    const sign = signatureParams(`userid=0&area_code=1&appid=1005&dopicfull=1&page=${page}&token=0&privilegefilter=0&requestid=0&pagesize=${limit}&user_labels=&clienttime=0&sec_aggre=1&iscorrection=1&uuid=0&mid=0&keyword=${str}&dfid=-&clientver=11409&platform=AndroidFilter&tag=`, 3)
-    return createHttpFetch(`https://gateway.kugou.com/complexsearch/v3/search/song?userid=0&area_code=1&appid=1005&dopicfull=1&page=${page}&token=0&privilegefilter=0&requestid=0&pagesize=${limit}&user_labels=&clienttime=0&sec_aggre=1&iscorrection=1&uuid=0&mid=0&dfid=-&clientver=11409&platform=AndroidFilter&tag=&keyword=${encodeURIComponent(str)}&signature=${sign}`, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
-        referer: 'https://kugou.com',
-      },
-    }).then(body => body)
+    const sign = signatureParams(
+      `userid=0&area_code=1&appid=1005&dopicfull=1&page=${page}&token=0&privilegefilter=0&requestid=0&pagesize=${limit}&user_labels=&clienttime=0&sec_aggre=1&iscorrection=1&uuid=0&mid=0&keyword=${str}&dfid=-&clientver=11409&platform=AndroidFilter&tag=`,
+      3
+    )
+    return createHttpFetch(
+      `https://gateway.kugou.com/complexsearch/v3/search/song?userid=0&area_code=1&appid=1005&dopicfull=1&page=${page}&token=0&privilegefilter=0&requestid=0&pagesize=${limit}&user_labels=&clienttime=0&sec_aggre=1&iscorrection=1&uuid=0&mid=0&dfid=-&clientver=11409&platform=AndroidFilter&tag=&keyword=${encodeURIComponent(str)}&signature=${sign}`,
+      {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+          referer: 'https://kugou.com',
+        },
+      }
+    ).then((body) => body)
   },
   filterList(raw) {
     let ids = new Set()
     const list = []
 
-    raw.forEach(item => {
+    raw.forEach((item) => {
       if (ids.has(item.Audioid)) return
       ids.add(item.Audioid)
 
@@ -81,9 +88,9 @@ export default {
   },
   handleResult(rawData) {
     const rawList = []
-    rawData.forEach(item => {
+    rawData.forEach((item) => {
       rawList.push(item)
-      item.Grp.forEach(e => rawList.push(e))
+      item.Grp.forEach((e) => rawList.push(e))
     })
 
     return this.filterList(rawList)
@@ -92,7 +99,7 @@ export default {
     if (++retryNum > 3) return Promise.reject(new Error('try max num'))
     if (limit == null) limit = this.limit
 
-    return this.musicSearch(str, page, limit).then(data => {
+    return this.musicSearch(str, page, limit).then((data) => {
       let list = this.handleResult(data.lists)
       if (!list) return this.search(str, page, limit, retryNum)
 

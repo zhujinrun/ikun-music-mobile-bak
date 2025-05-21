@@ -12,11 +12,15 @@ import commonState, { type InitState as CommonStateType } from '@/store/common/s
 import { storageDataPrefix } from '@/config/constant'
 import { saveData } from '@/plugins/storage'
 import { throttle } from '@/utils/common'
-import { getSelectedManagedFolder, saveFontSize, saveViewPrevState, setSelectedManagedFolder } from '@/utils/data'
+import {
+  getSelectedManagedFolder,
+  saveFontSize,
+  saveViewPrevState,
+  setSelectedManagedFolder,
+} from '@/utils/data'
 import { showPactModal as handleShowPactModal } from '@/navigation'
 import { hideDesktopLyricView } from '@/utils/nativeModules/lyricDesktop'
 import { getPersistedUriList, selectManagedFolder } from '@/utils/fs'
-
 
 const throttleSaveSetting = throttle(() => {
   void saveData(storageDataPrefix.setting, settingState.setting)
@@ -25,7 +29,7 @@ const throttleSaveSetting = throttle(() => {
 /**
  * 初始化设置
  */
-export const initSetting = async() => {
+export const initSetting = async () => {
   const setting = (await initAppSetting()).setting
   settingActions.updateSetting(setting)
   return setting
@@ -48,17 +52,12 @@ export const setLanguage = (locale: Parameters<typeof applyLanguage>[0]) => {
   })
 }
 
-
 let isDestroying = false
 export const exitApp = (reason: string) => {
   console.log('Handle Exit App, Reason: ' + reason)
   if (isDestroying) return
   isDestroying = true
-  void Promise.all([
-    hideDesktopLyric(),
-    destroyPlayer(),
-    hideDesktopLyricView(),
-  ]).finally(() => {
+  void Promise.all([hideDesktopLyric(), destroyPlayer(), hideDesktopLyricView()]).finally(() => {
     isDestroying = false
     utilExitApp()
   })
@@ -93,13 +92,14 @@ export const showPactModal = () => {
   handleShowPactModal()
 }
 
-export const checkStoragePermissions = async() => {
+export const checkStoragePermissions = async () => {
   const selectedManagedFolder = await getSelectedManagedFolder()
-  if (selectedManagedFolder) return (await getPersistedUriList()).some(uri => selectedManagedFolder.startsWith(uri))
+  if (selectedManagedFolder)
+    return (await getPersistedUriList()).some((uri) => selectedManagedFolder.startsWith(uri))
   return false
 }
 
-export const requestStoragePermission = async() => {
+export const requestStoragePermission = async () => {
   const isGranted = await checkStoragePermissions()
   if (isGranted) return isGranted
 

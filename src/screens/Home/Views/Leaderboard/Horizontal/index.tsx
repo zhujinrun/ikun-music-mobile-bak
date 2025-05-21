@@ -8,7 +8,6 @@ import { getLeaderboardSetting, saveLeaderboardSetting } from '@/utils/data'
 // import { BorderWidths } from '@/theme'
 // import { useTheme } from '@/store/theme/hook'
 
-
 export default () => {
   const leftBarRef = useRef<LeftBarType>(null)
   const musicListRef = useRef<MusicListType>(null)
@@ -35,16 +34,10 @@ export default () => {
     }
   }, [])
 
-
   return (
     <View style={styles.container}>
-      <LeftBar
-        ref={leftBarRef}
-        onChangeList={handleChangeBound}
-      />
-      <MusicList
-        ref={musicListRef}
-      />
+      <LeftBar ref={leftBarRef} onChangeList={handleChangeBound} />
+      <MusicList ref={musicListRef} />
     </View>
   )
 }

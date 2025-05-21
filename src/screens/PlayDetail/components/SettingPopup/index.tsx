@@ -35,22 +35,17 @@ export default forwardRef<SettingPopupType, SettingPopupProps>(({ direction, ...
     },
   }))
 
-
-  return (
-    visible
-      ? (
-        <Popup ref={popupRef} title={t('play_detail_setting_title')} {...props}>
-          <ScrollView>
-            <View onStartShouldSetResponder={() => true}>
-              <SettingLyricProgress />
-              <SettingVolume />
-              <SettingPlaybackRate />
-              <SettingLrcFontSize direction={direction} />
-              <SettingLrcAlign />
-            </View>
-          </ScrollView>
-        </Popup>
-        )
-      : null
-  )
+  return visible ? (
+    <Popup ref={popupRef} title={t('play_detail_setting_title')} {...props}>
+      <ScrollView>
+        <View onStartShouldSetResponder={() => true}>
+          <SettingLyricProgress />
+          <SettingVolume />
+          <SettingPlaybackRate />
+          <SettingLrcFontSize direction={direction} />
+          <SettingLrcAlign />
+        </View>
+      </ScrollView>
+    </Popup>
+  ) : null
 })

@@ -33,13 +33,14 @@ export default memo(() => {
   }
 
   return (
-    <View style={styles.content} >
+    <View style={styles.content}>
       <InputItem
         value={size}
         label={t('setting_play_cache_size')}
         onChanged={setSize}
         keyboardType="number-pad"
-        placeholder={t('setting_play_cache_size_no_cache')} />
+        placeholder={t('setting_play_cache_size_no_cache')}
+      />
     </View>
   )
 })
@@ -49,4 +50,3 @@ const styles = createStyle({
     marginTop: 10,
   },
 })
-

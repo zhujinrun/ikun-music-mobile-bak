@@ -5,10 +5,9 @@ const path = require('node:path')
 
 const rootPath = path.join(__dirname, './')
 
-const patchs = [
-]
+const patchs = []
 
-;(async() => {
+;(async () => {
   for (const [filePath, fromStr, toStr] of patchs) {
     console.log(`Patching ${filePath.replace(rootPath, '')}`)
     try {
@@ -20,4 +19,3 @@ const patchs = [
   }
   console.log('\nDependencies patch finished.\n')
 })()
-

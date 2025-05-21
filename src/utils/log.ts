@@ -1,10 +1,17 @@
 // import { requestStoragePermission } from '@/utils/common'
-import { temporaryDirectoryPath, existsFile, appendFile, unlink, writeFile, readFile } from '@/utils/fs'
+import {
+  temporaryDirectoryPath,
+  existsFile,
+  appendFile,
+  unlink,
+  writeFile,
+  readFile,
+} from '@/utils/fs'
 
 const logPath = temporaryDirectoryPath + '/error.log'
 
 const logTools = {
-  tempLog: [] as Array<{ time: string, type: 'LOG' | 'WARN' | 'ERROR', text: string }> | null,
+  tempLog: [] as Array<{ time: string; type: 'LOG' | 'WARN' | 'ERROR'; text: string }> | null,
   writeLog(msg: string) {
     console.log(msg)
     void appendFile(logPath, '\n----lx log----\n' + msg)
@@ -14,7 +21,10 @@ const logTools = {
       let isExists = await existsFile(logPath)
       // console.log(isExists)
       if (!isExists) await writeFile(logPath, '')
-      if (this.tempLog?.length) this.writeLog(this.tempLog.map(m => `${m.time} ${m.type} ${m.text}`).join('\n----lx log----\n'))
+      if (this.tempLog?.length)
+        this.writeLog(
+          this.tempLog.map((m) => `${m.time} ${m.type} ${m.text}`).join('\n----lx log----\n')
+        )
       this.tempLog = null
     } catch (err) {
       console.log(err)
@@ -22,22 +32,26 @@ const logTools = {
   },
 }
 
-export const init = async() => {
+export const init = async () => {
   return logTools.initLogFile()
 }
 
-export const getLogs = async() => {
+export const getLogs = async () => {
   return readFile(logPath)
 }
 
-export const clearLogs = async() => {
-  return unlink(logPath).then(async() => writeFile(logPath, ''))
+export const clearLogs = async () => {
+  return unlink(logPath).then(async () => writeFile(logPath, ''))
 }
 
 export const log = {
   info(...msgs: any[]) {
     // console.info(...msgs)
-    const msg = msgs.map(m => typeof m == 'string' ? m : m instanceof Error ? m.stack ?? m.message : JSON.stringify(m)).join(' ')
+    const msg = msgs
+      .map((m) =>
+        typeof m == 'string' ? m : m instanceof Error ? (m.stack ?? m.message) : JSON.stringify(m)
+      )
+      .join(' ')
     if (msg.startsWith('%c')) return
     const time = new Date().toLocaleString()
     if (logTools.tempLog) {
@@ -46,14 +60,22 @@ export const log = {
   },
   warn(...msgs: any[]) {
     // console.warn(...msgs)
-    const msg = msgs.map(m => typeof m == 'string' ? m : m instanceof Error ? m.stack ?? m.message : JSON.stringify(m)).join(' ')
+    const msg = msgs
+      .map((m) =>
+        typeof m == 'string' ? m : m instanceof Error ? (m.stack ?? m.message) : JSON.stringify(m)
+      )
+      .join(' ')
     const time = new Date().toLocaleString()
     if (logTools.tempLog) {
       logTools.tempLog.push({ type: 'WARN', time, text: msg })
     } else logTools.writeLog(`${time} WARN ${msg}`)
   },
   error(...msgs: any[]) {
-    const msg = msgs.map(m => typeof m == 'string' ? m : m instanceof Error ? m.stack ?? m.message : JSON.stringify(m)).join(' ')
+    const msg = msgs
+      .map((m) =>
+        typeof m == 'string' ? m : m instanceof Error ? (m.stack ?? m.message) : JSON.stringify(m)
+      )
+      .join(' ')
     const time = new Date().toLocaleString()
     if (logTools.tempLog) {
       logTools.tempLog.push({ type: 'ERROR', time, text: msg })

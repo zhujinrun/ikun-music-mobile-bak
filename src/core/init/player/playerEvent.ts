@@ -6,7 +6,6 @@ import BackgroundTimer from 'react-native-background-timer'
 import playerState from '@/store/player/state'
 import { setNowPlayTime } from '@/core/player/progress'
 
-
 export default () => {
   let retryNum = 0
   let prevTimeoutId: string | null = null
@@ -29,7 +28,8 @@ export default () => {
         void playNext(true)
       } else {
         prevTimeoutId = playerState.musicInfo.id
-        if (playerState.playMusicInfo.musicInfo) setMusicUrl(playerState.playMusicInfo.musicInfo, true)
+        if (playerState.playMusicInfo.musicInfo)
+          setMusicUrl(playerState.playMusicInfo.musicInfo, true)
       }
     }, 25000)
   }
@@ -90,17 +90,20 @@ export default () => {
     if (!playerState.musicInfo.id) return
     clearLoadingTimeout()
     if (global.lx.isPlayedStop) return
-    if (playerState.playMusicInfo.musicInfo && retryNum < 2) { // 若音频URL无效则尝试刷新2次URL
+    if (playerState.playMusicInfo.musicInfo && retryNum < 2) {
+      // 若音频URL无效则尝试刷新2次URL
       let musicInfo = playerState.playMusicInfo.musicInfo
-      void getPosition().then((position) => {
-        if (position) setNowPlayTime(position)
-      }).finally(() => {
-        // console.log(this.retryNum)
-        if (playerState.playMusicInfo.musicInfo !== musicInfo) return
-        retryNum++
-        setMusicUrl(playerState.playMusicInfo.musicInfo, true)
-        setStatusText(global.i18n.t('player__refresh_url'))
-      })
+      void getPosition()
+        .then((position) => {
+          if (position) setNowPlayTime(position)
+        })
+        .finally(() => {
+          // console.log(this.retryNum)
+          if (playerState.playMusicInfo.musicInfo !== musicInfo) return
+          retryNum++
+          setMusicUrl(playerState.playMusicInfo.musicInfo, true)
+          setStatusText(global.i18n.t('player__refresh_url'))
+        })
       return
     }
     if (!isEmpty()) void setStop()
@@ -125,7 +128,6 @@ export default () => {
   //   clearDelayNextTimeout()
   //   clearLoadingTimeout()
   // }
-
 
   global.app_event.on('playerLoadstart', handleLoadstart)
   // global.app_event.on('playerLoadeddata', handleLoadeddata)

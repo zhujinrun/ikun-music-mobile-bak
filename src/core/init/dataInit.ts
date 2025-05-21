@@ -22,7 +22,7 @@ import { TEMP_FILE_PATH } from '@/utils/tools'
 //   if (appSetting['player.startupAutoPlay']) setTimeout(play)
 // }
 
-export default async(appSetting: LX.AppSetting) => {
+export default async (appSetting: LX.AppSetting) => {
   // await Promise.all([
   //   initUserApi(), // 自定义API
   // ]).catch(err => log.error(err))

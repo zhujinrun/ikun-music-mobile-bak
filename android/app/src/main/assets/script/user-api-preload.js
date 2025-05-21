@@ -67,7 +67,6 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
     const id = timeoutId++
     callbacks.set(id, {
       callback(...args) {
-        // eslint-disable-next-line n/no-callback-literal
         callback(...args)
       },
       params,
@@ -100,7 +99,9 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
         result += String.fromCharCode(((byte & 31) << 6) | (bytes[i + 1] & 63))
         i += 2
       } else {
-        result += String.fromCharCode(((byte & 15) << 12) | ((bytes[i + 1] & 63) << 6) | (bytes[i + 2] & 63))
+        result += String.fromCharCode(
+          ((byte & 15) << 12) | ((bytes[i + 1] & 63) << 6) | (bytes[i + 2] & 63)
+        )
         i += 3
       }
     }
@@ -173,9 +174,9 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
     if (info.lyric.length > 51200) throw new Error('failed')
     return {
       lyric: info.lyric,
-      tlyric: (typeof info.tlyric == 'string' && info.tlyric.length < 5120) ? info.tlyric : null,
-      rlyric: (typeof info.rlyric == 'string' && info.rlyric.length < 5120) ? info.rlyric : null,
-      lxlyric: (typeof info.lxlyric == 'string' && info.lxlyric.length < 8192) ? info.lxlyric : null,
+      tlyric: typeof info.tlyric == 'string' && info.tlyric.length < 5120 ? info.tlyric : null,
+      rlyric: typeof info.rlyric == 'string' && info.rlyric.length < 5120 ? info.rlyric : null,
+      lxlyric: typeof info.lxlyric == 'string' && info.lxlyric.length < 8192 ? info.lxlyric : null,
     }
   }
 
@@ -216,46 +217,72 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
 
   const handleRequest = ({ requestKey, data }) => {
     // console.log(data)
-    if (!events.request) return nativeCall(NATIVE_EVENTS_NAMES.response, { requestKey, status: false, errorMessage: 'Request event is not defined' })
-    try {
-      events.request.call(globalThis.lx, { source: data.source, action: data.action, info: data.info }).then(response => {
-        let result
-        switch (data.action) {
-          case 'musicUrl':
-            if (typeof response != 'string' || response.length > 2048 || !/^https?:/.test(response)) throw new Error('failed')
-            result = {
-              source: data.source,
-              action: data.action,
-              data: {
-                type: data.info.type,
-                url: response,
-              },
-            }
-            break
-          case 'lyric':
-            result = {
-              source: data.source,
-              action: data.action,
-              data: verifyLyricInfo(response),
-            }
-            break
-          case 'pic':
-            if (typeof response != 'string' || response.length > 2048 || !/^https?:/.test(response)) throw new Error('failed')
-            result = {
-              source: data.source,
-              action: data.action,
-              data: response,
-            }
-            break
-        }
-        nativeCall(NATIVE_EVENTS_NAMES.response, { requestKey, status: true, result })
-      }).catch(err => {
-        // console.log('handleRequest err', err)
-        nativeCall(NATIVE_EVENTS_NAMES.response, { requestKey, status: false, errorMessage: err.message })
+    if (!events.request)
+      return nativeCall(NATIVE_EVENTS_NAMES.response, {
+        requestKey,
+        status: false,
+        errorMessage: 'Request event is not defined',
       })
+    try {
+      events.request
+        .call(globalThis.lx, { source: data.source, action: data.action, info: data.info })
+        .then((response) => {
+          let result
+          switch (data.action) {
+            case 'musicUrl':
+              if (
+                typeof response != 'string' ||
+                response.length > 2048 ||
+                !/^https?:/.test(response)
+              )
+                throw new Error('failed')
+              result = {
+                source: data.source,
+                action: data.action,
+                data: {
+                  type: data.info.type,
+                  url: response,
+                },
+              }
+              break
+            case 'lyric':
+              result = {
+                source: data.source,
+                action: data.action,
+                data: verifyLyricInfo(response),
+              }
+              break
+            case 'pic':
+              if (
+                typeof response != 'string' ||
+                response.length > 2048 ||
+                !/^https?:/.test(response)
+              )
+                throw new Error('failed')
+              result = {
+                source: data.source,
+                action: data.action,
+                data: response,
+              }
+              break
+          }
+          nativeCall(NATIVE_EVENTS_NAMES.response, { requestKey, status: true, result })
+        })
+        .catch((err) => {
+          // console.log('handleRequest err', err)
+          nativeCall(NATIVE_EVENTS_NAMES.response, {
+            requestKey,
+            status: false,
+            errorMessage: err.message,
+          })
+        })
     } catch (err) {
       // console.log('handleRequest call err', err)
-      nativeCall(NATIVE_EVENTS_NAMES.response, { requestKey, status: false, errorMessage: err.message })
+      nativeCall(NATIVE_EVENTS_NAMES.response, {
+        requestKey,
+        status: false,
+        errorMessage: err.message,
+      })
     }
   }
 
@@ -288,7 +315,6 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
     },
   })
 
-
   /**
    *
    * @param {*} info {
@@ -303,7 +329,11 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
    */
   const handleInit = (info) => {
     if (!info) {
-      nativeCall(NATIVE_EVENTS_NAMES.init, { info: null, status: false, errorMessage: 'Missing required parameter init info' })
+      nativeCall(NATIVE_EVENTS_NAMES.init, {
+        info: null,
+        status: false,
+        errorMessage: 'Missing required parameter init info',
+      })
       // sendMessage(NATIVE_EVENTS_NAMES.init, false, null, typeof info.message === 'string' ? info.message.substring(0, 100) : '')
       return
     }
@@ -323,13 +353,17 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
         const actions = supportActions[source]
         sourceInfo.sources[source] = {
           type: 'music',
-          actions: actions.filter(a => userSource.actions.includes(a)),
-          qualitys: qualitys.filter(q => userSource.qualitys.includes(q)),
+          actions: actions.filter((a) => userSource.actions.includes(a)),
+          qualitys: qualitys.filter((q) => userSource.qualitys.includes(q)),
         }
       }
     } catch (error) {
       // console.log(error)
-      nativeCall(NATIVE_EVENTS_NAMES.init, { info: null, status: false, errorMessage: error.message })
+      nativeCall(NATIVE_EVENTS_NAMES.init, {
+        info: null,
+        status: false,
+        errorMessage: error.message,
+      })
       return
     }
     nativeCall(NATIVE_EVENTS_NAMES.init, { info: sourceInfo, status: true })
@@ -337,15 +371,25 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
   const handleShowUpdateAlert = (data, resolve, reject) => {
     if (!data || typeof data != 'object') return reject(new Error('parameter format error.'))
     if (!data.log || typeof data.log != 'string') return reject(new Error('log is required.'))
-    if (data.updateUrl && !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(data.updateUrl) && data.updateUrl.length > 1024) delete data.updateUrl
+    if (
+      data.updateUrl &&
+      !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(data.updateUrl) &&
+      data.updateUrl.length > 1024
+    )
+      delete data.updateUrl
     if (data.log.length > 1024) data.log = data.log.substring(0, 1024) + '...'
-    nativeCall(NATIVE_EVENTS_NAMES.showUpdateAlert, { log: data.log, updateUrl: data.updateUrl, name })
+    nativeCall(NATIVE_EVENTS_NAMES.showUpdateAlert, {
+      log: data.log,
+      updateUrl: data.updateUrl,
+      name,
+    })
     resolve()
   }
 
   const dataToB64 = (data) => {
     if (typeof data === 'string') return nativeFuncs.utils_str2b64(data)
-    else if (Array.isArray(data) || ArrayBuffer.isView(data)) return utils.buffer.bufToString(data, 'base64')
+    else if (Array.isArray(data) || ArrayBuffer.isView(data))
+      return utils.buffer.bufToString(data, 'base64')
     throw new Error('data type error: ' + typeof data + ' raw data: ' + data)
   }
   const utils = {
@@ -354,9 +398,25 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
         // console.log('aesEncrypt', buffer, mode, key, iv)
         switch (mode) {
           case 'aes-128-cbc':
-            return utils.buffer.from(nativeFuncs.utils_aes_encrypt(dataToB64(buffer), dataToB64(key), dataToB64(iv), AES_MODE.CBC_128_PKCS7Padding), 'base64')
+            return utils.buffer.from(
+              nativeFuncs.utils_aes_encrypt(
+                dataToB64(buffer),
+                dataToB64(key),
+                dataToB64(iv),
+                AES_MODE.CBC_128_PKCS7Padding
+              ),
+              'base64'
+            )
           case 'aes-128-ecb':
-            return utils.buffer.from(nativeFuncs.utils_aes_encrypt(dataToB64(buffer), dataToB64(key), '', AES_MODE.ECB_128_NoPadding), 'base64')
+            return utils.buffer.from(
+              nativeFuncs.utils_aes_encrypt(
+                dataToB64(buffer),
+                dataToB64(key),
+                '',
+                AES_MODE.ECB_128_NoPadding
+              ),
+              'base64'
+            )
           default:
             throw new Error('Binary encoding is not supported for input strings')
         }
@@ -364,9 +424,11 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
       rsaEncrypt(buffer, key) {
         // console.log('rsaEncrypt', buffer, key)
         if (typeof key !== 'string') throw new Error('Invalid RSA key')
-        key = key.replace(KEY_PREFIX.publicKeyStart, '')
-          .replace(KEY_PREFIX.publicKeyEnd, '')
-        return utils.buffer.from(nativeFuncs.utils_rsa_encrypt(dataToB64(buffer), key, RSA_PADDING.NoPadding), 'base64')
+        key = key.replace(KEY_PREFIX.publicKeyStart, '').replace(KEY_PREFIX.publicKeyEnd, '')
+        return utils.buffer.from(
+          nativeFuncs.utils_rsa_encrypt(dataToB64(buffer), key, RSA_PADDING.NoPadding),
+          'base64'
+        )
       },
       randomBytes(size) {
         const byteArray = new Uint8Array(size)
@@ -392,7 +454,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
             case 'base64':
               return new Uint8Array(JSON.parse(nativeFuncs.utils_b642buf(input)))
             case 'hex':
-              return new Uint8Array(input.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
+              return new Uint8Array(input.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)))
             default:
               return new Uint8Array(stringToBytes(input))
           }
@@ -410,7 +472,10 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
               // return new TextDecoder('latin1').decode(new Uint8Array(buf))
               return buf
             case 'hex':
-              return new Uint8Array(buf).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '')
+              return new Uint8Array(buf).reduce(
+                (str, byte) => str + byte.toString(16).padStart(2, '0'),
+                ''
+              )
             case 'base64':
               return nativeFuncs.utils_str2b64(bytesToString(Array.from(buf)))
             case 'utf8':
@@ -459,22 +524,31 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
       //   // data.content_type = 'multipart/form-data'
       //   options.json = false
       // }
-      if (timeout && typeof timeout == 'number' && timeout > 0) options.timeout = Math.min(timeout, 60_000)
+      if (timeout && typeof timeout == 'number' && timeout > 0)
+        options.timeout = Math.min(timeout, 60_000)
 
-      let request = sendNativeRequest(url, { method, body, form, formData, ...options }, (err, resp) => {
-        if (err) {
-          callback(err, null, null)
-        } else {
-          callback(err, {
-            statusCode: resp.statusCode,
-            statusMessage: resp.statusMessage,
-            headers: resp.headers,
-            // bytes: resp.bytes,
-            // raw: resp.raw,
-            body: resp.body,
-          }, resp.body)
+      let request = sendNativeRequest(
+        url,
+        { method, body, form, formData, ...options },
+        (err, resp) => {
+          if (err) {
+            callback(err, null, null)
+          } else {
+            callback(
+              err,
+              {
+                statusCode: resp.statusCode,
+                statusMessage: resp.statusMessage,
+                headers: resp.headers,
+                // bytes: resp.bytes,
+                // raw: resp.raw,
+                body: resp.body,
+              },
+              resp.body
+            )
+          }
         }
-      })
+      )
 
       return () => {
         if (!request.aborted) request.abort()
@@ -483,7 +557,8 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
     },
     send(eventName, data) {
       return new Promise((resolve, reject) => {
-        if (!eventNames.includes(eventName)) return reject(new Error('The event is not supported: ' + eventName))
+        if (!eventNames.includes(eventName))
+          return reject(new Error('The event is not supported: ' + eventName))
         switch (eventName) {
           case EVENT_NAMES.inited:
             if (isInitedApi) return reject(new Error('Script is inited'))
@@ -492,7 +567,8 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
             resolve()
             break
           case EVENT_NAMES.updateAlert:
-            if (isShowedUpdateAlert) return reject(new Error('The update alert can only be called once.'))
+            if (isShowedUpdateAlert)
+              return reject(new Error('The update alert can only be called once.'))
             isShowedUpdateAlert = true
             handleShowUpdateAlert(data, resolve, reject)
             break
@@ -502,12 +578,14 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
       })
     },
     on(eventName, handler) {
-      if (!eventNames.includes(eventName)) return Promise.reject(new Error('The event is not supported: ' + eventName))
+      if (!eventNames.includes(eventName))
+        return Promise.reject(new Error('The event is not supported: ' + eventName))
       switch (eventName) {
         case EVENT_NAMES.request:
           events.request = handler
           break
-        default: return Promise.reject(new Error('The event is not supported: ' + eventName))
+        default:
+          return Promise.reject(new Error('The event is not supported: ' + eventName))
       }
       return Promise.resolve()
     },
@@ -535,14 +613,14 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
   freezeObject(globalThis.lx)
 
   const _toString = Function.prototype.toString
-  // eslint-disable-next-line no-extend-native
-  Function.prototype.toString = function() {
+
+  Function.prototype.toString = function () {
     return Object.getOwnPropertyDescriptors(this).name.configurable
       ? _toString.apply(this)
       : `function ${this.name}() { [native code] }`
   }
-  // eslint-disable-next-line no-eval
-  globalThis.eval = function() {
+
+  globalThis.eval = function () {
     throw new Error('eval is not available')
   }
   const proxyFunctionConstructor = new Proxy(Function.prototype.constructor, {
@@ -553,7 +631,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
       throw new Error('Dynamic code execution is not allowed.')
     },
   })
-  // eslint-disable-next-line no-extend-native
+
   Object.defineProperty(Function.prototype, 'constructor', {
     value: proxyFunctionConstructor,
     writable: false,

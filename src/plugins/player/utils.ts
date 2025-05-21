@@ -1,10 +1,14 @@
 import TrackPlayer, { Capability, Event, RepeatMode, State } from 'react-native-track-player'
 import BackgroundTimer from 'react-native-background-timer'
 import { playMusic as handlePlayMusic } from './playList'
-import { existsFile, moveFile, privateStorageDirectoryPath, temporaryDirectoryPath } from '@/utils/fs'
+import {
+  existsFile,
+  moveFile,
+  privateStorageDirectoryPath,
+  temporaryDirectoryPath,
+} from '@/utils/fs'
 import { toast } from '@/utils/tools'
 // import { PlayerMusicInfo } from '@/store/modules/player/playInfo'
-
 
 export { useBufferProgress } from './hook'
 
@@ -33,7 +37,6 @@ export const isTempId = (trackId = global.lx.playerTrackId) => !trackId || tempI
 //     // }, 500)
 //   }
 // }
-
 
 // 解决快速切歌导致的通知栏歌曲信息与当前播放歌曲对不上的问题
 // const debouncePlayMusicTools = {
@@ -106,7 +109,10 @@ export const isTempId = (trackId = global.lx.playerTrackId) => !trackId || tempI
 //   },
 // }
 
-const playMusic = ((fn: (musicInfo: LX.Player.PlayMusic, url: string, time: number) => void, delay = 800) => {
+const playMusic = ((
+  fn: (musicInfo: LX.Player.PlayMusic, url: string, time: number) => void,
+  delay = 800
+) => {
   let delayTimer: number | null = null
   let isDelayRun = false
   let timer: number | null = null
@@ -154,35 +160,41 @@ export const setResource = (musicInfo: LX.Player.PlayMusic, url: string, duratio
   playMusic(musicInfo, url, duration ?? 0)
 }
 
-export const setPlay = async() => TrackPlayer.play()
-export const getPosition = async() => TrackPlayer.getPosition()
-export const getDuration = async() => TrackPlayer.getDuration()
-export const setStop = async() => {
+export const setPlay = async () => TrackPlayer.play()
+export const getPosition = async () => TrackPlayer.getPosition()
+export const getDuration = async () => TrackPlayer.getDuration()
+export const setStop = async () => {
   await TrackPlayer.stop()
   if (!isEmpty()) await TrackPlayer.skipToNext()
 }
-export const setLoop = async(loop: boolean) => TrackPlayer.setRepeatMode(loop ? RepeatMode.Off : RepeatMode.Track)
+export const setLoop = async (loop: boolean) =>
+  TrackPlayer.setRepeatMode(loop ? RepeatMode.Off : RepeatMode.Track)
 
-export const setPause = async() => TrackPlayer.pause()
+export const setPause = async () => TrackPlayer.pause()
 // export const skipToNext = () => TrackPlayer.skipToNext()
-export const setCurrentTime = async(time: number) => TrackPlayer.seekTo(time)
-export const setVolume = async(num: number) => TrackPlayer.setVolume(num)
-export const setPlaybackRate = async(num: number) => TrackPlayer.setRate(num)
-export const updateNowPlayingTitles = async(duration: number, title: string, artist: string, album: string) => {
+export const setCurrentTime = async (time: number) => TrackPlayer.seekTo(time)
+export const setVolume = async (num: number) => TrackPlayer.setVolume(num)
+export const setPlaybackRate = async (num: number) => TrackPlayer.setRate(num)
+export const updateNowPlayingTitles = async (
+  duration: number,
+  title: string,
+  artist: string,
+  album: string
+) => {
   console.log('set playing titles', duration, title, artist, album)
   return TrackPlayer.updateNowPlayingTitles(duration, title, artist, album)
 }
 
-export const resetPlay = async() => Promise.all([setPause(), setCurrentTime(0)])
+export const resetPlay = async () => Promise.all([setPause(), setCurrentTime(0)])
 
-export const isCached = async(url: string) => TrackPlayer.isCached(url)
-export const getCacheSize = async() => TrackPlayer.getCacheSize()
-export const clearCache = async() => TrackPlayer.clearCache()
-export const migratePlayerCache = async() => {
+export const isCached = async (url: string) => TrackPlayer.isCached(url)
+export const getCacheSize = async () => TrackPlayer.getCacheSize()
+export const clearCache = async () => TrackPlayer.clearCache()
+export const migratePlayerCache = async () => {
   const newCachePath = privateStorageDirectoryPath + '/TrackPlayer'
   if (await existsFile(newCachePath)) return
   const oldCachePath = temporaryDirectoryPath + '/TrackPlayer'
-  if (!await existsFile(oldCachePath)) return
+  if (!(await existsFile(oldCachePath))) return
   let timeout: number | null = BackgroundTimer.setTimeout(() => {
     timeout = null
     toast(global.i18n.t('player_cache_migrating'), 'long')
@@ -192,7 +204,7 @@ export const migratePlayerCache = async() => {
   })
 }
 
-export const destroy = async() => {
+export const destroy = async () => {
   if (global.lx.playerStatus.isIniting || !global.lx.playerStatus.isInitialized) return
   await TrackPlayer.destroy()
   global.lx.playerStatus.isInitialized = false
@@ -200,8 +212,8 @@ export const destroy = async() => {
 
 type PlayStatus = 'None' | 'Ready' | 'Playing' | 'Paused' | 'Stopped' | 'Buffering' | 'Connecting'
 
-export const onStateChange = async(listener: (state: PlayStatus) => void) => {
-  const sub = TrackPlayer.addEventListener(Event.PlaybackState, state => {
+export const onStateChange = async (listener: (state: PlayStatus) => void) => {
+  const sub = TrackPlayer.addEventListener(Event.PlaybackState, (state) => {
     let _state: PlayStatus
     switch (state) {
       case State.Ready:
@@ -242,46 +254,48 @@ export const onStateChange = async(listener: (state: PlayStatus) => void) => {
  */
 // export const playState = callback => TrackPlayer.addEventListener('playback-state', callback)
 
-export const updateOptions = async(options = {
-  // Whether the player should stop running when the app is closed on Android
-  // stopWithApp: true,
+export const updateOptions = async (
+  options = {
+    // Whether the player should stop running when the app is closed on Android
+    // stopWithApp: true,
 
-  // An array of media controls capabilities
-  // Can contain CAPABILITY_PLAY, CAPABILITY_PAUSE, CAPABILITY_STOP, CAPABILITY_SEEK_TO,
-  // CAPABILITY_SKIP_TO_NEXT, CAPABILITY_SKIP_TO_PREVIOUS, CAPABILITY_SET_RATING
-  capabilities: [
-    Capability.Play,
-    Capability.Pause,
-    Capability.Stop,
-    Capability.SeekTo,
-    Capability.SkipToNext,
-    Capability.SkipToPrevious,
-  ],
+    // An array of media controls capabilities
+    // Can contain CAPABILITY_PLAY, CAPABILITY_PAUSE, CAPABILITY_STOP, CAPABILITY_SEEK_TO,
+    // CAPABILITY_SKIP_TO_NEXT, CAPABILITY_SKIP_TO_PREVIOUS, CAPABILITY_SET_RATING
+    capabilities: [
+      Capability.Play,
+      Capability.Pause,
+      Capability.Stop,
+      Capability.SeekTo,
+      Capability.SkipToNext,
+      Capability.SkipToPrevious,
+    ],
 
-  notificationCapabilities: [
-    Capability.Play,
-    Capability.Pause,
-    Capability.Stop,
-    Capability.SkipToNext,
-    Capability.SkipToPrevious,
-  ],
+    notificationCapabilities: [
+      Capability.Play,
+      Capability.Pause,
+      Capability.Stop,
+      Capability.SkipToNext,
+      Capability.SkipToPrevious,
+    ],
 
-  // // An array of capabilities that will show up when the notification is in the compact form on Android
-  compactCapabilities: [
-    Capability.Play,
-    Capability.Pause,
-    Capability.Stop,
-    Capability.SkipToNext,
-  ],
+    // // An array of capabilities that will show up when the notification is in the compact form on Android
+    compactCapabilities: [
+      Capability.Play,
+      Capability.Pause,
+      Capability.Stop,
+      Capability.SkipToNext,
+    ],
 
-  // Icons for the notification on Android (if you don't like the default ones)
-  // playIcon: require('./play-icon.png'),
-  // pauseIcon: require('./pause-icon.png'),
-  // stopIcon: require('./stop-icon.png'),
-  // previousIcon: require('./previous-icon.png'),
-  // nextIcon: require('./next-icon.png'),
-  // icon: notificationIcon, // The notification icon
-}) => {
+    // Icons for the notification on Android (if you don't like the default ones)
+    // playIcon: require('./play-icon.png'),
+    // pauseIcon: require('./pause-icon.png'),
+    // stopIcon: require('./stop-icon.png'),
+    // previousIcon: require('./previous-icon.png'),
+    // nextIcon: require('./next-icon.png'),
+    // icon: notificationIcon, // The notification icon
+  }
+) => {
   return TrackPlayer.updateOptions(options)
 }
 

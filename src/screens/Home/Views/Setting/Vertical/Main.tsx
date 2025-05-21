@@ -16,7 +16,6 @@ import { SETTING_SCREENS, type SettingScreenIds } from '../Main'
 
 type FlatListType = FlatListProps<SettingScreenIds>
 
-
 const styles = createStyle({
   content: {
     paddingLeft: 15,
@@ -27,26 +26,37 @@ const styles = createStyle({
   },
 })
 
-const ListItem = memo(({
-  id,
-}: { id: SettingScreenIds }) => {
-  switch (id) {
-    case 'player': return <Player />
-    case 'lyric_desktop': return <LyricDesktop />
-    case 'search': return <Search />
-    case 'list': return <List />
-    case 'sync': return <Sync />
-    case 'backup': return <Backup />
-    case 'other': return <Other />
-    case 'version': return <Version />
-    case 'about': return <About />
-    case 'basic': return <Basic />
-  }
-}, () => true)
+const ListItem = memo(
+  ({ id }: { id: SettingScreenIds }) => {
+    switch (id) {
+      case 'player':
+        return <Player />
+      case 'lyric_desktop':
+        return <LyricDesktop />
+      case 'search':
+        return <Search />
+      case 'list':
+        return <List />
+      case 'sync':
+        return <Sync />
+      case 'backup':
+        return <Backup />
+      case 'other':
+        return <Other />
+      case 'version':
+        return <Version />
+      case 'about':
+        return <About />
+      case 'basic':
+        return <Basic />
+    }
+  },
+  () => true
+)
 
 export default () => {
   const renderItem: FlatListType['renderItem'] = ({ item }) => <ListItem id={item} />
-  const getkey: FlatListType['keyExtractor'] = item => item
+  const getkey: FlatListType['keyExtractor'] = (item) => item
 
   return (
     <FlatList

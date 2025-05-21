@@ -1,4 +1,12 @@
-import { useRef, useState, useCallback, useMemo, forwardRef, useImperativeHandle, type Ref } from 'react'
+import {
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+  forwardRef,
+  useImperativeHandle,
+  type Ref,
+} from 'react'
 import { StyleSheet, View, Animated } from 'react-native'
 // import PropTypes from 'prop-types'
 // import { AppColors } from '@/theme'
@@ -16,7 +24,10 @@ export interface SearchTipListType<T> {
 
 const noop = () => {}
 
-const Component = <T extends ItemT<T>>({ onPressBg = noop, ...props }: SearchTipListProps<T>, ref: Ref<SearchTipListType<T>>) => {
+const Component = <T extends ItemT<T>>(
+  { onPressBg = noop, ...props }: SearchTipListProps<T>,
+  ref: Ref<SearchTipListType<T>>
+) => {
   const theme = useTheme()
   const translateY = useRef(new Animated.Value(0)).current
   const scaleY = useRef(new Animated.Value(0)).current
@@ -41,7 +52,6 @@ const Component = <T extends ItemT<T>>({ onPressBg = noop, ...props }: SearchTip
     },
   }))
 
-
   const handleShow = useCallback(() => {
     // console.log('handleShow', height, visible)
     if (!heightRef.current) return
@@ -52,11 +62,11 @@ const Component = <T extends ItemT<T>>({ onPressBg = noop, ...props }: SearchTip
       scaleY.setValue(0)
 
       Animated.parallel([
-      // Animated.timing(fade, {
-      //   toValue: 1,
-      //   duration: 300,
-      //   useNativeDriver: true,
-      // }),
+        // Animated.timing(fade, {
+        //   toValue: 1,
+        //   duration: 300,
+        //   useNativeDriver: true,
+        // }),
         Animated.timing(translateY, {
           toValue: 0,
           duration: 300,
@@ -99,28 +109,29 @@ const Component = <T extends ItemT<T>>({ onPressBg = noop, ...props }: SearchTip
     })
   }, [translateY, scaleY])
 
-
-  const component = useMemo(() => (
-    <Animated.View
-      style={{
-        ...styles.anima,
-        transform: [
-          { translateY },
-          { scaleY },
-        ],
-      }}>
-      <View style={{ ...styles.container, backgroundColor: theme['c-content-background'] }}>
-        <List ref={listRef} {...props} />
-      </View>
-      <View style={styles.blank} onTouchStart={onPressBg}></View>
-    </Animated.View>
-  ), [onPressBg, props, scaleY, theme, translateY])
+  const component = useMemo(
+    () => (
+      <Animated.View
+        style={{
+          ...styles.anima,
+          transform: [{ translateY }, { scaleY }],
+        }}
+      >
+        <View style={{ ...styles.container, backgroundColor: theme['c-content-background'] }}>
+          <List ref={listRef} {...props} />
+        </View>
+        <View style={styles.blank} onTouchStart={onPressBg}></View>
+      </Animated.View>
+    ),
+    [onPressBg, props, scaleY, theme, translateY]
+  )
 
   return !visible && animatePlayed ? null : component
 }
 
-export default forwardRef(Component) as
-  <T,>(p: SearchTipListProps<T> & { ref?: Ref<SearchTipListType<T>> }) => JSX.Element | null
+export default forwardRef(Component) as <T>(
+  p: SearchTipListProps<T> & { ref?: Ref<SearchTipListType<T>> }
+) => JSX.Element | null
 
 const styles = StyleSheet.create({
   anima: {

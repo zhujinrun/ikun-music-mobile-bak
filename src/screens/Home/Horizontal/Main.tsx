@@ -6,7 +6,6 @@ import Leaderboard from '../Views/Leaderboard'
 import Setting from '../Views/Setting'
 import commonState, { type InitState as CommonState } from '@/store/common/state'
 
-
 const Main = () => {
   const [id, setId] = useState(commonState.navActiveId)
 
@@ -24,18 +23,21 @@ const Main = () => {
 
   const component = useMemo(() => {
     switch (id) {
-      case 'nav_songlist': return <SongList />
-      case 'nav_top': return <Leaderboard />
-      case 'nav_love': return <Mylist />
-      case 'nav_setting': return <Setting />
+      case 'nav_songlist':
+        return <SongList />
+      case 'nav_top':
+        return <Leaderboard />
+      case 'nav_love':
+        return <Mylist />
+      case 'nav_setting':
+        return <Setting />
       case 'nav_search':
-      default: return <Search />
+      default:
+        return <Search />
     }
   }, [id])
 
   return component
 }
 
-
 export default Main
-

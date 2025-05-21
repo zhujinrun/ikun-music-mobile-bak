@@ -12,80 +12,132 @@ import Badge from '@/components/common/Badge'
 
 export const ITEM_HEIGHT = scaleSizeH(LIST_ITEM_HEIGHT)
 
+export default memo(
+  ({
+    item,
+    index,
+    activeIndex,
+    onPress,
+    onShowMenu,
+    onLongPress,
+    selectedList,
+    rowInfo,
+    isShowAlbumName,
+    isShowInterval,
+  }: {
+    item: LX.Music.MusicInfo
+    index: number
+    activeIndex: number
+    onPress: (item: LX.Music.MusicInfo, index: number) => void
+    onLongPress: (item: LX.Music.MusicInfo, index: number) => void
+    onShowMenu: (
+      item: LX.Music.MusicInfo,
+      index: number,
+      position: { x: number; y: number; w: number; h: number }
+    ) => void
+    selectedList: LX.Music.MusicInfo[]
+    rowInfo: RowInfo
+    isShowAlbumName: boolean
+    isShowInterval: boolean
+  }) => {
+    const theme = useTheme()
 
-export default memo(({ item, index, activeIndex, onPress, onShowMenu, onLongPress, selectedList, rowInfo, isShowAlbumName, isShowInterval }: {
-  item: LX.Music.MusicInfo
-  index: number
-  activeIndex: number
-  onPress: (item: LX.Music.MusicInfo, index: number) => void
-  onLongPress: (item: LX.Music.MusicInfo, index: number) => void
-  onShowMenu: (item: LX.Music.MusicInfo, index: number, position: { x: number, y: number, w: number, h: number }) => void
-  selectedList: LX.Music.MusicInfo[]
-  rowInfo: RowInfo
-  isShowAlbumName: boolean
-  isShowInterval: boolean
-}) => {
-  const theme = useTheme()
-
-  const isSelected = selectedList.includes(item)
-  // console.log(item.name, selectedList, selectedList.includes(item))
-  const isSupported = useAssertApiSupport(item.source)
-  const moreButtonRef = useRef<TouchableOpacity>(null)
-  const handleShowMenu = () => {
-    if (moreButtonRef.current?.measure) {
-      moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
-        // console.log(fx, fy, width, height, px, py)
-        onShowMenu(item, index, { x: Math.ceil(px), y: Math.ceil(py), w: Math.ceil(width), h: Math.ceil(height) })
-      })
+    const isSelected = selectedList.includes(item)
+    // console.log(item.name, selectedList, selectedList.includes(item))
+    const isSupported = useAssertApiSupport(item.source)
+    const moreButtonRef = useRef<TouchableOpacity>(null)
+    const handleShowMenu = () => {
+      if (moreButtonRef.current?.measure) {
+        moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
+          // console.log(fx, fy, width, height, px, py)
+          onShowMenu(item, index, {
+            x: Math.ceil(px),
+            y: Math.ceil(py),
+            w: Math.ceil(width),
+            h: Math.ceil(height),
+          })
+        })
+      }
     }
-  }
-  const active = activeIndex == index
+    const active = activeIndex == index
 
-  const singer = `${item.singer}${isShowAlbumName && item.meta.albumName ? ` · ${item.meta.albumName}` : ''}`
+    const singer = `${item.singer}${isShowAlbumName && item.meta.albumName ? ` · ${item.meta.albumName}` : ''}`
 
-  return (
-    <View style={{ ...styles.listItem, width: rowInfo.rowWidth, height: ITEM_HEIGHT, backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'rgba(0,0,0,0)', opacity: isSupported ? 1 : 0.5 }}>
-      <TouchableOpacity style={styles.listItemLeft} onPress={() => { onPress(item, index) }} onLongPress={() => { onLongPress(item, index) }}>
-        {
-          active
-            ? <Icon style={styles.sn} name="play-outline" size={13} color={theme['c-primary-font']} />
-            : <Text style={styles.sn} size={13} color={theme['c-300']}>{index + 1}</Text>
-        }
-        <View style={styles.itemInfo}>
-          {/* <View style={styles.listItemTitle}> */}
-          <Text color={active ? theme['c-primary-font'] : theme['c-font']} numberOfLines={1}>{item.name}</Text>
-          {/* </View> */}
-          <View style={styles.listItemSingle}>
-            <Badge>{item.source.toUpperCase()}</Badge>
-            <Text style={styles.listItemSingleText} size={11} color={active ? theme['c-primary-alpha-200'] : theme['c-500']} numberOfLines={1}>
-              {singer}
+    return (
+      <View
+        style={{
+          ...styles.listItem,
+          width: rowInfo.rowWidth,
+          height: ITEM_HEIGHT,
+          backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'rgba(0,0,0,0)',
+          opacity: isSupported ? 1 : 0.5,
+        }}
+      >
+        <TouchableOpacity
+          style={styles.listItemLeft}
+          onPress={() => {
+            onPress(item, index)
+          }}
+          onLongPress={() => {
+            onLongPress(item, index)
+          }}
+        >
+          {active ? (
+            <Icon style={styles.sn} name="play-outline" size={13} color={theme['c-primary-font']} />
+          ) : (
+            <Text style={styles.sn} size={13} color={theme['c-300']}>
+              {index + 1}
             </Text>
+          )}
+          <View style={styles.itemInfo}>
+            {/* <View style={styles.listItemTitle}> */}
+            <Text color={active ? theme['c-primary-font'] : theme['c-font']} numberOfLines={1}>
+              {item.name}
+            </Text>
+            {/* </View> */}
+            <View style={styles.listItemSingle}>
+              <Badge>{item.source.toUpperCase()}</Badge>
+              <Text
+                style={styles.listItemSingleText}
+                size={11}
+                color={active ? theme['c-primary-alpha-200'] : theme['c-500']}
+                numberOfLines={1}
+              >
+                {singer}
+              </Text>
+            </View>
           </View>
-        </View>
-        {
-          isShowInterval ? (
-            <Text size={12} color={active ? theme['c-primary-alpha-400'] : theme['c-250']} numberOfLines={1}>{item.interval}</Text>
-          ) : null
-        }
-      </TouchableOpacity>
-      {/* <View style={styles.listItemRight}> */}
-      <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.moreButton}>
-        <Icon name="dots-vertical" style={{ color: theme['c-350'] }} size={12} />
-      </TouchableOpacity>
-      {/* </View> */}
-    </View>
-  )
-}, (prevProps, nextProps) => {
-  return !!(prevProps.item === nextProps.item &&
-    prevProps.index === nextProps.index &&
-    prevProps.isShowAlbumName === nextProps.isShowAlbumName &&
-    prevProps.isShowInterval === nextProps.isShowInterval &&
-    prevProps.activeIndex != nextProps.index &&
-    nextProps.activeIndex != nextProps.index &&
-    nextProps.selectedList.includes(nextProps.item) == prevProps.selectedList.includes(nextProps.item)
-  )
-})
-
+          {isShowInterval ? (
+            <Text
+              size={12}
+              color={active ? theme['c-primary-alpha-400'] : theme['c-250']}
+              numberOfLines={1}
+            >
+              {item.interval}
+            </Text>
+          ) : null}
+        </TouchableOpacity>
+        {/* <View style={styles.listItemRight}> */}
+        <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.moreButton}>
+          <Icon name="dots-vertical" style={{ color: theme['c-350'] }} size={12} />
+        </TouchableOpacity>
+        {/* </View> */}
+      </View>
+    )
+  },
+  (prevProps, nextProps) => {
+    return !!(
+      prevProps.item === nextProps.item &&
+      prevProps.index === nextProps.index &&
+      prevProps.isShowAlbumName === nextProps.isShowAlbumName &&
+      prevProps.isShowInterval === nextProps.isShowInterval &&
+      prevProps.activeIndex != nextProps.index &&
+      nextProps.activeIndex != nextProps.index &&
+      nextProps.selectedList.includes(nextProps.item) ==
+        prevProps.selectedList.includes(nextProps.item)
+    )
+  }
+)
 
 const styles = createStyle({
   listItem: {

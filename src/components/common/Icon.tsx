@@ -20,9 +20,7 @@ import { StyleSheet, type StyleProp, type TextStyle } from 'react-native'
 // import IconZocial from 'react-native-vector-icons/Zocial'
 // import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-
 const IcoMoon = createIconSetFromIcoMoon(icoMoonConfig)
-
 
 // https://oblador.github.io/react-native-vector-icons/
 
@@ -36,11 +34,16 @@ interface IconProps extends Omit<ComponentProps<IconType>, 'style'> {
 export const Icon = memo(({ size = 15, rawSize, color, style, ...props }: IconProps) => {
   const theme = useTheme()
   const textShadow = useTextShadow()
-  const newStyle = textShadow ? StyleSheet.compose({
-    textShadowColor: theme['c-primary-dark-300-alpha-800'],
-    textShadowOffset: { width: 0.2, height: 0.2 },
-    textShadowRadius: 2,
-  }, style) : style
+  const newStyle = textShadow
+    ? StyleSheet.compose(
+        {
+          textShadowColor: theme['c-primary-dark-300-alpha-800'],
+          textShadowOffset: { width: 0.2, height: 0.2 },
+          textShadowRadius: 2,
+        },
+        style
+      )
+    : style
   return (
     <IcoMoon
       size={rawSize ?? scaleSizeW(size)}
@@ -52,20 +55,18 @@ export const Icon = memo(({ size = 15, rawSize, color, style, ...props }: IconPr
   )
 })
 
-
-export {
-  // IconAntDesign,
-  // IconEntypo,
-  // IconEvilIcons,
-  // IconFeather,
-  // IconFontAwesome,
-  // IconFontAwesome5,
-  // IconFontisto,
-  // IconFoundation,
-  // IconIonicons,
-  // IconMaterialIcons,
-  // IconMaterialCommunityIcons,
-  // IconOcticons,
-  // IconZocial,
-  // IconSimpleLineIcons,
-}
+export // IconAntDesign,
+// IconEntypo,
+// IconEvilIcons,
+// IconFeather,
+// IconFontAwesome,
+// IconFontAwesome5,
+// IconFontisto,
+// IconFoundation,
+// IconIonicons,
+// IconMaterialIcons,
+// IconMaterialCommunityIcons,
+// IconOcticons,
+// IconZocial,
+// IconSimpleLineIcons,
+ {}

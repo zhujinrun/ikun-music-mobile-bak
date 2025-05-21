@@ -82,7 +82,6 @@ export interface InitState {
   listDetailInfo: ListDetailInfo
 }
 
-
 const state: InitState = {
   sources: [],
   sortList: {},
@@ -112,7 +111,6 @@ const state: InitState = {
   },
 }
 
-
 for (const source of music.sources) {
   const songList = music[source.id as Source]?.songList
   if (!songList) continue
@@ -120,6 +118,4 @@ for (const source of music.sources) {
   state.sortList[source.id as Source] = songList.sortList as SortInfo[]
 }
 
-
 export default state
-

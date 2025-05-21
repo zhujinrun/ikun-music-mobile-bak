@@ -4,18 +4,16 @@ import { View } from 'react-native'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 
-export default memo(({ title, children }: {
-  title: string
-  children: React.ReactNode | React.ReactNode[]
-}) => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      {children}
-    </View>
-  )
-})
-
+export default memo(
+  ({ title, children }: { title: string; children: React.ReactNode | React.ReactNode[] }) => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>{title}</Text>
+        {children}
+      </View>
+    )
+  }
+)
 
 const styles = createStyle({
   container: {

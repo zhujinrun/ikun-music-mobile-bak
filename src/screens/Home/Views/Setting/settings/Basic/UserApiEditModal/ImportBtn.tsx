@@ -1,6 +1,8 @@
 import { useMemo, useRef } from 'react'
 
-import DorpDownMenu, { type DorpDownMenuProps as _DorpDownMenuProps } from '@/components/common/DorpDownMenu'
+import DorpDownMenu, {
+  type DorpDownMenuProps as _DorpDownMenuProps,
+} from '@/components/common/DorpDownMenu'
 import Text from '@/components/common/Text'
 import { useI18n } from '@/lang'
 import ScriptImportExport, { type ScriptImportExportType } from './ScriptImportExport'
@@ -13,7 +15,6 @@ import { useTheme } from '@/store/theme/hook'
 interface BtnProps {
   btnStyle?: _DorpDownMenuProps<any[]>['btnStyle']
 }
-
 
 export default ({ btnStyle }: BtnProps) => {
   const t = useI18n()
@@ -46,15 +47,11 @@ export default ({ btnStyle }: BtnProps) => {
     }
   }
 
-
   return (
-    <DorpDownMenu
-      btnStyle={btnStyle}
-      menus={importTypes}
-      center
-      onPress={handleAction}
-    >
-      <Text size={14} color={theme['c-button-font']}>{t('user_api_btn_import')}</Text>
+    <DorpDownMenu btnStyle={btnStyle} menus={importTypes} center onPress={handleAction}>
+      <Text size={14} color={theme['c-button-font']}>
+        {t('user_api_btn_import')}
+      </Text>
       <ScriptImportExport ref={scriptImportExportRef} />
       <ScriptImportOnline ref={scriptImportOnlineRef} />
     </DorpDownMenu>

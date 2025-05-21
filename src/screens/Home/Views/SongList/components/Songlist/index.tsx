@@ -14,10 +14,7 @@ export interface SonglistType {
   setStatus: (val: Status) => void
 }
 
-export default forwardRef<SonglistType, SonglistProps>(({
-  onRefresh,
-  onLoadMore,
-}, ref) => {
+export default forwardRef<SonglistType, SonglistProps>(({ onRefresh, onLoadMore }, ref) => {
   const listRef = useRef<ListType>(null)
   // const loadingMaskRef = useRef<LoadingMaskType>(null)
 

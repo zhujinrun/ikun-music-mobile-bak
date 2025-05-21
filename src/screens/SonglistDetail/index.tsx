@@ -9,8 +9,7 @@ import { type ListInfoItem } from '@/store/songlist/state'
 import PlayerBar from '@/components/player/PlayerBar'
 import { ListInfoContext } from './state'
 
-
-export default ({ componentId, info }: { componentId: string, info: ListInfoItem }) => {
+export default ({ componentId, info }: { componentId: string; info: ListInfoItem }) => {
   const musicListRef = useRef<MusicListType>(null)
   const isUnmountedRef = useRef(false)
 
@@ -21,13 +20,10 @@ export default ({ componentId, info }: { componentId: string, info: ListInfoItem
 
     musicListRef.current?.loadList(info.source, info.id)
 
-
     return () => {
       isUnmountedRef.current = true
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
 
   return (
     <PageContent>

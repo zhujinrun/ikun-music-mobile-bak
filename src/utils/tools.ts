@@ -1,9 +1,35 @@
-import { Platform, ToastAndroid, BackHandler, Linking, Dimensions, Alert, Appearance, PermissionsAndroid, AppState, StyleSheet, type ScaledSize } from 'react-native'
+import {
+  Platform,
+  ToastAndroid,
+  BackHandler,
+  Linking,
+  Dimensions,
+  Alert,
+  Appearance,
+  PermissionsAndroid,
+  AppState,
+  StyleSheet,
+  type ScaledSize,
+} from 'react-native'
 // import ExtraDimensions from 'react-native-extra-dimensions-android'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { storageDataPrefix } from '@/config/constant'
-import { gzipFile, readFile, temporaryDirectoryPath, unGzipFile, unlink, writeFile } from '@/utils/fs'
-import { getSystemLocales, isIgnoringBatteryOptimization, isNotificationsEnabled, requestNotificationPermission, requestIgnoreBatteryOptimization, shareText } from '@/utils/nativeModules/utils'
+import {
+  gzipFile,
+  readFile,
+  temporaryDirectoryPath,
+  unGzipFile,
+  unlink,
+  writeFile,
+} from '@/utils/fs'
+import {
+  getSystemLocales,
+  isIgnoringBatteryOptimization,
+  isNotificationsEnabled,
+  requestNotificationPermission,
+  requestIgnoreBatteryOptimization,
+  shareText,
+} from '@/utils/nativeModules/utils'
 import musicSdk from '@/utils/musicSdk'
 import { getData, removeData, saveData } from '@/plugins/storage'
 import BackgroundTimer from 'react-native-background-timer'
@@ -12,9 +38,8 @@ import { toOldMusicInfo } from './index'
 import { stringMd5 } from 'react-native-quick-md5'
 import { windowSizeTools } from '@/utils/windowSizeTools'
 
-
 // https://stackoverflow.com/a/47349998
-export const getDeviceLanguage = async() => {
+export const getDeviceLanguage = async () => {
   // let deviceLanguage = Platform.OS === 'ios'
   //   ? NativeModules.SettingsManager.settings.AppleLocale ||
   //     NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
@@ -22,7 +47,6 @@ export const getDeviceLanguage = async() => {
   // deviceLanguage = typeof deviceLanguage === 'string' ? deviceLanguage.substring(0, 5).toLocaleLowerCase() : ''
   return getSystemLocales()
 }
-
 
 export const isAndroid = Platform.OS === 'android'
 // @ts-expect-error
@@ -56,9 +80,10 @@ export const TEMP_FILE_PATH = temporaryDirectoryPath + '/tempFile'
 //   // return windowSize
 // }
 
-export const checkStoragePermissions = async() => PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE)
+export const checkStoragePermissions = async () =>
+  PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE)
 
-export const requestStoragePermission = async() => {
+export const requestStoragePermission = async () => {
   const isGranted = await checkStoragePermissions()
   if (isGranted) return isGranted
 
@@ -67,7 +92,7 @@ export const requestStoragePermission = async() => {
       [
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      ],
+      ]
       // {
       //   title: '存储读写权限申请',
       //   message:
@@ -78,10 +103,10 @@ export const requestStoragePermission = async() => {
       // },
     )
     console.log(granted)
-    console.log(Object.values(granted).every(r => r === PermissionsAndroid.RESULTS.GRANTED))
+    console.log(Object.values(granted).every((r) => r === PermissionsAndroid.RESULTS.GRANTED))
     console.log(PermissionsAndroid.RESULTS)
     const granteds = Object.values(granted)
-    return granteds.every(r => r === PermissionsAndroid.RESULTS.GRANTED)
+    return granteds.every((r) => r === PermissionsAndroid.RESULTS.GRANTED)
       ? true
       : granteds.includes(PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN)
         ? null
@@ -97,14 +122,17 @@ export const requestStoragePermission = async() => {
   }
 }
 
-
 /**
  * 显示toast
  * @param message 消息
  * @param duration 时长
  * @param position 位置
  */
-export const toast = (message: string, duration: 'long' | 'short' = 'short', position: 'top' | 'center' | 'bottom' = 'bottom') => {
+export const toast = (
+  message: string,
+  duration: 'long' | 'short' = 'short',
+  position: 'top' | 'center' | 'bottom' = 'bottom'
+) => {
   let _duration
   switch (duration) {
     case 'long':
@@ -135,7 +163,8 @@ export const toast = (message: string, duration: 'long' | 'short' = 'short', pos
   ToastAndroid.showWithGravityAndOffset(message, _duration, _position, 0, offset)
 }
 
-export const openUrl = async(url: string): Promise<void> => Linking.canOpenURL(url).then(async() => Linking.openURL(url))
+export const openUrl = async (url: string): Promise<void> =>
+  Linking.canOpenURL(url).then(async () => Linking.openURL(url))
 
 export const assertApiSupport = (source: LX.Source): boolean => {
   return source == 'local' || global.lx.qualityList[source] != null
@@ -150,7 +179,7 @@ export const exitApp = () => {
   BackHandler.exitApp()
 }
 
-export const handleSaveFile = async(path: string, data: any) => {
+export const handleSaveFile = async (path: string, data: any) => {
   // if (!path.endsWith('.json')) path += '.json'
   // const buffer = gzip(data)
   const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
@@ -158,7 +187,7 @@ export const handleSaveFile = async(path: string, data: any) => {
   await gzipFile(tempFilePath, path)
   await unlink(tempFilePath)
 }
-export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
+export const handleReadFile = async <T = unknown>(path: string): Promise<T> => {
   let isJSON = path.endsWith('.json')
   let data
   if (isJSON) {
@@ -183,56 +212,66 @@ export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
   return data
 }
 
-export const confirmDialog = async({
+export const confirmDialog = async ({
   title = '',
   message = '',
   cancelButtonText = global.i18n.t('dialog_cancel'),
   confirmButtonText = global.i18n.t('dialog_confirm'),
   bgClose = true,
 }) => {
-  return new Promise<boolean>(resolve => {
-    Alert.alert(title, message, [
+  return new Promise<boolean>((resolve) => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {
+          text: cancelButtonText,
+          onPress() {
+            resolve(false)
+          },
+        },
+        {
+          text: confirmButtonText,
+          onPress() {
+            resolve(true)
+          },
+        },
+      ],
       {
-        text: cancelButtonText,
-        onPress() {
+        cancelable: bgClose,
+        onDismiss() {
           resolve(false)
         },
-      },
-      {
-        text: confirmButtonText,
-        onPress() {
-          resolve(true)
-        },
-      },
-    ], {
-      cancelable: bgClose,
-      onDismiss() {
-        resolve(false)
-      },
-    })
+      }
+    )
   })
 }
 
-export const tipDialog = async({
+export const tipDialog = async ({
   title = '',
   message = '',
   btnText = global.i18n.t('dialog_confirm'),
   bgClose = true,
 }) => {
-  return new Promise<void>(resolve => {
-    Alert.alert(title, message, [
+  return new Promise<void>((resolve) => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {
+          text: btnText,
+          onPress() {
+            resolve()
+          },
+        },
+      ],
       {
-        text: btnText,
-        onPress() {
+        cancelable: bgClose,
+        onDismiss() {
           resolve()
         },
-      },
-    ], {
-      cancelable: bgClose,
-      onDismiss() {
-        resolve()
-      },
-    })
+      }
+    )
   })
 }
 
@@ -240,8 +279,7 @@ export const clipboardWriteText = (str: string) => {
   Clipboard.setString(str)
 }
 
-
-export const checkNotificationPermission = async() => {
+export const checkNotificationPermission = async () => {
   const isHide = await getData(storageDataPrefix.notificationTipEnable)
   if (isHide != null) return
   const enabled = await isNotificationsEnabled()
@@ -277,13 +315,12 @@ export const checkNotificationPermission = async() => {
             })
           },
         },
-      ],
+      ]
     )
   })
 }
 
-
-export const checkIgnoringBatteryOptimization = async() => {
+export const checkIgnoringBatteryOptimization = async () => {
   const isHide = await getData(storageDataPrefix.ignoringBatteryOptimizationTipEnable)
   if (isHide != null) return
   const enabled = await isIgnoringBatteryOptimization()
@@ -319,25 +356,36 @@ export const checkIgnoringBatteryOptimization = async() => {
             })
           },
         },
-      ],
+      ]
     )
   })
 }
-export const resetNotificationPermissionCheck = async() => {
+export const resetNotificationPermissionCheck = async () => {
   return removeData(storageDataPrefix.notificationTipEnable)
 }
-export const resetIgnoringBatteryOptimizationCheck = async() => {
+export const resetIgnoringBatteryOptimizationCheck = async () => {
   return removeData(storageDataPrefix.ignoringBatteryOptimizationTipEnable)
 }
 
-export const shareMusic = (shareType: LX.ShareType, downloadFileName: LX.AppSetting['download.fileName'], musicInfo: LX.Music.MusicInfo) => {
+export const shareMusic = (
+  shareType: LX.ShareType,
+  downloadFileName: LX.AppSetting['download.fileName'],
+  musicInfo: LX.Music.MusicInfo
+) => {
   const name = musicInfo.name
   const singer = musicInfo.singer
-  const detailUrl = musicInfo.source == 'local' ? '' : musicSdk[musicInfo.source]?.getMusicDetailPageUrl(toOldMusicInfo(musicInfo)) ?? ''
+  const detailUrl =
+    musicInfo.source == 'local'
+      ? ''
+      : (musicSdk[musicInfo.source]?.getMusicDetailPageUrl(toOldMusicInfo(musicInfo)) ?? '')
   const musicTitle = downloadFileName.replace('歌名', name).replace('歌手', singer)
   switch (shareType) {
     case 'system':
-      void shareText(global.i18n.t('share_card_title_music', { name }), global.i18n.t('share_title_music'), `${musicTitle.replace(/\s/g, '')}${detailUrl ? '\n' + detailUrl : ''}`)
+      void shareText(
+        global.i18n.t('share_card_title_music', { name }),
+        global.i18n.t('share_title_music'),
+        `${musicTitle.replace(/\s/g, '')}${detailUrl ? '\n' + detailUrl : ''}`
+      )
       break
     case 'clipboard':
       clipboardWriteText(`${musicTitle}${detailUrl ? '\n' + detailUrl : ''}`)
@@ -346,16 +394,23 @@ export const shareMusic = (shareType: LX.ShareType, downloadFileName: LX.AppSett
   }
 }
 
-export const onDimensionChange = (handler: (info: { window: ScaledSize, screen: ScaledSize }) => void) => {
+export const onDimensionChange = (
+  handler: (info: { window: ScaledSize; screen: ScaledSize }) => void
+) => {
   return Dimensions.addEventListener('change', handler)
 }
-
 
 export const getAppearance = () => {
   return Appearance.getColorScheme() ?? 'light'
 }
 
-export const onAppearanceChange = (callback: (colorScheme: Parameters<Parameters<typeof Appearance['addChangeListener']>[0]>[0]['colorScheme']) => void) => {
+export const onAppearanceChange = (
+  callback: (
+    colorScheme: Parameters<
+      Parameters<(typeof Appearance)['addChangeListener']>[0]
+    >[0]['colorScheme']
+  ) => void
+) => {
   return Appearance.addChangeListener(({ colorScheme }) => {
     callback(colorScheme)
   })
@@ -365,13 +420,10 @@ let isSupportedAutoTheme: boolean | null = null
 export const getIsSupportedAutoTheme = () => {
   if (isSupportedAutoTheme == null) {
     const osVerNum = parseInt(osVer)
-    isSupportedAutoTheme = isAndroid
-      ? osVerNum >= 5
-      : osVerNum >= 13
+    isSupportedAutoTheme = isAndroid ? osVerNum >= 5 : osVerNum >= 13
   }
   return isSupportedAutoTheme
 }
-
 
 export const showImportTip = (type: string) => {
   let message
@@ -405,14 +457,16 @@ export const showImportTip = (type: string) => {
   })
 }
 
-
 /**
  * 生成节流函数
  * @param fn 回调
  * @param delay 延迟
  * @returns
  */
-export function throttleBackgroundTimer<Args extends any[]>(fn: (...args: Args) => void | Promise<void>, delay = 100) {
+export function throttleBackgroundTimer<Args extends any[]>(
+  fn: (...args: Args) => void | Promise<void>,
+  delay = 100
+) {
   let timer: number | null = null
   let _args: Args
   return (...args: Args) => {
@@ -431,7 +485,10 @@ export function throttleBackgroundTimer<Args extends any[]>(fn: (...args: Args) 
  * @param delay 延迟
  * @returns
  */
-export function debounceBackgroundTimer<Args extends any[]>(fn: (...args: Args) => void | Promise<void>, delay = 100) {
+export function debounceBackgroundTimer<Args extends any[]>(
+  fn: (...args: Args) => void | Promise<void>,
+  delay = 100
+) {
   let timer: number | null = null
   let _args: Args
   return (...args: Args) => {
@@ -444,7 +501,6 @@ export function debounceBackgroundTimer<Args extends any[]>(fn: (...args: Args) 
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type Styles = StyleSheet.NamedStyles<Record<string, {}>>
 type Style = Styles[keyof Styles]
 const trasformeProps: Array<keyof Style> = [
@@ -509,7 +565,9 @@ export const trasformeStyle = <T extends Style>(styles: T): T => {
   return newStyle
 }
 
-export const createStyle = <T extends StyleSheet.NamedStyles<T>>(styles: T | StyleSheet.NamedStyles<T>): T => {
+export const createStyle = <T extends StyleSheet.NamedStyles<T>>(
+  styles: T | StyleSheet.NamedStyles<T>
+): T => {
   const newStyle: Record<string, Style> = { ...styles }
   for (const [n, s] of Object.entries(newStyle)) {
     newStyle[n] = trasformeStyle(s)
@@ -521,7 +579,6 @@ export const createStyle = <T extends StyleSheet.NamedStyles<T>>(styles: T | Sty
 export const isHorizontalMode = (width: number, height: number): boolean => {
   return width / height > 1.2
 }
-
 
 export interface RowInfo {
   rowNum: number | undefined
@@ -543,8 +600,7 @@ export const getRowInfo = (type: RowInfoType = 'full'): RowInfo => {
 
 export const toMD5 = stringMd5
 
-
-export const cheatTip = async() => {
+export const cheatTip = async () => {
   const isRead = await getData<boolean>(storageDataPrefix.cheatTip)
   if (isRead) return
 
@@ -560,13 +616,14 @@ export const cheatTip = async() => {
   })
 }
 
-export const remoteLyricTip = async() => {
+export const remoteLyricTip = async () => {
   const isRead = await getData<boolean>(storageDataPrefix.remoteLyricTip)
   if (isRead) return
 
   return tipDialog({
     title: '有点温馨的提示',
-    message: '若你将本功能用于汽车，请记住这个：\n道路千万条，安全第一条！\n道路千万条，安全第一条！！\n道路千万条，安全第一条！！！',
+    message:
+      '若你将本功能用于汽车，请记住这个：\n道路千万条，安全第一条！\n道路千万条，安全第一条！！\n道路千万条，安全第一条！！！',
     btnText: '我知道了 (Close)',
     bgClose: true,
   }).then(() => {

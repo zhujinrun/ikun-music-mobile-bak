@@ -29,9 +29,7 @@ function WrappedComponent(Component: any) {
   return function inject(props: Record<string, any>) {
     const EnhancedComponent = () => (
       <Provider>
-        <Component
-          {...props}
-        />
+        <Component {...props} />
       </Provider>
     )
 

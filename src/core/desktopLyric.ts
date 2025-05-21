@@ -26,11 +26,9 @@ import settingState from '@/store/setting/state'
 import playerState from '@/store/player/state'
 import { tranditionalize } from '@/utils/simplify-chinese-main'
 import { getPosition } from '@/plugins/player'
-export {
-  onLyricLinePlay,
-} from '@/utils/nativeModules/lyricDesktop'
+export { onLyricLinePlay } from '@/utils/nativeModules/lyricDesktop'
 
-export const showDesktopLyric = async() => {
+export const showDesktopLyric = async () => {
   const setting = settingState.setting
   await showDesktopLyricView({
     isShowToggleAnima: setting['desktopLyric.showToggleAnima'],
@@ -57,13 +55,13 @@ export const showDesktopLyric = async() => {
   }
   await setLyric(lrc, tlrc, rlrc)
   if (playerState.isPlay && !global.lx.gettingUrlId) {
-    void getPosition().then(position => {
+    void getPosition().then((position) => {
       void play(position * 1000)
     })
   }
 }
 
-export const hideDesktopLyric = async() => {
+export const hideDesktopLyric = async () => {
   return hideDesktopLyricView()
 }
 
@@ -74,10 +72,15 @@ export const setDesktopLyricPlaybackRate = setPlaybackRate
 export const toggleDesktopLyricTranslation = toggleTranslation
 export const toggleDesktopLyricRoma = toggleRoma
 export const toggleDesktopLyricLock = toggleLock
-export const setDesktopLyricColor = async(unplayColor: string | null, playedColor: string | null, shadowColor: string | null) => {
-  return setColor(unplayColor ?? settingState.setting['desktopLyric.style.lyricUnplayColor'],
+export const setDesktopLyricColor = async (
+  unplayColor: string | null,
+  playedColor: string | null,
+  shadowColor: string | null
+) => {
+  return setColor(
+    unplayColor ?? settingState.setting['desktopLyric.style.lyricUnplayColor'],
     playedColor ?? settingState.setting['desktopLyric.style.lyricPlayedColor'],
-    shadowColor ?? settingState.setting['desktopLyric.style.lyricShadowColor'],
+    shadowColor ?? settingState.setting['desktopLyric.style.lyricShadowColor']
   )
 }
 export const setDesktopLyricAlpha = setAlpha
@@ -87,15 +90,20 @@ export const setDesktopLyricSingleLine = setSingleLine
 export const setDesktopLyricPosition = setPosition
 export const setDesktopLyricMaxLineNum = setMaxLineNum
 export const setDesktopLyricWidth = setWidth
-export const setDesktopLyricTextPosition = async(x: LX.AppSetting['desktopLyric.textPosition.x'] | null, y: LX.AppSetting['desktopLyric.textPosition.y'] | null) => {
-  return setLyricTextPosition(x ?? settingState.setting['desktopLyric.textPosition.x'], y ?? settingState.setting['desktopLyric.textPosition.y'])
+export const setDesktopLyricTextPosition = async (
+  x: LX.AppSetting['desktopLyric.textPosition.x'] | null,
+  y: LX.AppSetting['desktopLyric.textPosition.y'] | null
+) => {
+  return setLyricTextPosition(
+    x ?? settingState.setting['desktopLyric.textPosition.x'],
+    y ?? settingState.setting['desktopLyric.textPosition.y']
+  )
 }
 export const checkDesktopLyricOverlayPermission = checkOverlayPermission
 export const openDesktopLyricOverlayPermissionActivity = openOverlayPermissionActivity
 export const onDesktopLyricPositionChange = onPositionChange
 
-
-export const showRemoteLyric = async(isSend: boolean) => {
+export const showRemoteLyric = async (isSend: boolean) => {
   await setSendLyricTextEvent(isSend)
   if (isSend) {
     let lrc = playerState.musicInfo.lrc ?? ''
@@ -107,7 +115,7 @@ export const showRemoteLyric = async(isSend: boolean) => {
     }
     await setLyric(lrc, tlrc, rlrc)
     if (playerState.isPlay && !global.lx.gettingUrlId) {
-      void getPosition().then(position => {
+      void getPosition().then((position) => {
         void play(position * 1000)
       })
     }

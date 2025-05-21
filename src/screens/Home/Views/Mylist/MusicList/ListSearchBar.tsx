@@ -35,7 +35,6 @@ const SearchInput = forwardRef<SearchInputType, SearchInputProps>(({ onSearch },
   )
 })
 
-
 export interface ListSearchBarProps {
   onSearch: (keywork: string) => void
   onExitSearch: () => void
@@ -45,100 +44,101 @@ export interface ListSearchBarType {
   hide: () => void
 }
 
-export default forwardRef<ListSearchBarType, ListSearchBarProps>(({ onSearch, onExitSearch }, ref) => {
-  const t = useI18n()
-  // const isGetDetailFailedRef = useRef(false)
-  const [visible, setVisible] = useState(false)
-  const [animatePlayed, setAnimatPlayed] = useState(true)
-  const animFade = useRef(new Animated.Value(0)).current
-  const animTranslateY = useRef(new Animated.Value(0)).current
-  const searchInputRef = useRef<SearchInputType>(null)
+export default forwardRef<ListSearchBarType, ListSearchBarProps>(
+  ({ onSearch, onExitSearch }, ref) => {
+    const t = useI18n()
+    // const isGetDetailFailedRef = useRef(false)
+    const [visible, setVisible] = useState(false)
+    const [animatePlayed, setAnimatPlayed] = useState(true)
+    const animFade = useRef(new Animated.Value(0)).current
+    const animTranslateY = useRef(new Animated.Value(0)).current
+    const searchInputRef = useRef<SearchInputType>(null)
 
-  const theme = useTheme()
+    const theme = useTheme()
 
-  useImperativeHandle(ref, () => ({
-    show() {
-      handleShow()
+    useImperativeHandle(ref, () => ({
+      show() {
+        handleShow()
+        requestAnimationFrame(() => {
+          searchInputRef.current?.focus()
+        })
+      },
+      hide() {
+        handleHide()
+      },
+    }))
+
+    const handleShow = useCallback(() => {
+      // console.log('show List')
+      setVisible(true)
+      setAnimatPlayed(false)
       requestAnimationFrame(() => {
-        searchInputRef.current?.focus()
+        animTranslateY.setValue(-20)
+
+        Animated.parallel([
+          Animated.timing(animFade, {
+            toValue: 0.92,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(animTranslateY, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          setAnimatPlayed(true)
+        })
       })
-    },
-    hide() {
-      handleHide()
-    },
-  }))
+    }, [animFade, animTranslateY])
 
-
-  const handleShow = useCallback(() => {
-    // console.log('show List')
-    setVisible(true)
-    setAnimatPlayed(false)
-    requestAnimationFrame(() => {
-      animTranslateY.setValue(-20)
-
+    const handleHide = useCallback(() => {
+      setAnimatPlayed(false)
       Animated.parallel([
         Animated.timing(animFade, {
-          toValue: 0.92,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(animTranslateY, {
           toValue: 0,
           duration: 200,
           useNativeDriver: true,
         }),
-      ]).start(() => {
+        Animated.timing(animTranslateY, {
+          toValue: -20,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start((finished) => {
+        if (!finished) return
+        setVisible(false)
         setAnimatPlayed(true)
       })
-    })
-  }, [animFade, animTranslateY])
+    }, [animFade, animTranslateY])
 
-  const handleHide = useCallback(() => {
-    setAnimatPlayed(false)
-    Animated.parallel([
-      Animated.timing(animFade, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
+    const animaStyle = useMemo(
+      () => ({
+        ...styles.container,
+        // backgroundColor: theme['c-content-background'],
+        borderBottomColor: theme['c-border-background'],
+        opacity: animFade, // Bind opacity to animated value
+        transform: [{ translateY: animTranslateY }],
       }),
-      Animated.timing(animTranslateY, {
-        toValue: -20,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start(finished => {
-      if (!finished) return
-      setVisible(false)
-      setAnimatPlayed(true)
-    })
-  }, [animFade, animTranslateY])
-
-
-  const animaStyle = useMemo(() => ({
-    ...styles.container,
-    // backgroundColor: theme['c-content-background'],
-    borderBottomColor: theme['c-border-background'],
-    opacity: animFade, // Bind opacity to animated value
-    transform: [
-      { translateY: animTranslateY },
-    ],
-  }), [animFade, animTranslateY, theme])
-
-  const component = useMemo(() => {
-    return (
-      <Animated.View style={animaStyle}>
-        <View style={styles.content}>
-          <SearchInput ref={searchInputRef} onSearch={onSearch} />
-        </View>
-        <TouchableOpacity onPress={onExitSearch} style={styles.btn}>
-          <Text color={theme['c-button-font']}>{t('list_select_cancel')}</Text>
-        </TouchableOpacity>
-      </Animated.View>
+      [animFade, animTranslateY, theme]
     )
-  }, [animaStyle, onSearch, onExitSearch, theme, t])
 
-  return !visible && animatePlayed ? null : component
-})
+    const component = useMemo(() => {
+      return (
+        <Animated.View style={animaStyle}>
+          <View style={styles.content}>
+            <SearchInput ref={searchInputRef} onSearch={onSearch} />
+          </View>
+          <TouchableOpacity onPress={onExitSearch} style={styles.btn}>
+            <Text color={theme['c-button-font']}>{t('list_select_cancel')}</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      )
+    }, [animaStyle, onSearch, onExitSearch, theme, t])
+
+    return !visible && animatePlayed ? null : component
+  }
+)
 
 const styles = createStyle({
   container: {

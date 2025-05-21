@@ -17,16 +17,18 @@ import TimeoutExitBtn from './TimeoutExitBtn'
 
 export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
-
 const Title = () => {
   const theme = useTheme()
   const musicInfo = usePlayerMusicInfo()
 
-
   return (
     <View style={styles.titleContent}>
-      <Text numberOfLines={1} style={styles.title}>{musicInfo.name}</Text>
-      <Text numberOfLines={1} style={styles.title} size={12} color={theme['c-font-label']}>{musicInfo.singer}</Text>
+      <Text numberOfLines={1} style={styles.title}>
+        {musicInfo.name}
+      </Text>
+      <Text numberOfLines={1} style={styles.title} size={12} color={theme['c-font-label']}>
+        {musicInfo.singer}
+      </Text>
     </View>
   )
 }
@@ -43,7 +45,10 @@ export default memo(() => {
   }
 
   return (
-    <View style={{ height: HEADER_HEIGHT + statusBarHeight, paddingTop: statusBarHeight }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_header}>
+    <View
+      style={{ height: HEADER_HEIGHT + statusBarHeight, paddingTop: statusBarHeight }}
+      nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_header}
+    >
       <StatusBar />
       <View style={styles.container}>
         <Btn icon="chevron-left" onPress={back} />
@@ -55,7 +60,6 @@ export default memo(() => {
     </View>
   )
 })
-
 
 const styles = StyleSheet.create({
   container: {

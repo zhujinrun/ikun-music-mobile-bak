@@ -29,12 +29,12 @@ declare global {
          */
         musicInfo: PlayMusic
         /**
-          * 当前播放歌曲的列表 id
-          */
+         * 当前播放歌曲的列表 id
+         */
         listId: string
         /**
-          * 是否属于 “稍后播放”
-          */
+         * 是否属于 “稍后播放”
+         */
         isTempPlay: boolean
       }>
 
@@ -44,12 +44,12 @@ declare global {
          */
         playIndex: number
         /**
-        * 播放器的播放列表 id
-        */
+         * 播放器的播放列表 id
+         */
         playerListId: string | null
         /**
-        * 播放器播放歌曲 index
-        */
+         * 播放器播放歌曲 index
+         */
         playerPlayIndex: number
       }
 
@@ -80,7 +80,6 @@ declare global {
         // original: PlayMusic
         // quality: LX.Quality
       }
-
     }
   }
 }

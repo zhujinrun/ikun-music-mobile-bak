@@ -23,10 +23,7 @@ const styles = createStyle({
 
 export type BadgeType = 'normal' | 'secondary' | 'tertiary'
 
-export default memo(({ type = 'normal', children }: {
-  type?: BadgeType
-  children: string
-}) => {
+export default memo(({ type = 'normal', children }: { type?: BadgeType; children: string }) => {
   const theme = useTheme()
   // console.log(visible)
   const colors = useMemo(() => {
@@ -48,6 +45,9 @@ export default memo(({ type = 'normal', children }: {
     return colors
   }, [type, theme])
 
-  return <Text style={styles.text} size={9} color={colors.textColor}>{children}</Text>
+  return (
+    <Text style={styles.text} size={9} color={colors.textColor}>
+      {children}
+    </Text>
+  )
 })
-

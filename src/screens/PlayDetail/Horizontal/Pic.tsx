@@ -13,7 +13,6 @@ import Image from '@/components/common/Image'
 import { useStatusbarHeight } from '@/store/common/hook'
 import commonState from '@/store/common/state'
 
-
 export default memo(({ componentId }: { componentId: string }) => {
   const musicInfo = usePlayerMusicInfo()
   const { width: winWidth, height: winHeight } = useWindowSize()
@@ -29,7 +28,10 @@ export default memo(({ componentId }: { componentId: string }) => {
     setAnimated(true)
   })
 
-  let imgWidth = Math.min((winWidth * 0.45 - marginLeft - BTN_WIDTH) * 0.76, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.62)
+  let imgWidth = Math.min(
+    (winWidth * 0.45 - marginLeft - BTN_WIDTH) * 0.76,
+    (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.62
+  )
   imgWidth -= imgWidth * (global.lx.fontSize - 1) * 0.3
   let contentHeight = (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.66
   contentHeight -= contentHeight * (global.lx.fontSize - 1) * 0.2
@@ -37,11 +39,15 @@ export default memo(({ componentId }: { componentId: string }) => {
   return (
     <View style={{ ...styles.container, height: contentHeight }}>
       <View style={{ ...styles.content, elevation: animated ? 3 : 0 }}>
-        <Image url={pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={{
-          width: imgWidth,
-          height: imgWidth,
-          borderRadius: 2,
-        }} />
+        <Image
+          url={pic}
+          nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic}
+          style={{
+            width: imgWidth,
+            height: imgWidth,
+            borderRadius: 2,
+          }}
+        />
       </View>
     </View>
   )

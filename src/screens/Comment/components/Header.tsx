@@ -15,9 +15,7 @@ import { useStatusbarHeight } from '@/store/common/hook'
 
 const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
-export default memo(({ musicInfo }: {
-  musicInfo: LX.Music.MusicInfo
-}) => {
+export default memo(({ musicInfo }: { musicInfo: LX.Music.MusicInfo }) => {
   const t = useI18n()
   const statusBarHeight = useStatusbarHeight()
 
@@ -32,7 +30,9 @@ export default memo(({ musicInfo }: {
         <TouchableOpacity onPress={back} style={{ ...styles.button, width: HEADER_HEIGHT }}>
           <Icon name="chevron-left" size={18} />
         </TouchableOpacity>
-        <Text numberOfLines={1} size={16} style={styles.title}>{t('comment_title', { name: musicInfo.name, singer: musicInfo.singer })}</Text>
+        <Text numberOfLines={1} size={16} style={styles.title}>
+          {t('comment_title', { name: musicInfo.name, singer: musicInfo.singer })}
+        </Text>
         {/* <TouchableOpacity onPress={back} style={{ ...styles.button }}>
           <Icon name="available_updates" style={{ color: theme.normal }} size={24} />
         </TouchableOpacity> */}
@@ -40,7 +40,6 @@ export default memo(({ musicInfo }: {
     </View>
   )
 })
-
 
 const styles = createStyle({
   container: {

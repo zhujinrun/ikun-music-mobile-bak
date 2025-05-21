@@ -1,7 +1,6 @@
 import state, { type InitState } from './state'
 import { type COMPONENT_IDS } from '@/config/constant'
 
-
 export default {
   setFontSize(size: number) {
     state.fontSize = size
@@ -17,7 +16,9 @@ export default {
     global.state_event.componentIdsUpdated({ ...state.componentIds })
   },
   removeComponentId(id: string) {
-    const name = (Object.entries(state.componentIds) as Array<[COMPONENT_IDS, string]>).find(kv => kv[1] == id)?.[0]
+    const name = (Object.entries(state.componentIds) as Array<[COMPONENT_IDS, string]>).find(
+      (kv) => kv[1] == id
+    )?.[0]
     if (!name) return
     delete state.componentIds[name]
     global.state_event.componentIdsUpdated({ ...state.componentIds })
@@ -39,4 +40,3 @@ export default {
     global.state_event.sourceNamesUpdated(names)
   },
 }
-

@@ -11,36 +11,53 @@ import musicSdk from '@/utils/musicSdk'
 import { toOldMusicInfo } from '@/utils'
 
 export const handlePlay = (musicInfo: LX.Music.MusicInfoOnline) => {
-  void addListMusics(LIST_IDS.DEFAULT, [musicInfo], settingState.setting['list.addMusicLocationType']).then(() => {
-    const index = getListMusicSync(LIST_IDS.DEFAULT).findIndex(m => m.id == musicInfo.id)
+  void addListMusics(
+    LIST_IDS.DEFAULT,
+    [musicInfo],
+    settingState.setting['list.addMusicLocationType']
+  ).then(() => {
+    const index = getListMusicSync(LIST_IDS.DEFAULT).findIndex((m) => m.id == musicInfo.id)
     if (index < 0) return
     void playList(LIST_IDS.DEFAULT, index)
   })
 }
-export const handlePlayLater = (musicInfo: LX.Music.MusicInfoOnline, selectedList: LX.Music.MusicInfoOnline[], onCancelSelect: () => void) => {
+export const handlePlayLater = (
+  musicInfo: LX.Music.MusicInfoOnline,
+  selectedList: LX.Music.MusicInfoOnline[],
+  onCancelSelect: () => void
+) => {
   if (selectedList.length) {
-    addTempPlayList(selectedList.map(s => ({ listId: '', musicInfo: s })))
+    addTempPlayList(selectedList.map((s) => ({ listId: '', musicInfo: s })))
     onCancelSelect()
   } else {
     addTempPlayList([{ listId: '', musicInfo }])
   }
 }
 
-
 export const handleShare = (musicInfo: LX.Music.MusicInfoOnline) => {
-  shareMusic(settingState.setting['common.shareType'], settingState.setting['download.fileName'], musicInfo)
+  shareMusic(
+    settingState.setting['common.shareType'],
+    settingState.setting['download.fileName'],
+    musicInfo
+  )
 }
 
-export const handleShowMusicSourceDetail = async(minfo: LX.Music.MusicInfoOnline) => {
-  const url = musicSdk[minfo.source as LX.OnlineSource]?.getMusicDetailPageUrl(toOldMusicInfo(minfo))
+export const handleShowMusicSourceDetail = async (minfo: LX.Music.MusicInfoOnline) => {
+  const url = musicSdk[minfo.source as LX.OnlineSource]?.getMusicDetailPageUrl(
+    toOldMusicInfo(minfo)
+  )
   if (!url) return
   void openUrl(url)
 }
 
-
-export const handleDislikeMusic = async(musicInfo: LX.Music.MusicInfoOnline) => {
+export const handleDislikeMusic = async (musicInfo: LX.Music.MusicInfoOnline) => {
   const confirm = await confirmDialog({
-    message: musicInfo.singer ? global.i18n.t('lists_dislike_music_singer_tip', { name: musicInfo.name, singer: musicInfo.singer }) : global.i18n.t('lists_dislike_music_tip', { name: musicInfo.name }),
+    message: musicInfo.singer
+      ? global.i18n.t('lists_dislike_music_singer_tip', {
+          name: musicInfo.name,
+          singer: musicInfo.singer,
+        })
+      : global.i18n.t('lists_dislike_music_tip', { name: musicInfo.name }),
     cancelButtonText: global.i18n.t('cancel_button_text_2'),
     confirmButtonText: global.i18n.t('confirm_button_text'),
     bgClose: false,
@@ -52,4 +69,3 @@ export const handleDislikeMusic = async(musicInfo: LX.Music.MusicInfoOnline) => 
     void playNext(true)
   }
 }
-

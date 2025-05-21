@@ -19,7 +19,6 @@ const headerComponents: Partial<Record<CommonState['navActiveId'], React.ReactNo
   nav_search: <SearchTypeSelector />,
 }
 
-
 // const LeftTitle = () => {
 //   const id = useNavActiveId()
 //   const t = useI18n()
@@ -37,17 +36,21 @@ const LeftHeader = () => {
   }
 
   return (
-    <View style={{
-      ...styles.container,
-      height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
-      paddingTop: statusBarHeight,
-    }}>
+    <View
+      style={{
+        ...styles.container,
+        height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
+        paddingTop: statusBarHeight,
+      }}
+    >
       <View style={styles.left}>
         <TouchableOpacity style={styles.btn} onPress={openMenu}>
           <Icon color={theme['c-font']} name="menu" size={18} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.titleBtn} onPress={openMenu}>
-          <Text style={styles.leftTitle} size={18}>{t(id)}</Text>
+          <Text style={styles.leftTitle} size={18}>
+            {t(id)}
+          </Text>
         </TouchableOpacity>
       </View>
       {headerComponents[id] ?? null}
@@ -58,7 +61,6 @@ const LeftHeader = () => {
     </View>
   )
 }
-
 
 // const RightTitle = () => {
 //   const id = useNavActiveId()
@@ -76,14 +78,18 @@ const RightHeader = () => {
     global.app_event.changeMenuVisible(true)
   }
   return (
-    <View style={{
-      ...styles.container,
-      height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
-      paddingTop: statusBarHeight,
-    }}>
+    <View
+      style={{
+        ...styles.container,
+        height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
+        paddingTop: statusBarHeight,
+      }}
+    >
       <View style={styles.left}>
         <TouchableOpacity style={styles.titleBtn} onPress={openMenu}>
-          <Text style={styles.rightTitle} size={18}>{t(id)}</Text>
+          <Text style={styles.rightTitle} size={18}>
+            {t(id)}
+          </Text>
         </TouchableOpacity>
       </View>
       {headerComponents[id] ?? null}
@@ -103,16 +109,10 @@ const Header = () => {
   return (
     <>
       <StatusBar />
-      {
-        drawerLayoutPosition == 'left'
-          ? <LeftHeader />
-          : <RightHeader />
-      }
-
+      {drawerLayoutPosition == 'left' ? <LeftHeader /> : <RightHeader />}
     </>
   )
 }
-
 
 const styles = createStyle({
   container: {

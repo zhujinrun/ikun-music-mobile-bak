@@ -51,39 +51,43 @@ export default forwardRef<MusicAddModalType, MusicAddModalProps>(({ onAdded }, r
   const handleSelect = (listInfo: LX.List.MyListInfo) => {
     dialogRef.current?.setVisible(false)
     if (selectInfo.isMove) {
-      void moveListMusics(selectInfo.listId, listInfo.id,
+      void moveListMusics(
+        selectInfo.listId,
+        listInfo.id,
         [selectInfo.musicInfo!],
-        settingState.setting['list.addMusicLocationType'],
-      ).then(() => {
-        onAdded?.()
-        toast(t('list_edit_action_tip_move_success'))
-      }).catch(() => {
-        toast(t('list_edit_action_tip_move_failed'))
-      })
+        settingState.setting['list.addMusicLocationType']
+      )
+        .then(() => {
+          onAdded?.()
+          toast(t('list_edit_action_tip_move_success'))
+        })
+        .catch(() => {
+          toast(t('list_edit_action_tip_move_failed'))
+        })
     } else {
-      void addListMusics(listInfo.id,
+      void addListMusics(
+        listInfo.id,
         [selectInfo.musicInfo!],
-        settingState.setting['list.addMusicLocationType'],
-      ).then(() => {
-        onAdded?.()
-        toast(t('list_edit_action_tip_add_success'))
-      }).catch(() => {
-        toast(t('list_edit_action_tip_add_failed'))
-      })
+        settingState.setting['list.addMusicLocationType']
+      )
+        .then(() => {
+          onAdded?.()
+          toast(t('list_edit_action_tip_add_success'))
+        })
+        .catch(() => {
+          toast(t('list_edit_action_tip_add_failed'))
+        })
     }
   }
 
   return (
     <Dialog ref={dialogRef} onHide={handleHide}>
-      {
-        selectInfo.musicInfo
-          ? (<>
-              <Title musicInfo={selectInfo.musicInfo} isMove={selectInfo.isMove} />
-              <List musicInfo={selectInfo.musicInfo} onPress={handleSelect} />
-            </>)
-          : null
-      }
+      {selectInfo.musicInfo ? (
+        <>
+          <Title musicInfo={selectInfo.musicInfo} isMove={selectInfo.isMove} />
+          <List musicInfo={selectInfo.musicInfo} onPress={handleSelect} />
+        </>
+      ) : null}
     </Dialog>
   )
 })
-

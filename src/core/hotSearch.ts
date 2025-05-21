@@ -2,7 +2,7 @@ import hotSearchState, { type Source } from '@/store/hotSearch/state'
 import hotSearchActions, { type Lists } from '@/store/hotSearch/action'
 import musicSdk from '@/utils/musicSdk'
 
-export const getList = async(source: Source): Promise<string[]> => {
+export const getList = async (source: Source): Promise<string[]> => {
   if (source == 'all') {
     let task = []
     for (const source of hotSearchState.sources) {
@@ -10,10 +10,13 @@ export const getList = async(source: Source): Promise<string[]> => {
       task.push(
         hotSearchState.sourceList[source]?.length
           ? Promise.resolve({ source, list: hotSearchState.sourceList[source]! })
-          : ((musicSdk[source]?.hotSearch.getList() as Promise<Lists[number]>) ?? Promise.reject(new Error('source not found: ' + source))).catch((err: any) => {
+          : (
+              (musicSdk[source]?.hotSearch.getList() as Promise<Lists[number]>) ??
+              Promise.reject(new Error('source not found: ' + source))
+            ).catch((err: any) => {
               console.log(err)
               return { source, list: [] }
-            }),
+            })
       )
     }
     return Promise.all(task).then((results: Lists) => {
@@ -25,12 +28,12 @@ export const getList = async(source: Source): Promise<string[]> => {
       hotSearchActions.setList(source, [])
       return []
     }
-    return musicSdk[source]?.hotSearch.getList().catch((err: any) => {
-      console.log(err)
-      return { source, list: [] }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    }).then(data => hotSearchActions.setList(source, data.list))
+    return musicSdk[source]?.hotSearch
+      .getList()
+      .catch((err: any) => {
+        console.log(err)
+        return { source, list: [] }
+      })
+      .then((data) => hotSearchActions.setList(source, data.list))
   }
 }
-
-

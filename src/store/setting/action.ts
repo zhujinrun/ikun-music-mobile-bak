@@ -1,7 +1,6 @@
 import { updateSetting as mergeSetting } from '@/config/setting'
 import state from './state'
 
-
 export default {
   // mergeSetting(newSetting: Partial<LX.AppSetting>) {
   //   for (const [key, value] of Object.entries(newSetting)) {
@@ -18,4 +17,3 @@ export default {
     global.state_event.configUpdated(result.updatedSettingKeys, result.updatedSetting)
   },
 }
-

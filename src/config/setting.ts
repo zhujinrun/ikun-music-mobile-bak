@@ -8,11 +8,13 @@ import { exitApp, tipDialog } from '@/utils/tools'
 
 // 业务相关工具方法
 
-
 const primitiveType = ['string', 'boolean', 'number']
 const checkPrimitiveType = (val: any): boolean => val === null || primitiveType.includes(typeof val)
 
-const mergeSetting = (originSetting: LX.AppSetting, targetSetting?: Partial<LX.AppSetting> | null): {
+const mergeSetting = (
+  originSetting: LX.AppSetting,
+  targetSetting?: Partial<LX.AppSetting> | null
+): {
   setting: LX.AppSetting
   updatedSettingKeys: Array<keyof LX.AppSetting>
   updatedSetting: Partial<LX.AppSetting>
@@ -31,7 +33,12 @@ const mergeSetting = (originSetting: LX.AppSetting, targetSetting?: Partial<LX.A
         const targetValue: any = targetSetting[key]
         const isPrimitive = checkPrimitiveType(targetValue)
         // if (checkPrimitiveType(value)) {
-        if (!isPrimitive || targetValue == originSettingCopy[key] || originSettingCopy[key] === undefined) continue
+        if (
+          !isPrimitive ||
+          targetValue == originSettingCopy[key] ||
+          originSettingCopy[key] === undefined
+        )
+          continue
         updatedSettingKeys.push(key)
         updatedSetting[key] = targetValue
         // @ts-expect-error
@@ -76,9 +83,8 @@ export const updateSetting = (setting?: Partial<LX.AppSetting> | null, isInit: b
   return result
 }
 
-export const initSetting = async() => {
+export const initSetting = async () => {
   let setting: Partial<LX.AppSetting> | null = await getData(storageDataPrefix.setting)
-
 
   // try migrate setting before v1
   if (!setting) {

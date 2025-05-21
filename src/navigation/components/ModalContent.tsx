@@ -8,20 +8,20 @@ interface Props {
   children: React.ReactNode
 }
 
-
 export default ({ children }: Props) => {
   const theme = useTheme()
 
   return (
     <View style={{ ...styles.centeredView, backgroundColor: 'rgba(50,50,50,.3)' }}>
       <View style={{ ...styles.modalView, backgroundColor: theme['c-content-background'] }}>
-        <View style={{ ...styles.header, backgroundColor: theme['c-primary-light-100-alpha-100'] }}></View>
+        <View
+          style={{ ...styles.header, backgroundColor: theme['c-primary-light-100-alpha-100'] }}
+        ></View>
         {children}
       </View>
     </View>
   )
 }
-
 
 const styles = createStyle({
   centeredView: {

@@ -25,5 +25,4 @@ const state: InitState = {
   historyList: [],
 }
 
-
 export default state

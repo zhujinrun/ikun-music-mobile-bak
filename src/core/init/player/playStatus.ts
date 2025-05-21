@@ -71,7 +71,7 @@ export default () => {
   // window.app_event.on(eventTaskbarNames.setTaskbarThumbnailClip, handleSetTaskbarThumbnailClip)
   // window.app_event.on('myListMusicUpdate', throttleListChange)
 
-  return async() => {
+  return async () => {
     // const setting = store.getters.setting
     // buttons.lrc = setting.desktopLyric.enable
     // buttons.lockLrc = setting.desktopLyric.isLock

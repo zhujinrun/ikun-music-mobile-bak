@@ -287,13 +287,13 @@ declare global {
       'desktopLyric.style.lyricUnplayColor': string
 
       /**
-        * 桌面歌词已播放字体颜色
-        */
+       * 桌面歌词已播放字体颜色
+       */
       'desktopLyric.style.lyricPlayedColor': string
 
       /**
-        * 桌面歌词字体阴影颜色
-        */
+       * 桌面歌词字体阴影颜色
+       */
       'desktopLyric.style.lyricShadowColor': string
 
       /**
@@ -348,4 +348,3 @@ declare global {
     }
   }
 }
-

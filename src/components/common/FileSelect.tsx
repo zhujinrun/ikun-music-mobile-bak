@@ -25,9 +25,5 @@ export default forwardRef<FileSelectType, {}>((props, ref) => {
     },
   }))
 
-  return (
-    visible
-      ? <ChoosePath ref={choosePathRef} onConfirm={onSelectRef.current} />
-      : null
-  )
+  return visible ? <ChoosePath ref={choosePathRef} onConfirm={onSelectRef.current} /> : null
 })

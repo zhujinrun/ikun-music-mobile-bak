@@ -11,7 +11,9 @@ export function compareVer(currentVer: string, targetVer: string): -1 | 0 | 1 {
   // replacing them with a negative number based on charcode of each character
   const fix = (s: string) => `.${s.toLowerCase().charCodeAt(0) - 2147483647}.`
 
-  const currentVerArr: Array<string | number> = ('' + currentVer).replace(/[^0-9.]/g, fix).split('.')
+  const currentVerArr: Array<string | number> = ('' + currentVer)
+    .replace(/[^0-9.]/g, fix)
+    .split('.')
   const targetVerArr: Array<string | number> = ('' + targetVer).replace(/[^0-9.]/g, fix).split('.')
   let c = Math.max(currentVerArr.length, targetVerArr.length)
   for (let i = 0; i < c; i++) {
@@ -23,7 +25,6 @@ export function compareVer(currentVer: string, targetVer: string): -1 | 0 | 1 {
   }
   return 0
 }
-
 
 export const toNewMusicInfo = (oldMusicInfo: any): LX.Music.MusicInfo => {
   const meta: Record<string, any> = {
@@ -51,7 +52,7 @@ export const toNewMusicInfo = (oldMusicInfo: any): LX.Music.MusicInfo => {
       meta._qualitys.hires = meta._qualitys.flac32bit
       delete meta._qualitys.flac32bit
 
-      meta.qualitys = (meta.qualitys as any[]).map(quality => {
+      meta.qualitys = (meta.qualitys as any[]).map((quality) => {
         if (quality.type == 'flac32bit') quality.type = 'hires'
         return quality
       })
@@ -136,7 +137,7 @@ export const fixNewMusicInfoQuality = (musicInfo: LX.Music.MusicInfo) => {
     // @ts-expect-error
     delete musicInfo.meta._qualitys.flac32bit
 
-    musicInfo.meta.qualitys = musicInfo.meta.qualitys.map(quality => {
+    musicInfo.meta.qualitys = musicInfo.meta.qualitys.map((quality) => {
       // @ts-expect-error
       if (quality.type == 'flac32bit') quality.type = 'hires'
       return quality
@@ -146,10 +147,9 @@ export const fixNewMusicInfoQuality = (musicInfo: LX.Music.MusicInfo) => {
   return musicInfo
 }
 
-
 export const filterMusicList = <T extends LX.Music.MusicInfo>(list: T[]): T[] => {
   const ids = new Set<string>()
-  return list.filter(s => {
+  return list.filter((s) => {
     if (!s.id || ids.has(s.id) || !s.name) return false
     if (s.singer == null) s.singer = ''
     ids.add(s.id)
@@ -157,16 +157,14 @@ export const filterMusicList = <T extends LX.Music.MusicInfo>(list: T[]): T[] =>
   })
 }
 
-
 export const deduplicationList = <T extends LX.Music.MusicInfo>(list: T[]): T[] => {
   const ids = new Set<string>()
-  return list.filter(s => {
+  return list.filter((s) => {
     if (ids.has(s.id)) return false
     ids.add(s.id)
     return true
   })
 }
-
 
 /**
  * 时间格式化

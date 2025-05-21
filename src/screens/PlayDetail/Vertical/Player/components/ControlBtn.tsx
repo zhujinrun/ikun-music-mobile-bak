@@ -15,8 +15,12 @@ const PrevBtn = ({ size }: { size: number }) => {
     void playPrev()
   }
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={handlePlayPrev}>
-      <Icon name='prevMusic' color={theme['c-button-font']} rawSize={size * 0.7} />
+    <TouchableOpacity
+      style={{ ...styles.cotrolBtn, width: size, height: size }}
+      activeOpacity={0.5}
+      onPress={handlePlayPrev}
+    >
+      <Icon name="prevMusic" color={theme['c-button-font']} rawSize={size * 0.7} />
     </TouchableOpacity>
   )
 }
@@ -26,8 +30,12 @@ const NextBtn = ({ size }: { size: number }) => {
     void playNext()
   }
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={handlePlayNext}>
-      <Icon name='nextMusic' color={theme['c-button-font']} rawSize={size * 0.7} />
+    <TouchableOpacity
+      style={{ ...styles.cotrolBtn, width: size, height: size }}
+      activeOpacity={0.5}
+      onPress={handlePlayNext}
+    >
+      <Icon name="nextMusic" color={theme['c-button-font']} rawSize={size * 0.7} />
     </TouchableOpacity>
   )
 }
@@ -36,7 +44,11 @@ const TogglePlayBtn = ({ size }: { size: number }) => {
   const theme = useTheme()
   const isPlay = useIsPlay()
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={togglePlay}>
+    <TouchableOpacity
+      style={{ ...styles.cotrolBtn, width: size, height: size }}
+      activeOpacity={0.5}
+      onPress={togglePlay}
+    >
       <Icon name={isPlay ? 'pause' : 'play'} color={theme['c-button-font']} rawSize={size * 0.7} />
     </TouchableOpacity>
   )
@@ -54,17 +66,20 @@ export default () => {
       maxHeight,
     }
   }, [maxHeight])
-  const size = Math.min(Math.max(winSize.width * 0.33 * global.lx.fontSize * 0.4, MIN_SIZE), MAX_SIZE, maxHeight)
+  const size = Math.min(
+    Math.max(winSize.width * 0.33 * global.lx.fontSize * 0.4, MIN_SIZE),
+    MAX_SIZE,
+    maxHeight
+  )
 
   return (
     <View style={containerStyle}>
       <PrevBtn size={size} />
-      <TogglePlayBtn size={size}/>
+      <TogglePlayBtn size={size} />
       <NextBtn size={size} />
     </View>
   )
 }
-
 
 const styles = createStyle({
   conatiner: {

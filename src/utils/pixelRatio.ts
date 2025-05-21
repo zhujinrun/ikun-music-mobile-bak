@@ -46,7 +46,7 @@ export function getTextSize(size: number) {
   let scaleHeight = screenH / designHeight
   // console.log(scaleWidth, scaleHeight)
   let scale = Math.min(scaleWidth, scaleHeight, 1.3)
-  size = Math.floor(size * scale / fontScale)
+  size = Math.floor((size * scale) / fontScale)
   // console.log(size)
   return size
 }
@@ -79,7 +79,6 @@ export function scaleSizeW(size: number) {
   size = Math.floor(scaleWidth / pixelRatio)
   return size * global.lx.fontSize
 }
-
 
 export const scaleSizeWR = (size: number) => {
   return size * 2 - scaleSizeW(size)

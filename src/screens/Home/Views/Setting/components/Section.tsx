@@ -4,7 +4,6 @@ import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
 
-
 interface Props {
   title: string
   children: React.ReactNode | React.ReactNode[]
@@ -15,14 +14,13 @@ export default ({ title, children }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ ...styles.title, borderLeftColor: theme['c-primary'] }} size={16} >{title}</Text>
-      <View>
-        {children}
-      </View>
+      <Text style={{ ...styles.title, borderLeftColor: theme['c-primary'] }} size={16}>
+        {title}
+      </Text>
+      <View>{children}</View>
     </View>
   )
 }
-
 
 const styles = createStyle({
   container: {

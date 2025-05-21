@@ -6,7 +6,6 @@ import Input from '@/components/common/Input'
 import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
 
-
 export interface InputItemProps extends InputProps {
   value: string
   label: string
@@ -36,7 +35,7 @@ export default memo(({ value, label, onChanged, ...props }: InputItemProps) => {
   useEffect(() => {
     const handleKeyboardDidHide = () => {
       if (!inputRef.current?.isFocused()) return
-      onChanged?.(textRef.current, value => {
+      onChanged?.(textRef.current, (value) => {
         if (!isMountRef.current) return
         const newValue = String(value)
         setText(newValue)
@@ -55,7 +54,6 @@ export default memo(({ value, label, onChanged, ...props }: InputItemProps) => {
       setText(newValue)
       textRef.current = newValue
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
   const handleSetSelectMode = (text: string) => {
     setText(text)
@@ -63,7 +61,9 @@ export default memo(({ value, label, onChanged, ...props }: InputItemProps) => {
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.label} size={14}>{label}</Text>
+      <Text style={styles.label} size={14}>
+        {label}
+      </Text>
       <Input
         value={text}
         ref={inputRef}
@@ -71,7 +71,7 @@ export default memo(({ value, label, onChanged, ...props }: InputItemProps) => {
         style={{ ...styles.input, backgroundColor: theme['c-primary-input-background'] }}
         {...props}
         onBlur={saveValue}
-       />
+      />
     </View>
   )
 })

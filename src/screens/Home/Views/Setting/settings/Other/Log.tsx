@@ -20,7 +20,7 @@ export default memo(() => {
   const [isEnableUserApiLog, setIsEnableUserApiLog] = useState(global.lx.isEnableUserApiLog)
 
   const getErrorLog = () => {
-    void getLogs().then(log => {
+    void getLogs().then((log) => {
       if (isUnmountedRef.current) return
       const logArr = log.split(/^----lx log----\n|\n----lx log----\n|\n----lx log----$/)
       // console.log(logArr)
@@ -51,7 +51,6 @@ export default memo(() => {
     global.lx.isEnableUserApiLog = enable
   }
 
-
   useEffect(() => {
     isUnmountedRef.current = false
     return () => {
@@ -63,8 +62,16 @@ export default memo(() => {
     <>
       <SubTitle title={t('setting_other_log')}>
         <View style={styles.checkBox}>
-          <CheckBoxItem check={isEnableSyncErrorLog} label={t('setting_other_log_sync_log')} onChange={handleSetEnableSyncErrorLog} />
-          <CheckBoxItem check={isEnableUserApiLog} label={t('setting_other_log_user_api_log')} onChange={handleSetEnableUserApiLog} />
+          <CheckBoxItem
+            check={isEnableSyncErrorLog}
+            label={t('setting_other_log_sync_log')}
+            onChange={handleSetEnableSyncErrorLog}
+          />
+          <CheckBoxItem
+            check={isEnableUserApiLog}
+            label={t('setting_other_log_user_api_log')}
+            onChange={handleSetEnableUserApiLog}
+          />
         </View>
         <View style={styles.btn}>
           <Button onPress={openLogModal}>{t('setting_other_log_btn_show')}</Button>
@@ -77,13 +84,15 @@ export default memo(() => {
         onConfirm={handleCleanLog}
         showConfirm={!!logText}
         reverseBtn={true}
-        >
+      >
         <View onStartShouldSetResponder={() => true}>
-          {
-            logText
-              ? <Text selectable size={13}>{ logText }</Text>
-              : <Text size={13}>{t('setting_other_log_tip_null')}</Text>
-          }
+          {logText ? (
+            <Text selectable size={13}>
+              {logText}
+            </Text>
+          ) : (
+            <Text size={13}>{t('setting_other_log_tip_null')}</Text>
+          )}
         </View>
       </ConfirmAlert>
     </>

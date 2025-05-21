@@ -28,30 +28,40 @@ export default () => {
 
   const getCurrentTime = () => {
     let id = playerState.musicInfo.id
-    void getPosition().then(position => {
+    void getPosition().then((position) => {
       if (!position || id != playerState.musicInfo.id) return
       setNowPlayTime(position)
       if (!playerState.isPlay) return
 
-      if (settingState.setting['player.isSavePlayTime'] && !playerState.playMusicInfo.isTempPlay && isScreenOn) {
+      if (
+        settingState.setting['player.isSavePlayTime'] &&
+        !playerState.playMusicInfo.isTempPlay &&
+        isScreenOn
+      ) {
         delaySavePlayInfo()
       }
     })
   }
-  const getMaxTime = async() => {
+  const getMaxTime = async () => {
     setMaxplayTime(await getDuration())
 
-    if (playerState.playMusicInfo.musicInfo && 'source' in playerState.playMusicInfo.musicInfo && !playerState.playMusicInfo.musicInfo.interval) {
+    if (
+      playerState.playMusicInfo.musicInfo &&
+      'source' in playerState.playMusicInfo.musicInfo &&
+      !playerState.playMusicInfo.musicInfo.interval
+    ) {
       // console.log(formatPlayTime2(playProgress.maxPlayTime))
 
       if (playerState.playMusicInfo.listId) {
-        void updateListMusics([{
-          id: playerState.playMusicInfo.listId,
-          musicInfo: {
-            ...playerState.playMusicInfo.musicInfo,
-            interval: formatPlayTime2(playerState.progress.maxPlayTime),
+        void updateListMusics([
+          {
+            id: playerState.playMusicInfo.listId,
+            musicInfo: {
+              ...playerState.playMusicInfo.musicInfo,
+              interval: formatPlayTime2(playerState.progress.maxPlayTime),
+            },
           },
-        }])
+        ])
       }
     }
   }
@@ -81,7 +91,6 @@ export default () => {
     // if (!isPlay) audio.play()
   }
 
-
   const handlePlay = () => {
     void getMaxTime()
     // prevProgressStatus = 'normal'
@@ -110,7 +119,6 @@ export default () => {
     // handleSetTaskBarState(playProgress.progress, prevProgressStatus)
     clearUpdateTimeout()
   }
-
 
   const handleSetPlayInfo = () => {
     // restorePlayTime = playProgress.nowPlayTime

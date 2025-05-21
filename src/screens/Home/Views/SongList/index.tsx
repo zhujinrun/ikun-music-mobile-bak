@@ -3,7 +3,9 @@ import settingState from '@/store/setting/state'
 import Content from './Content'
 import TagList from './TagList'
 import { useTheme } from '@/store/theme/hook'
-import DrawerLayoutFixed, { type DrawerLayoutFixedType } from '@/components/common/DrawerLayoutFixed'
+import DrawerLayoutFixed, {
+  type DrawerLayoutFixedType,
+} from '@/components/common/DrawerLayoutFixed'
 import { COMPONENT_IDS } from '@/config/constant'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import type { InitState as CommonState } from '@/store/common/state'

@@ -24,9 +24,7 @@ const styles = createStyle({
 const MIN_WIDTH = scaleSizeW(140)
 const PADDING = styles.list.paddingLeft + styles.list.paddingRight
 
-const EditListItem = ({ itemWidth }: {
-  itemWidth: number
-}) => {
+const EditListItem = ({ itemWidth }: { itemWidth: number }) => {
   const [isEdit, setEdit] = useState(false)
   const theme = useTheme()
   const t = useI18n()
@@ -34,26 +32,45 @@ const EditListItem = ({ itemWidth }: {
   return (
     <View style={{ ...listStyles.listItem, width: itemWidth }}>
       <TouchableOpacity
-        style={{ ...listStyles.button, borderColor: theme['c-primary-light-200-alpha-700'], borderStyle: 'dashed' }}
-        onPress={() => { setEdit(true) }}
+        style={{
+          ...listStyles.button,
+          borderColor: theme['c-primary-light-200-alpha-700'],
+          borderStyle: 'dashed',
+        }}
+        onPress={() => {
+          setEdit(true)
+        }}
       >
-        <Text style={{ opacity: isEdit ? 0 : 1 }} numberOfLines={1} size={14} color={theme['c-button-font']}>{t('list_create')}</Text>
+        <Text
+          style={{ opacity: isEdit ? 0 : 1 }}
+          numberOfLines={1}
+          size={14}
+          color={theme['c-button-font']}
+        >
+          {t('list_create')}
+        </Text>
       </TouchableOpacity>
-      {
-        isEdit
-          ? <CreateUserList isEdit={isEdit} onHide={() => { setEdit(false) }} />
-          : null
-      }
+      {isEdit ? (
+        <CreateUserList
+          isEdit={isEdit}
+          onHide={() => {
+            setEdit(false)
+          }}
+        />
+      ) : null}
     </View>
   )
 }
 
-export default ({ listId, onPress }: {
+export default ({
+  listId,
+  onPress,
+}: {
   listId: string
   onPress: (listInfo: LX.List.MyListInfo) => void
 }) => {
   const windowSize = useWindowSize()
-  const allList = useMyList().filter(l => l.id != listId)
+  const allList = useMyList().filter((l) => l.id != listId)
   const itemWidth = useMemo(() => {
     let w = Math.floor(windowSize.width * 0.9 - PADDING)
     let n = Math.floor(w / MIN_WIDTH)
@@ -64,7 +81,9 @@ export default ({ listId, onPress }: {
   return (
     <ScrollView style={{ flexGrow: 0 }}>
       <View style={{ ...styles.list }} onStartShouldSetResponder={() => true}>
-        { allList.map(info => <ListItem key={info.id} listInfo={info} onPress={onPress} width={itemWidth} />) }
+        {allList.map((info) => (
+          <ListItem key={info.id} listInfo={info} onPress={onPress} width={itemWidth} />
+        ))}
         <EditListItem itemWidth={itemWidth} />
       </View>
     </ScrollView>

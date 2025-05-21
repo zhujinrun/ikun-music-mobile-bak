@@ -24,15 +24,15 @@ export default () => {
   const [isSliding, setSliding] = useState(false)
   const t = useI18n()
 
-  const handleSlidingStart: SliderProps['onSlidingStart'] = value => {
+  const handleSlidingStart: SliderProps['onSlidingStart'] = (value) => {
     setSliding(true)
   }
-  const handleValueChange: SliderProps['onValueChange'] = value => {
+  const handleValueChange: SliderProps['onValueChange'] = (value) => {
     value = Math.trunc(value)
     setSliderSize(value)
     void setPlaybackRate(parseFloat((value / 100).toFixed(2)))
   }
-  const handleSlidingComplete: SliderProps['onSlidingComplete'] = value => {
+  const handleSlidingComplete: SliderProps['onSlidingComplete'] = (value) => {
     setSliding(false)
     value = Math.trunc(value)
     const rate = value / 100
@@ -55,7 +55,10 @@ export default () => {
     <View style={styles.container}>
       <Text>{t('play_detail_setting_playback_rate')}</Text>
       <View style={styles.content}>
-        <Text style={styles.label} color={theme['c-font-label']}>{`${((isSliding ? sliderSize : playbackRate) / 100).toFixed(2)}x`}</Text>
+        <Text
+          style={styles.label}
+          color={theme['c-font-label']}
+        >{`${((isSliding ? sliderSize : playbackRate) / 100).toFixed(2)}x`}</Text>
         <Slider
           minimumValue={MIN_VALUE}
           maximumValue={MAX_VALUE}
@@ -66,8 +69,9 @@ export default () => {
           value={playbackRate}
         />
       </View>
-      <ButtonPrimary onPress={handleReset}>{t('play_detail_setting_playback_rate_reset')}</ButtonPrimary>
+      <ButtonPrimary onPress={handleReset}>
+        {t('play_detail_setting_playback_rate_reset')}
+      </ButtonPrimary>
     </View>
   )
 }
-

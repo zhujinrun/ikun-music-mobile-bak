@@ -6,7 +6,11 @@ import { HEADER_HEIGHT as _HEADER_HEIGHT } from '@/config/constant'
 
 export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
-export default ({ icon, color, onPress }: {
+export default ({
+  icon,
+  color,
+  onPress,
+}: {
   icon: string
   color?: string
   onPress: () => void

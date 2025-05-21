@@ -31,11 +31,9 @@ export interface ListMenuType {
   show: (selectInfo: SelectInfo, position: Position) => void
 }
 
-export type {
-  Position,
-}
+export type { Position }
 
-const hasEditMetadata = async(musicInfo: LX.Music.MusicInfo) => {
+const hasEditMetadata = async (musicInfo: LX.Music.MusicInfo) => {
   if (musicInfo.source != 'local') return false
   return existsFile(musicInfo.meta.filePath)
 }
@@ -71,12 +69,21 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
       { action: 'changePosition', label: t('change_position') },
       { action: 'toggleSource', label: t('toggle_source') },
       { action: 'copyName', label: t('copy_name') },
-      { action: 'musicSourceDetail', disabled: musicInfo.source == 'local', label: t('music_source_detail') },
+      {
+        action: 'musicSourceDetail',
+        disabled: musicInfo.source == 'local',
+        label: t('music_source_detail'),
+      },
       // { action: 'musicSearch', label: t('music_search') },
       { action: 'dislike', disabled: hasDislike(musicInfo), label: t('dislike') },
       { action: 'remove', label: t('delete') },
     ]
-    if (musicInfo.source == 'local') menu.splice(5, 0, { action: 'editMetadata', disabled: !edit_metadata, label: t('edit_metadata') })
+    if (musicInfo.source == 'local')
+      menu.splice(5, 0, {
+        action: 'editMetadata',
+        disabled: !edit_metadata,
+        label: t('edit_metadata'),
+      })
     setMenus(menu)
     void Promise.all([hasEditMetadata(musicInfo)]).then(([_edit_metadata]) => {
       // console.log(_edit_metadata)
@@ -87,13 +94,13 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
       }
 
       if (isUpdated) {
-        menu[menu.findIndex(m => m.action == 'editMetadata')].disabled = !edit_metadata
+        menu[menu.findIndex((m) => m.action == 'editMetadata')].disabled = !edit_metadata
         setMenus([...menu])
       }
     })
   }
 
-  const handleMenuPress = ({ action }: typeof menus[number]) => {
+  const handleMenuPress = ({ action }: (typeof menus)[number]) => {
     const selectInfo = selectInfoRef.current
     switch (action) {
       case 'play':
@@ -148,9 +155,5 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
     }
   }
 
-  return (
-    visible
-      ? <Menu ref={menuRef} menus={menus} onPress={handleMenuPress} />
-      : null
-  )
+  return visible ? <Menu ref={menuRef} menus={menus} onPress={handleMenuPress} /> : null
 })

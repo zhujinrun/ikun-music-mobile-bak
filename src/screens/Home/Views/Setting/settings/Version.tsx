@@ -35,11 +35,15 @@ export default memo(() => {
       switch (versionInfo.status) {
         case 'downloading':
           setTitle(t('version_title_new'))
-          setTip(t('version_btn_downloading', {
-            total: sizeFormate(progress.total),
-            current: sizeFormate(progress.current),
-            progress: progress.total ? (progress.current / progress.total * 100).toFixed(2) : '0',
-          }))
+          setTip(
+            t('version_btn_downloading', {
+              total: sizeFormate(progress.total),
+              current: sizeFormate(progress.current),
+              progress: progress.total
+                ? ((progress.current / progress.total) * 100).toFixed(2)
+                : '0',
+            })
+          )
           break
         case 'downloaded':
           setTitle(t('version_title_update'))
@@ -67,11 +71,15 @@ export default memo(() => {
     <Section title={t('setting_version')}>
       <SubTitle title={title}>
         <View style={styles.desc}>
-          <Text size={14}>{t('version_label_latest_ver')}{versionInfo.newVersion?.version}</Text>
-          <Text size={14}>{t('version_label_current_ver')}{currentVer}</Text>
-          {
-            tip ? <Text size={14}>{tip}</Text> : null
-          }
+          <Text size={14}>
+            {t('version_label_latest_ver')}
+            {versionInfo.newVersion?.version}
+          </Text>
+          <Text size={14}>
+            {t('version_label_current_ver')}
+            {currentVer}
+          </Text>
+          {tip ? <Text size={14}>{tip}</Text> : null}
         </View>
         <View style={styles.btn}>
           <Button onPress={handleOpenVersionModal}>{t('setting_version_show_ver_modal')}</Button>

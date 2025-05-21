@@ -59,7 +59,6 @@ const timeoutTools = {
   },
 }
 
-
 export const startTimeoutExit = (time: number) => {
   timeoutTools.start(time)
 }
@@ -78,7 +77,9 @@ export const useTimeoutExitTimeInfo = () => {
       setInfo({ time, isPlayedStop })
     }
     timeoutTools.addTimeHook(hook)
-    return () => { timeoutTools.removeTimeHook(hook) }
+    return () => {
+      timeoutTools.removeTimeHook(hook)
+    }
   }, [setInfo])
 
   return info
@@ -91,7 +92,6 @@ export const onTimeUpdate = (handler: Hook) => {
     timeoutTools.removeTimeHook(handler)
   }
 }
-
 
 export const cancelTimeoutExit = () => {
   global.lx.isPlayedStop = false

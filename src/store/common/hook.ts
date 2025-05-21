@@ -43,9 +43,12 @@ export const useComponentIds = () => {
 
 const hasVisible = (visibleNames: COMPONENT_IDS[], ids: InitState['componentIds']) => {
   const names = Object.keys(ids)
-  return names.length == visibleNames.length ? visibleNames.every(n => names.includes(n)) : false
+  return names.length == visibleNames.length ? visibleNames.every((n) => names.includes(n)) : false
 }
-export const usePageVisible = (visibleNames: COMPONENT_IDS[], onChange: (visible: boolean) => void) => {
+export const usePageVisible = (
+  visibleNames: COMPONENT_IDS[],
+  onChange: (visible: boolean) => void
+) => {
   useEffect(() => {
     let visible = hasVisible(visibleNames, state.componentIds)
     const handlecheck = (ids: InitState['componentIds']) => {
@@ -59,10 +62,8 @@ export const usePageVisible = (visibleNames: COMPONENT_IDS[], onChange: (visible
     return () => {
       global.state_event.off('componentIdsUpdated', handlecheck)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }
-
 
 export const useAssertApiSupport = (source: LX.Source) => {
   const [value, update] = useState(global.lx.qualityList[source] != null || source == 'local')
@@ -76,12 +77,10 @@ export const useAssertApiSupport = (source: LX.Source) => {
     return () => {
       global.state_event.off('apiSourceUpdated', handleUpdate)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return value
 }
-
 
 export const useNavActiveId = () => {
   const [value, update] = useState(state.navActiveId)
@@ -109,7 +108,6 @@ export const useBgPic = () => {
   return value
 }
 
-
 export const useSourceNames = () => {
   const [value, update] = useState(state.sourceNames)
 
@@ -122,4 +120,3 @@ export const useSourceNames = () => {
 
   return value
 }
-

@@ -48,7 +48,7 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
     setForm(path, data) {
       filePath.current = path
       // setPath(path)
-      void stat(path).then(info => {
+      void stat(path).then((info) => {
         if (isUnmounted.current) return
         setFileName(info.name)
       })
@@ -66,19 +66,19 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
 
   const handleUpdateName = useCallback((name: string) => {
     if (name.length > 150) name = name.substring(0, 150)
-    setData(data => {
+    setData((data) => {
       return { ...data, name }
     })
   }, [])
   const handleUpdateSinger = useCallback((singer: string) => {
     if (singer.length > 150) singer = singer.substring(0, 150)
-    setData(data => {
+    setData((data) => {
       return { ...data, singer }
     })
   }, [])
   const handleUpdateAlbumName = useCallback((albumName: string) => {
     if (albumName.length > 150) albumName = albumName.substring(0, 150)
-    setData(data => {
+    setData((data) => {
       return { ...data, albumName }
     })
   }, [])
@@ -102,31 +102,33 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
         source: 'local',
       },
       isRefresh: false,
-    }).then(async(pic) => {
-      if (isUnmounted.current || path != filePath.current) return
-      let ext = pic.split('?')[0]
-      ext = ext.substring(ext.lastIndexOf('.') + 1)
-      if (ext.length > 5) ext = 'jpeg'
-      await mkdir(TEMP_FILE_PATH)
-      const picPath = `${TEMP_FILE_PATH}/${Math.random().toString().substring(5)}.${ext}`
-      return downloadFile(pic, picPath, {
-        connectionTimeout: 10000,
-        readTimeout: 10000,
-      }).promise.then((res) => {
+    })
+      .then(async (pic) => {
         if (isUnmounted.current || path != filePath.current) return
-        toast(t('metadata_edit_modal_form_match_pic_success'))
-        setData(data => {
-          return { ...data, pic: picPath }
+        let ext = pic.split('?')[0]
+        ext = ext.substring(ext.lastIndexOf('.') + 1)
+        if (ext.length > 5) ext = 'jpeg'
+        await mkdir(TEMP_FILE_PATH)
+        const picPath = `${TEMP_FILE_PATH}/${Math.random().toString().substring(5)}.${ext}`
+        return downloadFile(pic, picPath, {
+          connectionTimeout: 10000,
+          readTimeout: 10000,
+        }).promise.then((res) => {
+          if (isUnmounted.current || path != filePath.current) return
+          toast(t('metadata_edit_modal_form_match_pic_success'))
+          setData((data) => {
+            return { ...data, pic: picPath }
+          })
         })
       })
-    }).catch((err) => {
-      console.log(err)
-      if (isUnmounted.current || path != filePath.current) return
-      toast(t('metadata_edit_modal_form_match_pic_failed'))
-    }).finally(() => {
-      matcheingPic.delete(path)
-    })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch((err) => {
+        console.log(err)
+        if (isUnmounted.current || path != filePath.current) return
+        toast(t('metadata_edit_modal_form_match_pic_failed'))
+      })
+      .finally(() => {
+        matcheingPic.delete(path)
+      })
   }, [data.albumName, data.name, data.singer, t])
   const handleOnlineMatchLyric = useCallback(() => {
     let path = filePath.current
@@ -148,32 +150,34 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
         source: 'local',
       },
       isRefresh: false,
-    }).then(async({ lyric, tlyric, rlyric }) => {
-      if (isUnmounted.current || path != filePath.current) return
-      toast(t('metadata_edit_modal_form_match_lyric_success'))
-      let lrc = [
-        lyric,
-        settingState.setting['player.isShowLyricTranslation'] && tlyric ? tlyric : '',
-        settingState.setting['player.isShowLyricRoma'] && rlyric ? rlyric : '',
-      ]
-      setData(data => {
-        return { ...data, lyric: lrc.join('\n\n').trim() }
-      })
-    }).catch(() => {
-      if (isUnmounted.current || path != filePath.current) return
-      toast(t('metadata_edit_modal_form_match_lyric_failed'))
-    }).finally(() => {
-      matcheingLrc.delete(path)
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      .then(async ({ lyric, tlyric, rlyric }) => {
+        if (isUnmounted.current || path != filePath.current) return
+        toast(t('metadata_edit_modal_form_match_lyric_success'))
+        let lrc = [
+          lyric,
+          settingState.setting['player.isShowLyricTranslation'] && tlyric ? tlyric : '',
+          settingState.setting['player.isShowLyricRoma'] && rlyric ? rlyric : '',
+        ]
+        setData((data) => {
+          return { ...data, lyric: lrc.join('\n\n').trim() }
+        })
+      })
+      .catch(() => {
+        if (isUnmounted.current || path != filePath.current) return
+        toast(t('metadata_edit_modal_form_match_lyric_failed'))
+      })
+      .finally(() => {
+        matcheingLrc.delete(path)
+      })
   }, [data.albumName, data.name, data.singer, t])
   const handleUpdatePic = useCallback((path: string) => {
-    setData(data => {
+    setData((data) => {
       return { ...data, pic: path }
     })
   }, [])
   const handleUpdateLyric = useCallback((lyric: string) => {
-    setData(data => {
+    setData((data) => {
       return { ...data, lyric }
     })
   }, [])
@@ -192,12 +196,14 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
         value={data.name}
         label={t('metadata_edit_modal_form_name')}
         onChanged={handleUpdateName}
-        keyboardType="name-phone-pad" />
+        keyboardType="name-phone-pad"
+      />
       <InputItem
         value={data.singer}
         label={t('metadata_edit_modal_form_singer')}
         onChanged={handleUpdateSinger}
-        keyboardType="name-phone-pad" />
+        keyboardType="name-phone-pad"
+      />
       <ParseName
         fileName={fileName}
         onNameChanged={handleUpdateName}
@@ -207,20 +213,23 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
         value={data.albumName}
         label={t('metadata_edit_modal_form_album_name')}
         onChanged={handleUpdateAlbumName}
-        keyboardType="name-phone-pad" />
+        keyboardType="name-phone-pad"
+      />
 
       <PicItem
         value={data.pic}
         label={t('metadata_edit_modal_form_pic')}
         onOnlineMatch={handleOnlineMatchPic}
-        onChanged={handleUpdatePic} />
+        onChanged={handleUpdatePic}
+      />
       <TextAreaItem
         value={data.lyric}
         label={t('metadata_edit_modal_form_lyric')}
         onOnlineMatch={handleOnlineMatchLyric}
         onChanged={handleUpdateLyric}
         numberOfLines={6}
-        keyboardType="default" />
+        keyboardType="default"
+      />
     </View>
   )
 })
@@ -237,5 +246,3 @@ const styles = createStyle({
     height: 60,
   },
 })
-
-

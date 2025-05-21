@@ -19,7 +19,6 @@ const headerComponents: Partial<Record<CommonState['navActiveId'], React.ReactNo
 
 const HEADER_HEIGHT = _HEADER_HEIGHT * 0.8
 
-
 // const LeftTitle = () => {
 //   const id = useNavActiveId()
 //   const t = useI18n()
@@ -32,13 +31,17 @@ const LeftHeader = () => {
   const statusBarHeight = useStatusbarHeight()
 
   return (
-    <View style={{
-      ...styles.container,
-      height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
-      paddingTop: statusBarHeight,
-    }}>
+    <View
+      style={{
+        ...styles.container,
+        height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
+        paddingTop: statusBarHeight,
+      }}
+    >
       <View style={styles.left}>
-        <Text style={styles.leftTitle} size={18}>{t(id)}</Text>
+        <Text style={styles.leftTitle} size={18}>
+          {t(id)}
+        </Text>
       </View>
       {headerComponents[id] ?? null}
 
@@ -48,7 +51,6 @@ const LeftHeader = () => {
     </View>
   )
 }
-
 
 // const RightTitle = () => {
 //   const id = useNavActiveId()
@@ -62,13 +64,17 @@ const RightHeader = () => {
   const statusBarHeight = useStatusbarHeight()
 
   return (
-    <View style={{
-      ...styles.container,
-      height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
-      paddingTop: statusBarHeight,
-    }}>
+    <View
+      style={{
+        ...styles.container,
+        height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
+        paddingTop: statusBarHeight,
+      }}
+    >
       <View style={styles.left}>
-        <Text style={styles.rightTitle} size={18}>{t(id)}</Text>
+        <Text style={styles.rightTitle} size={18}>
+          {t(id)}
+        </Text>
       </View>
       {headerComponents[id] ?? null}
       {/* <TouchableOpacity style={styles.btn} onPress={openSetting}>
@@ -84,16 +90,10 @@ const Header = () => {
   return (
     <>
       <StatusBar />
-      {
-        drawerLayoutPosition == 'left'
-          ? <LeftHeader />
-          : <RightHeader />
-      }
-
+      {drawerLayoutPosition == 'left' ? <LeftHeader /> : <RightHeader />}
     </>
   )
 }
-
 
 const styles = createStyle({
   container: {

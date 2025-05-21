@@ -39,33 +39,56 @@ export default ({ children }: Props) => {
   // }
   // console.log('render page content')
 
-  const themeComponent = useMemo(() => (
-    <View style={{ flex: 1, overflow: 'hidden' }}>
-      <ImageBackground
-        style={{ position: 'absolute', left: 0, top: 0, height: windowSize.height, width: windowSize.width, backgroundColor: theme['c-content-background'] }}
-        source={theme['bg-image']}
-        resizeMode="cover"
-      >
-      </ImageBackground>
-      <View style={{ flex: 1, flexDirection: 'column', backgroundColor: theme['c-main-background'] }}>
-        {children}
+  const themeComponent = useMemo(
+    () => (
+      <View style={{ flex: 1, overflow: 'hidden' }}>
+        <ImageBackground
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            height: windowSize.height,
+            width: windowSize.width,
+            backgroundColor: theme['c-content-background'],
+          }}
+          source={theme['bg-image']}
+          resizeMode="cover"
+        ></ImageBackground>
+        <View
+          style={{ flex: 1, flexDirection: 'column', backgroundColor: theme['c-main-background'] }}
+        >
+          {children}
+        </View>
       </View>
-    </View>
-  ), [children, theme, windowSize.height, windowSize.width])
+    ),
+    [children, theme, windowSize.height, windowSize.width]
+  )
   const picComponent = useMemo(() => {
     return (
       <View style={{ flex: 1, overflow: 'hidden' }}>
         <ImageBackground
-          style={{ position: 'absolute', left: 0, top: 0, height: windowSize.height, width: windowSize.width, backgroundColor: theme['c-content-background'] }}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            height: windowSize.height,
+            width: windowSize.width,
+            backgroundColor: theme['c-content-background'],
+          }}
           source={{ uri: pic!, headers: defaultHeaders }}
           resizeMode="cover"
           blurRadius={BLUR_RADIUS}
         >
-          <View style={{ flex: 1, flexDirection: 'column', backgroundColor: theme['c-content-background'], opacity: 0.76 }}></View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              backgroundColor: theme['c-content-background'],
+              opacity: 0.76,
+            }}
+          ></View>
         </ImageBackground>
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-          {children}
-        </View>
+        <View style={{ flex: 1, flexDirection: 'column' }}>{children}</View>
       </View>
     )
   }, [children, pic, theme, windowSize.height, windowSize.width])

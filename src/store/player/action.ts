@@ -16,7 +16,11 @@ export default {
 
     global.state_event.playInfoChanged({ ...state.playInfo })
   },
-  setPlayMusicInfo(listId: string | null, musicInfo: LX.Download.ListItem | LX.Music.MusicInfo | null, isTempPlay: boolean = false) {
+  setPlayMusicInfo(
+    listId: string | null,
+    musicInfo: LX.Download.ListItem | LX.Music.MusicInfo | null,
+    isTempPlay: boolean = false
+  ) {
     state.playMusicInfo = { listId, musicInfo, isTempPlay }
 
     global.state_event.playMusicInfoChanged(state.playMusicInfo)
@@ -65,7 +69,7 @@ export default {
     global.state_event.playProgressChanged({ ...state.progress })
   },
   addPlayedList(info: LX.Player.PlayMusicInfo) {
-    if (state.playedList.some(m => m.musicInfo.id == info.musicInfo.id)) return
+    if (state.playedList.some((m) => m.musicInfo.id == info.musicInfo.id)) return
     state.playedList.push(info)
 
     global.state_event.playPlayedListChanged({ ...state.playedList })
@@ -81,7 +85,10 @@ export default {
     global.state_event.playPlayedListChanged({ ...state.playedList })
   },
   addTempPlayList(list: LX.Player.TempPlayListItem[]) {
-    const topList: Array<{ listId: string | null, musicInfo: LX.Music.MusicInfo | LX.Download.ListItem }> = []
+    const topList: Array<{
+      listId: string | null
+      musicInfo: LX.Music.MusicInfo | LX.Download.ListItem
+    }> = []
     const bottomList = list.filter(({ isTop, ...musicInfo }) => {
       if (isTop) {
         topList.push(musicInfo)
@@ -89,8 +96,16 @@ export default {
       }
       return true
     })
-    if (topList.length) arrUnshift(state.tempPlayList, topList.map(({ musicInfo, listId }) => ({ musicInfo, listId, isTempPlay: true })))
-    if (bottomList.length) arrPush(state.tempPlayList, bottomList.map(({ musicInfo, listId }) => ({ musicInfo, listId, isTempPlay: true })))
+    if (topList.length)
+      arrUnshift(
+        state.tempPlayList,
+        topList.map(({ musicInfo, listId }) => ({ musicInfo, listId, isTempPlay: true }))
+      )
+    if (bottomList.length)
+      arrPush(
+        state.tempPlayList,
+        bottomList.map(({ musicInfo, listId }) => ({ musicInfo, listId, isTempPlay: true }))
+      )
 
     global.state_event.playTempPlayListChanged({ ...state.tempPlayList })
   },

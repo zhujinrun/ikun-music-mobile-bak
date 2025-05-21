@@ -11,34 +11,35 @@ import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useSettingValue } from '@/store/setting/hook'
 
-
 export default memo(({ isHome = false }: { isHome?: boolean }) => {
   // const { onLayout, ...layout } = useLayout()
   const { keyboardShown } = useKeyboard()
   const theme = useTheme()
   const autoHidePlayBar = useSettingValue('common.autoHidePlayBar')
 
-  const playerComponent = useMemo(() => (
-    <View style={{ ...styles.container, backgroundColor: theme['c-content-background'] }}>
-      <Pic isHome={isHome} />
-      <View style={styles.center}>
-        <Title isHome={isHome} />
-        {/* <View style={{ ...styles.row, justifyContent: 'space-between' }}>
+  const playerComponent = useMemo(
+    () => (
+      <View style={{ ...styles.container, backgroundColor: theme['c-content-background'] }}>
+        <Pic isHome={isHome} />
+        <View style={styles.center}>
+          <Title isHome={isHome} />
+          {/* <View style={{ ...styles.row, justifyContent: 'space-between' }}>
           <PlayTime />
         </View> */}
-        <PlayInfo isHome={isHome} />
+          <PlayInfo isHome={isHome} />
+        </View>
+        <View style={styles.right}>
+          <ControlBtn />
+        </View>
       </View>
-      <View style={styles.right}>
-        <ControlBtn />
-      </View>
-    </View>
-  ), [theme, isHome])
+    ),
+    [theme, isHome]
+  )
 
   // console.log('render pb')
 
   return autoHidePlayBar && keyboardShown ? null : playerComponent
 })
-
 
 const styles = createStyle({
   container: {

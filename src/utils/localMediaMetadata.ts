@@ -13,21 +13,23 @@ export {
 let cleared = false
 const picCachePath = temporaryDirectoryPath + '/local-media-metadata'
 
-export const scanAudioFiles = async(dirPath: string) => {
+export const scanAudioFiles = async (dirPath: string) => {
   const files = await readDir(dirPath)
-  return files.filter(file => {
-    if (file.mimeType?.startsWith('audio/')) return true
-    if (extname(file?.name ?? '') === 'ogg') return true
-    return false
-  }).map(file => file)
+  return files
+    .filter((file) => {
+      if (file.mimeType?.startsWith('audio/')) return true
+      if (extname(file?.name ?? '') === 'ogg') return true
+      return false
+    })
+    .map((file) => file)
 }
 
-const clearPicCache = async() => {
+const clearPicCache = async () => {
   await unlink(picCachePath)
   cleared = true
 }
 
-export const readPic = async(dirPath: string): Promise<string> => {
+export const readPic = async (dirPath: string): Promise<string> => {
   if (!cleared) await clearPicCache()
   return _readPic(dirPath, picCachePath)
 }
@@ -53,5 +55,3 @@ export const readPic = async(dirPath: string): Promise<string> => {
 // export const readLyric = async(filePath: string): Promise<string> => {
 //   return LocalMediaModule.readLyric(filePath)
 // }
-
-

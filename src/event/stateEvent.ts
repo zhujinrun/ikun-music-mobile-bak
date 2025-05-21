@@ -5,7 +5,6 @@ import type { InitState as PlayerState } from '@/store/player/state'
 import type { InitState as VersionState } from '@/store/version/state'
 import { type I18n } from '@/lang'
 
-
 // {
 //   // sync: {
 //   //   send_action_list: 'send_action_list',
@@ -79,7 +78,9 @@ export class StateEvent extends Event {
   /**
    * 我的列表更新
    */
-  mylistUpdated(lists: Array<LX.List.MyDefaultListInfo | LX.List.MyLoveListInfo | LX.List.UserListInfo>) {
+  mylistUpdated(
+    lists: Array<LX.List.MyDefaultListInfo | LX.List.MyLoveListInfo | LX.List.UserListInfo>
+  ) {
     this.emit('mylistUpdated', lists)
   }
 
@@ -123,9 +124,7 @@ export class StateEvent extends Event {
   }
 }
 
-
 type EventMethods = Omit<EventType, keyof Event>
-
 
 declare class EventType extends StateEvent {
   on<K extends keyof EventMethods>(event: K, listener: EventMethods[K]): any

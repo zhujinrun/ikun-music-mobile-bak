@@ -19,8 +19,7 @@ export const getMusicType = (info, type) => {
   return '128k'
 }
 
-export const toMD5 = str => stringMd5(str)
-
+export const toMD5 = (str) => stringMd5(str)
 
 /**
  * 格式化歌手
@@ -31,7 +30,7 @@ export const toMD5 = str => stringMd5(str)
 export const formatSingerName = (singers, nameKey = 'name', join = '、') => {
   if (Array.isArray(singers)) {
     const singer = []
-    singers.forEach(item => {
+    singers.forEach((item) => {
       let name = item[nameKey]
       if (!name) return
       singer.push(name)

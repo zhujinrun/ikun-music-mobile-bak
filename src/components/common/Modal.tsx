@@ -39,64 +39,69 @@ export interface ModalProps extends Omit<_ModalProps, 'visible'> {
   statusBarPadding?: boolean
 }
 
-
 export interface ModalType {
   setVisible: (visible: boolean) => void
 }
 
-export default forwardRef<ModalType, ModalProps>(({
-  onHide = () => {},
-  keyHide = true,
-  bgHide = true,
-  bgColor = 'rgba(0,0,0,0)',
-  statusBarPadding = true,
-  children,
-  ...props
-}: ModalProps, ref) => {
-  const [visible, setVisible] = useState(false)
-  // const { window: windowSize } = useWindowSize()
-  const statusBarHeight = useStatusbarHeight()
-  const handleRequestClose = () => {
-    if (keyHide) {
-      setVisible(false)
-      onHide()
+export default forwardRef<ModalType, ModalProps>(
+  (
+    {
+      onHide = () => {},
+      keyHide = true,
+      bgHide = true,
+      bgColor = 'rgba(0,0,0,0)',
+      statusBarPadding = true,
+      children,
+      ...props
+    }: ModalProps,
+    ref
+  ) => {
+    const [visible, setVisible] = useState(false)
+    // const { window: windowSize } = useWindowSize()
+    const statusBarHeight = useStatusbarHeight()
+    const handleRequestClose = () => {
+      if (keyHide) {
+        setVisible(false)
+        onHide()
+      }
     }
-  }
-  const handleBgClose = () => {
-    if (bgHide) {
-      setVisible(false)
-      onHide()
+    const handleBgClose = () => {
+      if (bgHide) {
+        setVisible(false)
+        onHide()
+      }
     }
+
+    useImperativeHandle(ref, () => ({
+      setVisible(_visible) {
+        if (visible == _visible) return
+        setVisible(_visible)
+        if (!_visible) onHide()
+      },
+    }))
+
+    const memoChildren = useMemo(() => children, [children])
+
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        hardwareAccelerated={true}
+        statusBarTranslucent={true}
+        visible={visible}
+        onRequestClose={handleRequestClose}
+        {...props}
+      >
+        {/* <StatusBar /> */}
+        {/* <View style={{ flex: 1, paddingTop: statusBarPadding ? StatusBar.currentHeight : 0 }}> */}
+        <TouchableWithoutFeedback
+          style={{ flex: 1, paddingTop: statusBarPadding ? statusBarHeight : 0 }}
+          onPress={handleBgClose}
+        >
+          <View style={{ flex: 1, backgroundColor: bgColor }}>{memoChildren}</View>
+        </TouchableWithoutFeedback>
+        {/* </View> */}
+      </Modal>
+    )
   }
-
-  useImperativeHandle(ref, () => ({
-    setVisible(_visible) {
-      if (visible == _visible) return
-      setVisible(_visible)
-      if (!_visible) onHide()
-    },
-  }))
-
-  const memoChildren = useMemo(() => children, [children])
-
-  return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      hardwareAccelerated={true}
-      statusBarTranslucent={true}
-      visible={visible}
-      onRequestClose={handleRequestClose}
-      {...props}
-    >
-      {/* <StatusBar /> */}
-      {/* <View style={{ flex: 1, paddingTop: statusBarPadding ? StatusBar.currentHeight : 0 }}> */}
-      <TouchableWithoutFeedback style={{ flex: 1, paddingTop: statusBarPadding ? statusBarHeight : 0 }} onPress={handleBgClose}>
-        <View style={{ flex: 1, backgroundColor: bgColor }}>
-          {memoChildren}
-        </View>
-      </TouchableWithoutFeedback>
-      {/* </View> */}
-    </Modal>
-  )
-})
+)

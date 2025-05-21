@@ -7,8 +7,7 @@ import { delayUpdateMusicInfo } from '@/plugins/player/playList'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
 
-
-export default async(setting: LX.AppSetting) => {
+export default async (setting: LX.AppSetting) => {
   const setPlayStatus = () => {
     setIsPlay(true)
   }
@@ -49,10 +48,10 @@ export default async(setting: LX.AppSetting) => {
       const newValue = settings['player.togglePlayMethod']
       if (playerState.playedList.length) clearPlayedList()
       const playMusicInfo = playerState.playMusicInfo
-      if (newValue == 'random' && playMusicInfo.musicInfo && !playMusicInfo.isTempPlay) addPlayedList({ ...(playMusicInfo as LX.Player.PlayMusicInfo) })
+      if (newValue == 'random' && playMusicInfo.musicInfo && !playMusicInfo.isTempPlay)
+        addPlayedList({ ...(playMusicInfo as LX.Player.PlayMusicInfo) })
     }
   }
-
 
   global.app_event.on('play', setPlayStatus)
   global.app_event.on('pause', setPauseStatus)

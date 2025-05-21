@@ -14,7 +14,7 @@ export const ITEM_HEIGHT = scaleSizeH(LIST_ITEM_HEIGHT)
 
 const useQualityTag = (musicInfo: LX.Music.MusicInfoOnline) => {
   const t = useI18n()
-  let info: { type: BadgeType | null, text: string } = { type: null, text: '' }
+  let info: { type: BadgeType | null; text: string } = { type: null, text: '' }
   if (musicInfo.meta._qualitys.master) {
     info.type = 'secondary'
     info.text = t('quality_lossless_master')
@@ -38,66 +38,115 @@ const useQualityTag = (musicInfo: LX.Music.MusicInfoOnline) => {
   return info
 }
 
-export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu, selectedList, rowInfo, isShowAlbumName, isShowInterval }: {
-  item: LX.Music.MusicInfoOnline
-  index: number
-  showSource?: boolean
-  onPress: (item: LX.Music.MusicInfoOnline, index: number) => void
-  onLongPress: (item: LX.Music.MusicInfoOnline, index: number) => void
-  onShowMenu: (item: LX.Music.MusicInfoOnline, index: number, position: { x: number, y: number, w: number, h: number }) => void
-  selectedList: LX.Music.MusicInfoOnline[]
-  rowInfo: RowInfo
-  isShowAlbumName: boolean
-  isShowInterval: boolean
-}) => {
-  const theme = useTheme()
+export default memo(
+  ({
+    item,
+    index,
+    showSource,
+    onPress,
+    onLongPress,
+    onShowMenu,
+    selectedList,
+    rowInfo,
+    isShowAlbumName,
+    isShowInterval,
+  }: {
+    item: LX.Music.MusicInfoOnline
+    index: number
+    showSource?: boolean
+    onPress: (item: LX.Music.MusicInfoOnline, index: number) => void
+    onLongPress: (item: LX.Music.MusicInfoOnline, index: number) => void
+    onShowMenu: (
+      item: LX.Music.MusicInfoOnline,
+      index: number,
+      position: { x: number; y: number; w: number; h: number }
+    ) => void
+    selectedList: LX.Music.MusicInfoOnline[]
+    rowInfo: RowInfo
+    isShowAlbumName: boolean
+    isShowInterval: boolean
+  }) => {
+    const theme = useTheme()
 
-  const isSelected = selectedList.includes(item)
+    const isSelected = selectedList.includes(item)
 
-  const moreButtonRef = useRef<TouchableOpacity>(null)
-  const handleShowMenu = () => {
-    if (moreButtonRef.current?.measure) {
-      moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
-        // console.log(fx, fy, width, height, px, py)
-        onShowMenu(item, index, { x: Math.ceil(px), y: Math.ceil(py), w: Math.ceil(width), h: Math.ceil(height) })
-      })
+    const moreButtonRef = useRef<TouchableOpacity>(null)
+    const handleShowMenu = () => {
+      if (moreButtonRef.current?.measure) {
+        moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
+          // console.log(fx, fy, width, height, px, py)
+          onShowMenu(item, index, {
+            x: Math.ceil(px),
+            y: Math.ceil(py),
+            w: Math.ceil(width),
+            h: Math.ceil(height),
+          })
+        })
+      }
     }
-  }
-  const tagInfo = useQualityTag(item)
+    const tagInfo = useQualityTag(item)
 
-  const singer = `${item.singer}${isShowAlbumName && item.meta.albumName ? ` · ${item.meta.albumName}` : ''}`
+    const singer = `${item.singer}${isShowAlbumName && item.meta.albumName ? ` · ${item.meta.albumName}` : ''}`
 
-  return (
-    <View style={{ ...styles.listItem, width: rowInfo.rowWidth, height: ITEM_HEIGHT, backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'rgba(0,0,0,0)' }}>
-      <TouchableOpacity style={styles.listItemLeft} onPress={() => { onPress(item, index) }} onLongPress={() => { onLongPress(item, index) }}>
-        <Text style={styles.sn} size={13} color={theme['c-300']}>{index + 1}</Text>
-        <View style={styles.itemInfo}>
-          <Text numberOfLines={1}>{item.name}</Text>
-          <View style={styles.listItemSingle}>
-            { tagInfo.type ? <Badge type={tagInfo.type}>{tagInfo.text}</Badge> : null }
-            { showSource ? <Badge type="tertiary">{item.source}</Badge> : null }
-            <Text style={styles.listItemSingleText} size={11} color={theme['c-500']} numberOfLines={1}>{singer}</Text>
+    return (
+      <View
+        style={{
+          ...styles.listItem,
+          width: rowInfo.rowWidth,
+          height: ITEM_HEIGHT,
+          backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'rgba(0,0,0,0)',
+        }}
+      >
+        <TouchableOpacity
+          style={styles.listItemLeft}
+          onPress={() => {
+            onPress(item, index)
+          }}
+          onLongPress={() => {
+            onLongPress(item, index)
+          }}
+        >
+          <Text style={styles.sn} size={13} color={theme['c-300']}>
+            {index + 1}
+          </Text>
+          <View style={styles.itemInfo}>
+            <Text numberOfLines={1}>{item.name}</Text>
+            <View style={styles.listItemSingle}>
+              {tagInfo.type ? <Badge type={tagInfo.type}>{tagInfo.text}</Badge> : null}
+              {showSource ? <Badge type="tertiary">{item.source}</Badge> : null}
+              <Text
+                style={styles.listItemSingleText}
+                size={11}
+                color={theme['c-500']}
+                numberOfLines={1}
+              >
+                {singer}
+              </Text>
+            </View>
           </View>
-        </View>
-        {
-          isShowInterval ? (
-            <Text size={12} color={theme['c-250']} numberOfLines={1}>{item.interval}</Text>
-          ) : null
-        }
-      </TouchableOpacity>
-     <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.moreButton}>
-        <Icon name="dots-vertical" style={{ color: theme['c-350'] }} size={12} />
-      </TouchableOpacity>
-    </View>
-  )
-}, (prevProps, nextProps) => {
-  return !!(prevProps.item === nextProps.item &&
-    prevProps.index === nextProps.index &&
-    prevProps.isShowAlbumName === nextProps.isShowAlbumName &&
-    prevProps.isShowInterval === nextProps.isShowInterval &&
-    nextProps.selectedList.includes(nextProps.item) == prevProps.selectedList.includes(nextProps.item)
-  )
-})
+          {isShowInterval ? (
+            <Text size={12} color={theme['c-250']} numberOfLines={1}>
+              {item.interval}
+            </Text>
+          ) : null}
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.moreButton}>
+          <Icon name="dots-vertical" style={{ color: theme['c-350'] }} size={12} />
+        </TouchableOpacity>
+      </View>
+    )
+  },
+  (prevProps, nextProps) => {
+    return !!(
+      prevProps.item === nextProps.item &&
+      prevProps.index === nextProps.index &&
+      prevProps.isShowAlbumName === nextProps.isShowAlbumName &&
+      prevProps.isShowInterval === nextProps.isShowInterval &&
+      nextProps.selectedList.includes(nextProps.item) ==
+        prevProps.selectedList.includes(nextProps.item)
+    )
+  }
+)
 
 const styles = createStyle({
   listItem: {
@@ -177,4 +226,3 @@ const styles = createStyle({
     justifyContent: 'center',
   },
 })
-

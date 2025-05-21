@@ -21,12 +21,20 @@ const PADDING_TOP_PROGRESS = PADDING_TOP + MARGIN_TOP
 const PlayTimeCurrent = ({ timeStr }: { timeStr: string }) => {
   const theme = useTheme()
   // console.log(timeStr)
-  return <Text size={FONT_SIZE} color={theme['c-500']}>{timeStr}</Text>
+  return (
+    <Text size={FONT_SIZE} color={theme['c-500']}>
+      {timeStr}
+    </Text>
+  )
 }
 
 const PlayTimeMax = memo(({ timeStr }: { timeStr: string }) => {
   const theme = useTheme()
-  return <Text size={FONT_SIZE} color={theme['c-500']}>{timeStr}</Text>
+  return (
+    <Text size={FONT_SIZE} color={theme['c-500']}>
+      {timeStr}
+    </Text>
+  )
 })
 
 export default ({ isHome }: { isHome: boolean }) => {
@@ -34,9 +42,15 @@ export default ({ isHome }: { isHome: boolean }) => {
   const [autoUpdate, setAutoUpdate] = useState(true)
   const { maxPlayTimeStr, nowPlayTimeStr, progress, maxPlayTime } = useProgress(autoUpdate)
   const buffered = useBufferProgress()
-  usePageVisible([COMPONENT_IDS.home], useCallback((visible) => {
-    if (isHome) setAutoUpdate(visible)
-  }, [isHome]))
+  usePageVisible(
+    [COMPONENT_IDS.home],
+    useCallback(
+      (visible) => {
+        if (isHome) setAutoUpdate(visible)
+      },
+      [isHome]
+    )
+  )
 
   return (
     <View style={stylesRaw.container}>
@@ -44,18 +58,25 @@ export default ({ isHome }: { isHome: boolean }) => {
       <View style={styles.status}>
         <Status autoUpdate={autoUpdate} />
       </View>
-      <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row', alignItems: 'flex-start' }} >
+      <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row', alignItems: 'flex-start' }}>
         <PlayTimeCurrent timeStr={nowPlayTimeStr} />
-        <Text size={FONT_SIZE} color={theme['c-500']}> / </Text>
+        <Text size={FONT_SIZE} color={theme['c-500']}>
+          {' '}
+          /{' '}
+        </Text>
         <PlayTimeMax timeStr={maxPlayTimeStr} />
       </View>
       <View style={[StyleSheet.absoluteFill, stylesRaw.progress]}>
-        <Progress progress={progress} duration={maxPlayTime} buffered={buffered} paddingTop={PADDING_TOP_PROGRESS} />
+        <Progress
+          progress={progress}
+          duration={maxPlayTime}
+          buffered={buffered}
+          paddingTop={PADDING_TOP_PROGRESS}
+        />
       </View>
     </View>
   )
 }
-
 
 const styles = createStyle({
   // container: {

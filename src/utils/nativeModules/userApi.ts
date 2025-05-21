@@ -74,12 +74,11 @@ export interface Actions {
   showUpdateAlert: UpdateInfoParams
   log: string
 }
-export type ActionsEvent = { [K in keyof Actions]: { action: K, data: Actions[K] } }[keyof Actions]
+export type ActionsEvent = { [K in keyof Actions]: { action: K; data: Actions[K] } }[keyof Actions]
 
-export const onScriptAction = (handler: (event: ActionsEvent) => void): () => void => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+export const onScriptAction = (handler: (event: ActionsEvent) => void): (() => void) => {
   const eventEmitter = new NativeEventEmitter(UserApiModule)
-  const eventListener = eventEmitter.addListener('api-action', event => {
+  const eventListener = eventEmitter.addListener('api-action', (event) => {
     if (event.data) event.data = JSON.parse(event.data as string)
     if (event.action == 'init') {
       if (event.data.info) event.data.info = { ...loadScriptInfo, ...event.data.info }

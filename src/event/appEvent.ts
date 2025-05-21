@@ -4,7 +4,6 @@ import commonState from '@/store/common/state'
 import { type Source as SonglistSource } from '@/store/songlist/state'
 import { type SearchType } from '@/store/search/state'
 
-
 // {
 //   // sync: {
 //   //   send_action_list: 'send_action_list',
@@ -26,7 +25,9 @@ export class AppEvent extends Event {
   /**
    * 我的列表更新
    */
-  mylistUpdated(lists: Array<LX.List.MyDefaultListInfo | LX.List.MyLoveListInfo | LX.List.UserListInfo>) {
+  mylistUpdated(
+    lists: Array<LX.List.MyDefaultListInfo | LX.List.MyLoveListInfo | LX.List.UserListInfo>
+  ) {
     this.emit('mylistUpdated', lists)
   }
 
@@ -126,7 +127,6 @@ export class AppEvent extends Event {
     this.emit('playerWaiting')
   }
 
-
   // 更新图片事件
   picUpdated() {
     this.emit('picUpdated')
@@ -203,9 +203,7 @@ export class AppEvent extends Event {
   }
 }
 
-
 type EventMethods = Omit<EventType, keyof Event>
-
 
 declare class EventType extends AppEvent {
   on<K extends keyof EventMethods>(event: K, listener: EventMethods[K]): any

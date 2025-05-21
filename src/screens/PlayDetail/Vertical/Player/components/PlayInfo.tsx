@@ -30,10 +30,12 @@ export default () => {
 
   return (
     <>
-      <View style={styles.progress}><Progress progress={progress} duration={maxPlayTime} buffered={buffered} /></View>
+      <View style={styles.progress}>
+        <Progress progress={progress} duration={maxPlayTime} buffered={buffered} />
+      </View>
       <View style={styles.info}>
         <PlayTimeCurrent timeStr={nowPlayTimeStr} />
-        <View style={styles.status} >
+        <View style={styles.status}>
           <Status />
         </View>
         <PlayTimeMax timeStr={maxPlayTimeStr} />
@@ -41,7 +43,6 @@ export default () => {
     </>
   )
 }
-
 
 const styles = createStyle({
   progress: {

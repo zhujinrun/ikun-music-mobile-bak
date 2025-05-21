@@ -20,7 +20,6 @@ if (process.versions == null) {
 //   screenH = temp
 // }
 
-
 global.lx = {
   fontSize: 1,
   playerStatus: {

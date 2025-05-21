@@ -1,4 +1,12 @@
-import { getData, saveData, getAllKeys, removeDataMultiple, saveDataMultiple, removeData, getDataMultiple } from '@/plugins/storage'
+import {
+  getData,
+  saveData,
+  getAllKeys,
+  removeDataMultiple,
+  saveDataMultiple,
+  removeData,
+  getDataMultiple,
+} from '@/plugins/storage'
 import { DEFAULT_SETTING, LIST_IDS, storageDataPrefix, type NAV_ID_Type } from '@/config/constant'
 import { throttle } from './common'
 // import { gzip, ungzip } from '@/utils/nativeModules/gzip'
@@ -37,9 +45,9 @@ let listPosition: LX.List.ListPositionInfo
 let listPrevSelectId: string
 let listUpdateInfo: LX.List.ListUpdateInfo
 
-let searchSetting: typeof DEFAULT_SETTING['search']
-let songListSetting: typeof DEFAULT_SETTING['songList']
-let leaderboardSetting: typeof DEFAULT_SETTING['leaderboard']
+let searchSetting: (typeof DEFAULT_SETTING)['search']
+let songListSetting: (typeof DEFAULT_SETTING)['songList']
+let leaderboardSetting: (typeof DEFAULT_SETTING)['leaderboard']
 let searchHistoryList: string[]
 
 const saveListPositionThrottle = throttle(() => {
@@ -61,36 +69,34 @@ const saveViewPrevStateThrottle = throttle((state) => {
   void saveData(viewPrevStateKey, state)
 }, 1000)
 
-export const getFontSize = async() => (await getData<number>(fontSizeKey) ?? 1)
-export const saveFontSize = async(size: number) => {
+export const getFontSize = async () => (await getData<number>(fontSizeKey)) ?? 1
+export const saveFontSize = async (size: number) => {
   await saveData(fontSizeKey, size)
 }
 
-export const getUserTheme = async() => (await getData<LX.Theme[]>(themeKey) ?? [])
-export const saveUserTheme = async(themes: LX.Theme[]) => {
+export const getUserTheme = async () => (await getData<LX.Theme[]>(themeKey)) ?? []
+export const saveUserTheme = async (themes: LX.Theme[]) => {
   await saveData(themeKey, themes)
 }
 
-
-const initPosition = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  listPosition ??= await getData(listScrollPositionKey) ?? {}
+const initPosition = async () => {
+  listPosition ??= (await getData(listScrollPositionKey)) ?? {}
 }
-export const getListPosition = async(id: string): Promise<number> => {
+export const getListPosition = async (id: string): Promise<number> => {
   await initPosition()
   return listPosition[id] ?? 0
 }
-export const saveListPosition = async(id: string, position?: number) => {
+export const saveListPosition = async (id: string, position?: number) => {
   await initPosition()
   listPosition[id] = position ?? 0
   saveListPositionThrottle()
 }
-export const removeListPosition = async(id: string) => {
+export const removeListPosition = async (id: string) => {
   await initPosition()
   delete listPosition[id]
   saveListPositionThrottle()
 }
-export const overwriteListPosition = async(ids: string[]) => {
+export const overwriteListPosition = async (ids: string[]) => {
   await initPosition()
   const removedIds = []
   for (const id of Object.keys(listPosition)) {
@@ -104,9 +110,8 @@ export const overwriteListPosition = async(ids: string[]) => {
 const saveListPrevSelectIdThrottle = throttle(() => {
   void saveData(listPrevSelectIdKey, listPrevSelectId)
 }, 200)
-export const getListPrevSelectId = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  listPrevSelectId ??= await getData(listPrevSelectIdKey) ?? LIST_IDS.DEFAULT
+export const getListPrevSelectId = async () => {
+  listPrevSelectId ??= (await getData(listPrevSelectIdKey)) ?? LIST_IDS.DEFAULT
   return listPrevSelectId || LIST_IDS.DEFAULT
 }
 export const saveListPrevSelectId = (id: string) => {
@@ -118,27 +123,26 @@ const saveListUpdateInfoThrottle = throttle(() => {
   void saveData(listUpdateInfoKey, listUpdateInfo)
 }, 1000)
 
-const initListUpdateInfo = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  listUpdateInfo ??= await getData(listUpdateInfoKey) ?? {}
+const initListUpdateInfo = async () => {
+  listUpdateInfo ??= (await getData(listUpdateInfoKey)) ?? {}
 }
-export const getListUpdateInfo = async() => {
+export const getListUpdateInfo = async () => {
   await initListUpdateInfo()
   return listUpdateInfo
 }
-export const saveListUpdateInfo = async(info: LX.List.ListUpdateInfo) => {
+export const saveListUpdateInfo = async (info: LX.List.ListUpdateInfo) => {
   await initListUpdateInfo()
   listUpdateInfo = info
   saveListUpdateInfoThrottle()
 }
-export const setListAutoUpdate = async(id: string, enable: boolean) => {
+export const setListAutoUpdate = async (id: string, enable: boolean) => {
   await initListUpdateInfo()
   const targetInfo = listUpdateInfo[id] ?? { updateTime: 0, isAutoUpdate: false }
   targetInfo.isAutoUpdate = enable
   listUpdateInfo[id] = targetInfo
   saveListUpdateInfoThrottle()
 }
-export const setListUpdateTime = async(id: string, time: number) => {
+export const setListUpdateTime = async (id: string, time: number) => {
   await initListUpdateInfo()
   const targetInfo = listUpdateInfo[id] ?? { updateTime: 0, isAutoUpdate: false }
   targetInfo.updateTime = time
@@ -149,12 +153,12 @@ export const setListUpdateTime = async(id: string, time: number) => {
 //   listUpdateInfo[id] = { updateTime, isAutoUpdate }
 //   saveListUpdateInfo()
 // }
-export const removeListUpdateInfo = async(id: string) => {
+export const removeListUpdateInfo = async (id: string) => {
   await initListUpdateInfo()
   delete listUpdateInfo[id]
   saveListUpdateInfoThrottle()
 }
-export const overwriteListUpdateInfo = async(ids: string[]) => {
+export const overwriteListUpdateInfo = async (ids: string[]) => {
   await initListUpdateInfo()
   const removedIds = []
   for (const id of Object.keys(listUpdateInfo)) {
@@ -175,9 +179,9 @@ export const saveIgnoreVersion = (version: string | null) => {
   }
 }
 // 获取忽略更新的版本号
-export const getIgnoreVersion = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  if (ignoreVersion === undefined) ignoreVersion = (await getData<string | null>(ignoreVersionKey)) ?? null
+export const getIgnoreVersion = async () => {
+  if (ignoreVersion === undefined)
+    ignoreVersion = (await getData<string | null>(ignoreVersionKey)) ?? null
   return ignoreVersion
 }
 
@@ -191,14 +195,14 @@ export const saveIgnoreVersionFailTipTime = (time: number | null) => {
   }
 }
 // 获取忽略更新的版本号
-export const getIgnoreVersionFailTipTime = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  if (ignoreVersionFailTipTime === undefined) ignoreVersionFailTipTime = (await getData<number | null>(ignoreVersionFailTipTimeKey))
+export const getIgnoreVersionFailTipTime = async () => {
+  if (ignoreVersionFailTipTime === undefined)
+    ignoreVersionFailTipTime = await getData<number | null>(ignoreVersionFailTipTimeKey)
   return ignoreVersionFailTipTime ?? 0
 }
 
 let openStoragePath: string | null = ''
-export const saveOpenStoragePath = async(path: string) => {
+export const saveOpenStoragePath = async (path: string) => {
   if (path) {
     openStoragePath = path
     await saveData(openStoragePathPrefix, path)
@@ -209,20 +213,18 @@ export const saveOpenStoragePath = async(path: string) => {
   }
 }
 // 获取上次打开的存储路径
-export const getOpenStoragePath = async() => {
+export const getOpenStoragePath = async () => {
   if (openStoragePath === '') {
-    // eslint-disable-next-line require-atomic-updates
     openStoragePath = await getData<string | null>(openStoragePathPrefix)
   }
   return openStoragePath
 }
 
-export const getSearchSetting = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  searchSetting ??= await getData(searchSettingKey) ?? { ...DEFAULT_SETTING.search }
+export const getSearchSetting = async () => {
+  searchSetting ??= (await getData(searchSettingKey)) ?? { ...DEFAULT_SETTING.search }
   return { ...searchSetting }
 }
-export const saveSearchSetting = async(setting: Partial<typeof DEFAULT_SETTING['search']>) => {
+export const saveSearchSetting = async (setting: Partial<(typeof DEFAULT_SETTING)['search']>) => {
   if (!searchSetting) await getSearchSetting()
   let requiredSave = false
   if (setting.source && searchSetting.source != setting.source) requiredSave = true
@@ -234,53 +236,57 @@ export const saveSearchSetting = async(setting: Partial<typeof DEFAULT_SETTING['
   saveSearchSettingThrottle()
 }
 
-export const getSearchHistory = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  searchHistoryList ??= await getData(searchHistoryListKey) ?? []
+export const getSearchHistory = async () => {
+  searchHistoryList ??= (await getData(searchHistoryListKey)) ?? []
   return [...searchHistoryList]
 }
-export const saveSearchHistory = async(historyList: typeof searchHistoryList) => {
+export const saveSearchHistory = async (historyList: typeof searchHistoryList) => {
   // if (!searchHistoryList) await getSearchHistory()
   searchHistoryList = historyList
   saveSearchHistoryThrottle()
 }
 
-export const getSongListSetting = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  songListSetting ??= await getData(songListSettingKey) ?? { ...DEFAULT_SETTING.songList }
+export const getSongListSetting = async () => {
+  songListSetting ??= (await getData(songListSettingKey)) ?? { ...DEFAULT_SETTING.songList }
   return { ...songListSetting }
 }
-export const saveSongListSetting = async(setting: Partial<typeof DEFAULT_SETTING['songList']>) => {
+export const saveSongListSetting = async (
+  setting: Partial<(typeof DEFAULT_SETTING)['songList']>
+) => {
   if (!songListSetting) await getSongListSetting()
   songListSetting = Object.assign(songListSetting, setting)
   saveSongListSettingThrottle()
 }
 
-export const getLeaderboardSetting = async() => {
-  // eslint-disable-next-line require-atomic-updates
-  leaderboardSetting ??= await getData(leaderboardSettingKey) ?? { ...DEFAULT_SETTING.leaderboard }
+export const getLeaderboardSetting = async () => {
+  leaderboardSetting ??= (await getData(leaderboardSettingKey)) ?? {
+    ...DEFAULT_SETTING.leaderboard,
+  }
   return { ...leaderboardSetting }
 }
-export const saveLeaderboardSetting = async(setting: Partial<typeof DEFAULT_SETTING['leaderboard']>) => {
+export const saveLeaderboardSetting = async (
+  setting: Partial<(typeof DEFAULT_SETTING)['leaderboard']>
+) => {
   if (!leaderboardSetting) await getLeaderboardSetting()
   leaderboardSetting = Object.assign(leaderboardSetting, setting)
   saveLeaderboardSettingThrottle()
 }
 
-export const getViewPrevState = async() => {
-  return (await getData<{ id: NAV_ID_Type }>(viewPrevStateKey)) ?? { ...DEFAULT_SETTING.viewPrevState }
+export const getViewPrevState = async () => {
+  return (
+    (await getData<{ id: NAV_ID_Type }>(viewPrevStateKey)) ?? { ...DEFAULT_SETTING.viewPrevState }
+  )
 }
 export const saveViewPrevState = (state: { id: NAV_ID_Type }) => {
   saveViewPrevStateThrottle(state)
 }
 
-
 const idFixRxp = /\.0$/
 /**
  * 获取用户列表
  */
-export const getUserLists = async(): Promise<LX.List.UserListInfo[]> => {
-  const list = await getData<LX.List.UserListInfo[]>(userListKey) ?? []
+export const getUserLists = async (): Promise<LX.List.UserListInfo[]> => {
+  const list = (await getData<LX.List.UserListInfo[]>(userListKey)) ?? []
   for (const info of list) {
     // 兼容v2.3.0之前版本PC端插入数字类型的ID导致其意外在末尾追加 .0 的问题
     if (info.sourceListId?.endsWith?.('.0')) {
@@ -294,7 +300,7 @@ export const getUserLists = async(): Promise<LX.List.UserListInfo[]> => {
  * 保存用户列表
  * @param listInfo
  */
-export const saveUserList = async(listInfo: LX.List.UserListInfo[]) => {
+export const saveUserList = async (listInfo: LX.List.UserListInfo[]) => {
   await saveData(userListKey, listInfo)
 }
 
@@ -303,7 +309,7 @@ export const saveUserList = async(listInfo: LX.List.UserListInfo[]) => {
  * @param listId 列表id
  * @returns
  */
-export const getListMusics = async(listId: string): Promise<LX.Music.MusicInfo[]> => {
+export const getListMusics = async (listId: string): Promise<LX.Music.MusicInfo[]> => {
   const list = await getData<LX.Music.MusicInfo[]>(listPrefix + listId)
   return list ?? []
 }
@@ -312,9 +318,11 @@ export const getListMusics = async(listId: string): Promise<LX.Music.MusicInfo[]
  * 保存列表内歌曲
  * @param listData 列表数据
  */
-export const saveListMusics = async(listData: Array<{ id: string, musics: LX.Music.MusicInfo[] }>) => {
+export const saveListMusics = async (
+  listData: Array<{ id: string; musics: LX.Music.MusicInfo[] }>
+) => {
   if (listData.length > 1) {
-    await saveDataMultiple(listData.map(list => ([listPrefix + list.id, list.musics])))
+    await saveDataMultiple(listData.map((list) => [listPrefix + list.id, list.musics]))
   } else {
     const list = listData[0]
     await saveData(listPrefix + list.id, list.musics)
@@ -325,13 +333,15 @@ export const saveListMusics = async(listData: Array<{ id: string, musics: LX.Mus
  * 移除歌曲列表
  * @param ids
  */
-export const removeListMusics = async(ids: string[]): Promise<void> => {
+export const removeListMusics = async (ids: string[]): Promise<void> => {
   if (ids.length > 1) {
-    await removeDataMultiple(ids.map(id => {
-      // delete global.lx.listScrollPosition[id]
-      // delete global.lx.listSort[id]
-      return listPrefix + id
-    }))
+    await removeDataMultiple(
+      ids.map((id) => {
+        // delete global.lx.listScrollPosition[id]
+        // delete global.lx.listSort[id]
+        return listPrefix + id
+      })
+    )
   } else {
     await removeData(listPrefix + ids[0])
   }
@@ -339,50 +349,69 @@ export const removeListMusics = async(ids: string[]): Promise<void> => {
   // delaySaveListScrollPosition(global.lx.listScrollPosition)
 }
 
-
-export const getMusicUrl = async(musicInfo: LX.Music.MusicInfo, type: LX.Quality) => getData<string>(`${storageDataPrefix.musicUrl}${musicInfo.id}_${type}`).then((url) => url ?? '')
-export const saveMusicUrl = async(musicInfo: LX.Music.MusicInfo, type: LX.Quality, url: string) => saveData(`${storageDataPrefix.musicUrl}${musicInfo.id}_${type}`, url)
-export const clearMusicUrl = async(keys?: string[]) => {
-  if (!keys) keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.musicUrl))
+export const getMusicUrl = async (musicInfo: LX.Music.MusicInfo, type: LX.Quality) =>
+  getData<string>(`${storageDataPrefix.musicUrl}${musicInfo.id}_${type}`).then((url) => url ?? '')
+export const saveMusicUrl = async (musicInfo: LX.Music.MusicInfo, type: LX.Quality, url: string) =>
+  saveData(`${storageDataPrefix.musicUrl}${musicInfo.id}_${type}`, url)
+export const clearMusicUrl = async (keys?: string[]) => {
+  if (!keys) keys = (await getAllKeys()).filter((key) => key.startsWith(storageDataPrefix.musicUrl))
   await removeDataMultiple(keys)
 }
 
-export const getLyric = async(musicInfo: LX.Music.MusicInfo) => getData<LX.Music.LyricInfo>(`${storageDataPrefix.lyric}${musicInfo.id}`).then(lrcInfo => lrcInfo ?? { lyric: '' })
-export const saveLyric = async(musicInfo: LX.Music.MusicInfo, lyricInfo: LX.Music.LyricInfo) => saveData(`${storageDataPrefix.lyric}${musicInfo.id}`, lyricInfo)
-export const clearLyric = async(keys?: string[]) => {
-  if (!keys) keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.lyric))
+export const getLyric = async (musicInfo: LX.Music.MusicInfo) =>
+  getData<LX.Music.LyricInfo>(`${storageDataPrefix.lyric}${musicInfo.id}`).then(
+    (lrcInfo) => lrcInfo ?? { lyric: '' }
+  )
+export const saveLyric = async (musicInfo: LX.Music.MusicInfo, lyricInfo: LX.Music.LyricInfo) =>
+  saveData(`${storageDataPrefix.lyric}${musicInfo.id}`, lyricInfo)
+export const clearLyric = async (keys?: string[]) => {
+  if (!keys) keys = (await getAllKeys()).filter((key) => key.startsWith(storageDataPrefix.lyric))
   await removeDataMultiple(keys)
 }
-export const saveEditedLyric = async(musicInfo: LX.Music.MusicInfo, lyricInfo: LX.Music.LyricInfo) => saveData(`${storageDataPrefix.lyric}${musicInfo.id}_edited`, lyricInfo)
-export const clearEditedLyric = async() => {
-  let keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.lyric) && key.endsWith('_edited'))
+export const saveEditedLyric = async (
+  musicInfo: LX.Music.MusicInfo,
+  lyricInfo: LX.Music.LyricInfo
+) => saveData(`${storageDataPrefix.lyric}${musicInfo.id}_edited`, lyricInfo)
+export const clearEditedLyric = async () => {
+  let keys = (await getAllKeys()).filter(
+    (key) => key.startsWith(storageDataPrefix.lyric) && key.endsWith('_edited')
+  )
   await removeDataMultiple(keys)
 }
-export const getPlayerLyric = async(musicInfo: LX.Music.MusicInfo): Promise<LX.Player.LyricInfo> => {
+export const getPlayerLyric = async (
+  musicInfo: LX.Music.MusicInfo
+): Promise<LX.Player.LyricInfo> => {
   return getDataMultiple([
     `${storageDataPrefix.lyric}${musicInfo.id}`,
     `${storageDataPrefix.lyric}${musicInfo.id}_edited`,
   ]).then(([lrcInfo, lrcInfo_edited]) => {
-    const lyricInfo: LX.Music.LyricInfo = lrcInfo_edited[1] as LX.Music.LyricInfo | null ?? {
+    const lyricInfo: LX.Music.LyricInfo = (lrcInfo_edited[1] as LX.Music.LyricInfo | null) ?? {
       lyric: '',
     }
-    let rawLyricInfo: LX.Music.LyricInfo = lrcInfo[1] as LX.Music.LyricInfo | null ?? {
+    let rawLyricInfo: LX.Music.LyricInfo = (lrcInfo[1] as LX.Music.LyricInfo | null) ?? {
       lyric: '',
     }
-    return lyricInfo.lyric ? {
-      ...lyricInfo,
-      rawlrcInfo: rawLyricInfo,
-    } : {
-      ...rawLyricInfo,
-      rawlrcInfo: rawLyricInfo,
-    }
+    return lyricInfo.lyric
+      ? {
+          ...lyricInfo,
+          rawlrcInfo: rawLyricInfo,
+        }
+      : {
+          ...rawLyricInfo,
+          rawlrcInfo: rawLyricInfo,
+        }
   })
 }
 
-export const getOtherSource = async(id: string) => getData<LX.Music.MusicInfoOnline[]>(`${storageDataPrefix.musicOtherSource}${id}`).then((url) => url ?? [])
-export const saveOtherSource = async(id: string, sourceInfo: LX.Music.MusicInfoOnline[]) => saveData(`${storageDataPrefix.musicOtherSource}${id}`, sourceInfo)
-export const clearOtherSource = async(keys?: string[]) => {
-  if (!keys) keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.musicOtherSource))
+export const getOtherSource = async (id: string) =>
+  getData<LX.Music.MusicInfoOnline[]>(`${storageDataPrefix.musicOtherSource}${id}`).then(
+    (url) => url ?? []
+  )
+export const saveOtherSource = async (id: string, sourceInfo: LX.Music.MusicInfoOnline[]) =>
+  saveData(`${storageDataPrefix.musicOtherSource}${id}`, sourceInfo)
+export const clearOtherSource = async (keys?: string[]) => {
+  if (!keys)
+    keys = (await getAllKeys()).filter((key) => key.startsWith(storageDataPrefix.musicOtherSource))
   await removeDataMultiple(keys)
 }
 
@@ -390,14 +419,14 @@ export const clearOtherSource = async(keys?: string[]) => {
  * 获取不喜欢列表信息
  * @returns 不喜欢列表信息
  */
-export const getDislikeListRules = async() => {
-  return await getData<string>(dislikeListPrefix) ?? ''
+export const getDislikeListRules = async () => {
+  return (await getData<string>(dislikeListPrefix)) ?? ''
 }
 /**
  * 保存列表信息
  * @param rules 规则信息
  */
-export const saveDislikeListRules = async(rules: string) => {
+export const saveDislikeListRules = async (rules: string) => {
   await saveData(dislikeListPrefix, rules)
 }
 
@@ -406,7 +435,7 @@ export const saveDislikeListRules = async(rules: string) => {
 //   await removeDataMultiple(keys)
 // }
 
-export const getMetaCache = async() => {
+export const getMetaCache = async () => {
   const keys = await getAllKeys()
   const info = {
     otherSourceKeys: [] as string[],
@@ -422,49 +451,48 @@ export const getMetaCache = async() => {
   return info
 }
 
-export const savePlayInfo = async(playInfo: LX.Player.SavedPlayInfo) => {
+export const savePlayInfo = async (playInfo: LX.Player.SavedPlayInfo) => {
   return saveData(playInfoStorageKey, playInfo)
 }
 // 获取上次关闭时的当前歌曲播放信息
-export const getPlayInfo = async() => {
+export const getPlayInfo = async () => {
   return getData<LX.Player.SavedPlayInfo | null>(playInfoStorageKey)
 }
 
 let selectedManagedFolder: string | null = ''
-export const setSelectedManagedFolder = async(uri: string) => {
+export const setSelectedManagedFolder = async (uri: string) => {
   selectedManagedFolder = uri
   return saveData(selectedManagedFolderPrefix, uri)
 }
-export const getSelectedManagedFolder = async() => {
+export const getSelectedManagedFolder = async () => {
   if (selectedManagedFolder != '') return selectedManagedFolder
   let uri = await getData<string>(selectedManagedFolderPrefix)
   if (selectedManagedFolder != uri) selectedManagedFolder = uri
   return selectedManagedFolder
 }
 
-export const getSyncAuthKey = async(serverId: string) => {
+export const getSyncAuthKey = async (serverId: string) => {
   const keys = await getData<Record<string, LX.Sync.KeyInfo>>(syncAuthKeyPrefix)
   if (!keys) return null
   return keys[serverId] ?? null
 }
-export const setSyncAuthKey = async(serverId: string, info: LX.Sync.KeyInfo) => {
-  let keys = await getData<Record<string, LX.Sync.KeyInfo>>(syncAuthKeyPrefix) ?? {}
+export const setSyncAuthKey = async (serverId: string, info: LX.Sync.KeyInfo) => {
+  let keys = (await getData<Record<string, LX.Sync.KeyInfo>>(syncAuthKeyPrefix)) ?? {}
   keys[serverId] = info
   await saveData(syncAuthKeyPrefix, keys)
 }
 
 let syncHostInfo: string
-export const getSyncHost = async() => {
+export const getSyncHost = async () => {
   if (syncHostInfo === undefined) {
-    // eslint-disable-next-line require-atomic-updates
-    syncHostInfo = await getData(syncHostPrefix) ?? ''
+    syncHostInfo = (await getData(syncHostPrefix)) ?? ''
 
     // 清空1.0.0之前版本的同步主机
     if (typeof syncHostInfo == 'object') syncHostInfo = ''
   }
   return syncHostInfo
 }
-export const setSyncHost = async(host: string) => {
+export const setSyncHost = async (host: string) => {
   // let hostInfo = await getData(syncHostPrefix) || {}
   // hostInfo.host = host
   // hostInfo.port = port
@@ -472,35 +500,34 @@ export const setSyncHost = async(host: string) => {
   await saveData(syncHostPrefix, syncHostInfo)
 }
 let syncHostHistory: string[]
-export const getSyncHostHistory = async() => {
+export const getSyncHostHistory = async () => {
   if (syncHostHistory === undefined) {
-    // eslint-disable-next-line require-atomic-updates
-    syncHostHistory = await getData(syncHostHistoryPrefix) ?? []
+    syncHostHistory = (await getData(syncHostHistoryPrefix)) ?? []
 
     // 清空1.0.0之前版本的同步历史
     if (syncHostHistory.length && typeof syncHostHistory[0] !== 'string') syncHostHistory = []
   }
   return syncHostHistory
 }
-export const addSyncHostHistory = async(host: string) => {
+export const addSyncHostHistory = async (host: string) => {
   let syncHostHistory = await getSyncHostHistory()
-  if (syncHostHistory.some(h => h == host)) return
+  if (syncHostHistory.some((h) => h == host)) return
   syncHostHistory.unshift(host)
   if (syncHostHistory.length > 20) syncHostHistory = syncHostHistory.slice(0, 20) // 最多存储20个
   await saveData(syncHostHistoryPrefix, syncHostHistory)
 }
-export const removeSyncHostHistory = async(index: number) => {
+export const removeSyncHostHistory = async (index: number) => {
   syncHostHistory.splice(index, 1)
   await saveData(syncHostHistoryPrefix, syncHostHistory)
 }
 
 let userApis: LX.UserApi.UserApiInfo[] = []
-export const getUserApiList = async(): Promise<LX.UserApi.UserApiInfo[]> => {
-  userApis = await getData<LX.UserApi.UserApiInfo[]>(userApiPrefix) ?? []
+export const getUserApiList = async (): Promise<LX.UserApi.UserApiInfo[]> => {
+  userApis = (await getData<LX.UserApi.UserApiInfo[]>(userApiPrefix)) ?? []
   return [...userApis]
 }
-export const getUserApiScript = async(id: string): Promise<string> => {
-  const script = await getData<string>(`${userApiPrefix}${id}`) ?? ''
+export const getUserApiScript = async (id: string): Promise<string> => {
+  const script = (await getData<string>(`${userApiPrefix}${id}`)) ?? ''
   return script
 }
 
@@ -524,7 +551,9 @@ const matchInfo = (scriptInfo: string) => {
     infos[key] = result[2].trim()
   }
 
-  for (const [key, len] of Object.entries(INFO_NAMES) as Array<{ [K in keyof INFO_NAMES_Type]: [K, INFO_NAMES_Type[K]] }[keyof INFO_NAMES_Type]>) {
+  for (const [key, len] of Object.entries(INFO_NAMES) as Array<
+    { [K in keyof INFO_NAMES_Type]: [K, INFO_NAMES_Type[K]] }[keyof INFO_NAMES_Type]
+  >) {
     infos[key] ||= ''
     if (infos[key] == null) infos[key] = ''
     else if (infos[key]!.length > len) infos[key] = infos[key]!.substring(0, len) + '...'
@@ -532,7 +561,7 @@ const matchInfo = (scriptInfo: string) => {
 
   return infos as Record<keyof typeof INFO_NAMES, string>
 }
-export const addUserApi = async(script: string): Promise<LX.UserApi.UserApiInfo> => {
+export const addUserApi = async (script: string): Promise<LX.UserApi.UserApiInfo> => {
   const result = /^\/\*[\S|\s]+?\*\//.exec(script)
   if (!result) throw new Error(global.i18n.t('user_api_add_failed_tip'))
 
@@ -552,7 +581,7 @@ export const addUserApi = async(script: string): Promise<LX.UserApi.UserApiInfo>
   ])
   return apiInfo
 }
-export const removeUserApi = async(ids: string[]) => {
+export const removeUserApi = async (ids: string[]) => {
   if (!userApis) return []
   const _ids: string[] = []
   for (let index = userApis.length - 1; index > -1; index--) {
@@ -566,8 +595,8 @@ export const removeUserApi = async(ids: string[]) => {
   if (_ids.length) await removeDataMultiple(_ids)
   return [...userApis]
 }
-export const setUserApiAllowShowUpdateAlert = async(id: string, enable: boolean) => {
-  const targetApi = userApis?.find(api => api.id == id)
+export const setUserApiAllowShowUpdateAlert = async (id: string, enable: boolean) => {
+  const targetApi = userApis?.find((api) => api.id == id)
   if (!targetApi) return
   targetApi.allowShowUpdateAlert = enable
   await saveData(userApiPrefix, userApis)

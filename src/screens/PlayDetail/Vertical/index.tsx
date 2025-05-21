@@ -67,7 +67,6 @@ export default memo(({ componentId }: { componentId: string }) => {
       appstateListener.remove()
       screenUnkeepAwake()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

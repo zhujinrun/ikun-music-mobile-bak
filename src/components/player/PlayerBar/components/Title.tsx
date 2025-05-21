@@ -10,7 +10,6 @@ import Text from '@/components/common/Text'
 import { LIST_IDS } from '@/config/constant'
 import { createStyle } from '@/utils/tools'
 
-
 export default ({ isHome }: { isHome: boolean }) => {
   // const { t } = useTranslation()
   const musicInfo = usePlayerMusicInfo()
@@ -39,8 +38,15 @@ export default ({ isHome }: { isHome: boolean }) => {
     : ''
   // console.log(playMusicInfo)
   return (
-    <TouchableOpacity style={styles.container} onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
-      <Text color={theme['c-font-label']} numberOfLines={1}>{title}</Text>
+    <TouchableOpacity
+      style={styles.container}
+      onLongPress={handleLongPress}
+      onPress={handlePress}
+      activeOpacity={0.7}
+    >
+      <Text color={theme['c-font-label']} numberOfLines={1}>
+        {title}
+      </Text>
     </TouchableOpacity>
   )
 }

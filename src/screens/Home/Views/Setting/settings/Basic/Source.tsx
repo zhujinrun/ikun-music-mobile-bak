@@ -16,7 +16,7 @@ import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
 // import { importUserApi, removeUserApi } from '@/core/userApi'
 
-const apiSourceList = apiSourceInfo.map(api => ({
+const apiSourceList = apiSourceInfo.map((api) => ({
   id: api.id,
   name: api.name,
   disabled: api.disabled,
@@ -28,7 +28,13 @@ const useActive = (id: string) => {
   return isActive
 }
 
-const Item = ({ id, name, desc, statusLabel, change }: {
+const Item = ({
+  id,
+  name,
+  desc,
+  statusLabel,
+  change,
+}: {
   id: string
   name: string
   desc?: string
@@ -39,15 +45,28 @@ const Item = ({ id, name, desc, statusLabel, change }: {
   const theme = useTheme()
   // const [toggleCheckBox, setToggleCheckBox] = useState(false)
   return (
-    <CheckBox marginBottom={5} check={isActive} onChange={() => { change(id) }} need>
+    <CheckBox
+      marginBottom={5}
+      check={isActive}
+      onChange={() => {
+        change(id)
+      }}
+      need
+    >
       <Text style={styles.sourceLabel}>
         {name}
-        {
-          desc ? <Text style={styles.sourceDesc} color={theme['c-500']} size={13}>  {desc}</Text> : null
-        }
-        {
-          statusLabel ? <Text style={styles.sourceStatus} size={13}>  {statusLabel}</Text> : null
-        }
+        {desc ? (
+          <Text style={styles.sourceDesc} color={theme['c-500']} size={13}>
+            {' '}
+            {desc}
+          </Text>
+        ) : null}
+        {statusLabel ? (
+          <Text style={styles.sourceStatus} size={13}>
+            {' '}
+            {statusLabel}
+          </Text>
+        ) : null}
       </Text>
     </CheckBox>
   )
@@ -55,11 +74,15 @@ const Item = ({ id, name, desc, statusLabel, change }: {
 
 export default memo(() => {
   const t = useI18n()
-  const list = useMemo(() => apiSourceList.map(s => ({
-    // @ts-expect-error
-    name: t(`setting_basic_source_${s.id}`) || s.name,
-    id: s.id,
-  })), [t])
+  const list = useMemo(
+    () =>
+      apiSourceList.map((s) => ({
+        // @ts-expect-error
+        name: t(`setting_basic_source_${s.id}`) || s.name,
+        id: s.id,
+      })),
+    [t]
+  )
   const setApiSourceId = useCallback((id: string) => {
     setApiSource(id)
   }, [])
@@ -75,13 +98,15 @@ export default memo(() => {
 
       return status
     }
-    return userApiListRaw.map(api => {
+    return userApiListRaw.map((api) => {
       const statusLabel = api.id == apiSourceSetting ? `[${getApiStatus()}]` : ''
       return {
         id: api.id,
         name: api.name,
         label: `${api.name}${statusLabel}`,
-        desc: [/^\d/.test(api.version) ? `v${api.version}` : api.version].filter(Boolean).join(', '),
+        desc: [/^\d/.test(api.version) ? `v${api.version}` : api.version]
+          .filter(Boolean)
+          .join(', '),
         statusLabel,
         // status: apiStatus.status,
         // message: apiStatus.message,
@@ -98,12 +123,19 @@ export default memo(() => {
   return (
     <SubTitle title={t('setting_basic_source')}>
       <View style={styles.list}>
-        {
-          list.map(({ id, name }) => <Item name={name} id={id} key={id} change={setApiSourceId} />)
-        }
-        {
-          userApiList.map(({ id, name, desc, statusLabel }) => <Item name={name} desc={desc} statusLabel={statusLabel} id={id} key={id} change={setApiSourceId} />)
-        }
+        {list.map(({ id, name }) => (
+          <Item name={name} id={id} key={id} change={setApiSourceId} />
+        ))}
+        {userApiList.map(({ id, name, desc, statusLabel }) => (
+          <Item
+            name={name}
+            desc={desc}
+            statusLabel={statusLabel}
+            id={id}
+            key={id}
+            change={setApiSourceId}
+          />
+        ))}
       </View>
       <View style={styles.btn}>
         <Button onPress={handleShow}>{t('setting_basic_source_user_api_btn')}</Button>
@@ -124,13 +156,7 @@ const styles = createStyle({
     marginTop: 10,
     flexDirection: 'row',
   },
-  sourceLabel: {
-
-  },
-  sourceDesc: {
-
-  },
-  sourceStatus: {
-
-  },
+  sourceLabel: {},
+  sourceDesc: {},
+  sourceStatus: {},
 })

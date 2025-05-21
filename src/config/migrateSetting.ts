@@ -17,7 +17,8 @@ export default (setting: any): Partial<LX.AppSetting> => {
     setting['player.isShowNotificationImage'] = setting.player?.isShowNotificationImage
     setting['player.isS2t'] = setting.player?.isS2t
     setting['playDetail.portrait.style.lrcFontSize'] = setting.player?.portrait?.style?.lrcFontSize
-    setting['playDetail.landscape.style.lrcFontSize'] = setting.player?.landscape?.style?.lrcFontSize
+    setting['playDetail.landscape.style.lrcFontSize'] =
+      setting.player?.landscape?.style?.lrcFontSize
     setting['desktopLyric.enable'] = setting.desktopLyric?.enable
     setting['desktopLyric.isLock'] = setting.desktopLyric?.isLock
     setting['desktopLyric.width'] = setting.desktopLyric?.width

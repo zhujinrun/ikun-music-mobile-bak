@@ -1,21 +1,45 @@
-import { init as initLyricPlayer, toggleTranslation, toggleRoma, play, pause, stop, setLyric, setPlaybackRate } from '@/core/lyric'
+import {
+  init as initLyricPlayer,
+  toggleTranslation,
+  toggleRoma,
+  play,
+  pause,
+  stop,
+  setLyric,
+  setPlaybackRate,
+} from '@/core/lyric'
 import { updateSetting } from '@/core/common'
-import { onDesktopLyricPositionChange, showDesktopLyric, onLyricLinePlay, showRemoteLyric } from '@/core/desktopLyric'
+import {
+  onDesktopLyricPositionChange,
+  showDesktopLyric,
+  onLyricLinePlay,
+  showRemoteLyric,
+} from '@/core/desktopLyric'
 import playerState from '@/store/player/state'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import { setLastLyric } from '@/core/player/playInfo'
 import { state } from '@/plugins/player/playList'
 
-const updateRemoteLyric = async(lrc?: string) => {
+const updateRemoteLyric = async (lrc?: string) => {
   setLastLyric(lrc)
   if (lrc == null) {
-    void updateNowPlayingTitles((state.prevDuration || 0) * 1000, playerState.musicInfo.name, playerState.musicInfo.singer ?? '', playerState.musicInfo.album ?? '')
+    void updateNowPlayingTitles(
+      (state.prevDuration || 0) * 1000,
+      playerState.musicInfo.name,
+      playerState.musicInfo.singer ?? '',
+      playerState.musicInfo.album ?? ''
+    )
   } else {
-    void updateNowPlayingTitles((state.prevDuration || 0) * 1000, lrc, `${playerState.musicInfo.name}${playerState.musicInfo.singer ? ` - ${playerState.musicInfo.singer}` : ''}`, playerState.musicInfo.album ?? '')
+    void updateNowPlayingTitles(
+      (state.prevDuration || 0) * 1000,
+      lrc,
+      `${playerState.musicInfo.name}${playerState.musicInfo.singer ? ` - ${playerState.musicInfo.singer}` : ''}`,
+      playerState.musicInfo.album ?? ''
+    )
   }
 }
 
-export default async(setting: LX.AppSetting) => {
+export default async (setting: LX.AppSetting) => {
   await initLyricPlayer()
   await Promise.all([
     setPlaybackRate(setting['player.playbackRate']),
@@ -33,7 +57,7 @@ export default async(setting: LX.AppSetting) => {
       updateSetting({ 'player.isShowBluetoothLyric': false })
     })
   }
-  onDesktopLyricPositionChange(position => {
+  onDesktopLyricPositionChange((position) => {
     updateSetting({
       'desktopLyric.position.x': position.x,
       'desktopLyric.position.y': position.y,
@@ -46,7 +70,6 @@ export default async(setting: LX.AppSetting) => {
       void updateRemoteLyric(text)
     }
   })
-
 
   global.app_event.on('play', play)
   global.app_event.on('pause', pause)

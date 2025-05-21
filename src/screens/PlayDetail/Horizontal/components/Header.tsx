@@ -21,11 +21,14 @@ const Title = () => {
   const theme = useTheme()
   const musicInfo = usePlayerMusicInfo()
 
-
   return (
     <View style={styles.titleContent}>
-      <Text numberOfLines={1} style={styles.title} size={14}>{musicInfo.name}</Text>
-      <Text numberOfLines={1} style={styles.title} size={12} color={theme['c-font-label']}>{musicInfo.singer}</Text>
+      <Text numberOfLines={1} style={styles.title} size={14}>
+        {musicInfo.name}
+      </Text>
+      <Text numberOfLines={1} style={styles.title} size={12} color={theme['c-font-label']}>
+        {musicInfo.singer}
+      </Text>
     </View>
   )
 }
@@ -55,7 +58,6 @@ export default memo(() => {
     </View>
   )
 })
-
 
 const styles = StyleSheet.create({
   container: {

@@ -6,10 +6,7 @@ import { useI18n } from '@/lang'
 import { createUserList } from '@/core/list'
 import listState from '@/store/list/state'
 
-export default ({ isEdit, onHide }: {
-  isEdit: boolean
-  onHide: () => void
-}) => {
+export default ({ isEdit, onHide }: { isEdit: boolean; onHide: () => void }) => {
   const [text, setText] = useState('')
   const inputRef = useRef<InputType>(null)
   const t = useI18n()
@@ -23,30 +20,35 @@ export default ({ isEdit, onHide }: {
     }
   }, [isEdit])
 
-  const handleSubmitEditing = async() => {
+  const handleSubmitEditing = async () => {
     onHide()
     const name = text.trim()
-    if (!name.length || (listState.userList.some(l => l.name == name) && !(await confirmDialog({
-      message: global.i18n.t('list_duplicate_tip'),
-    })))) return
-    void createUserList(listState.userList.length, [{ id: `userlist_${Date.now()}`, name, locationUpdateTime: null }])
+    if (
+      !name.length ||
+      (listState.userList.some((l) => l.name == name) &&
+        !(await confirmDialog({
+          message: global.i18n.t('list_duplicate_tip'),
+        })))
+    )
+      return
+    void createUserList(listState.userList.length, [
+      { id: `userlist_${Date.now()}`, name, locationUpdateTime: null },
+    ])
   }
 
-  return isEdit
-    ? (
-      <View style={styles.imputContainer}>
-        <Input
-          placeholder={t('list_create_input_placeholder')}
-          value={text}
-          onChangeText={setText}
-          ref={inputRef}
-          onBlur={handleSubmitEditing}
-          onSubmitEditing={handleSubmitEditing}
-          style={styles.input}
-        />
-      </View>
-      )
-    : null
+  return isEdit ? (
+    <View style={styles.imputContainer}>
+      <Input
+        placeholder={t('list_create_input_placeholder')}
+        value={text}
+        onChangeText={setText}
+        ref={inputRef}
+        onBlur={handleSubmitEditing}
+        onSubmitEditing={handleSubmitEditing}
+        style={styles.input}
+      />
+    </View>
+  ) : null
 }
 
 const styles = createStyle({

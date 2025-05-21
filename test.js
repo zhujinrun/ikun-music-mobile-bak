@@ -1,34 +1,41 @@
-const { publicEncrypt, privateDecrypt, generateKeyPair, createCipheriv, createDecipheriv, constants } = require('crypto')
+const {
+  publicEncrypt,
+  privateDecrypt,
+  generateKeyPair,
+  createCipheriv,
+  createDecipheriv,
+  constants,
+} = require('crypto')
 
-
-const generateRsaKey = () => new Promise((resolve, reject) => {
-  generateKeyPair(
-    'rsa',
-    {
-      modulusLength: 2048, // It holds a number. It is the key size in bits and is applicable for RSA, and DSA algorithm only.
-      publicKeyEncoding: {
-        type: 'spki', // Note the type is pkcs1 not spki
-        format: 'pem',
+const generateRsaKey = () =>
+  new Promise((resolve, reject) => {
+    generateKeyPair(
+      'rsa',
+      {
+        modulusLength: 2048, // It holds a number. It is the key size in bits and is applicable for RSA, and DSA algorithm only.
+        publicKeyEncoding: {
+          type: 'spki', // Note the type is pkcs1 not spki
+          format: 'pem',
+        },
+        privateKeyEncoding: {
+          type: 'pkcs8', // Note again the type is set to pkcs1
+          format: 'pem',
+          // cipher: "aes-256-cbc", //Optional
+          // passphrase: "", //Optional
+        },
       },
-      privateKeyEncoding: {
-        type: 'pkcs8', // Note again the type is set to pkcs1
-        format: 'pem',
-        // cipher: "aes-256-cbc", //Optional
-        // passphrase: "", //Optional
-      },
-    },
-    (err, publicKey, privateKey) => {
-      if (err) {
-        reject(err)
-        return
+      (err, publicKey, privateKey) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve({
+          publicKey,
+          privateKey,
+        })
       }
-      resolve({
-        publicKey,
-        privateKey,
-      })
-    },
-  )
-})
+    )
+  })
 
 // generateRsaKey().then(({ publicKey, privateKey }) => {
 //   console.log(publicKey)
@@ -36,7 +43,9 @@ const generateRsaKey = () => new Promise((resolve, reject) => {
 // })
 
 const rsaEncrypt = (buffer, key) => {
-  return publicEncrypt({ key, padding: constants.RSA_PKCS1_OAEP_PADDING }, buffer).toString('base64')
+  return publicEncrypt({ key, padding: constants.RSA_PKCS1_OAEP_PADDING }, buffer).toString(
+    'base64'
+  )
 }
 const rsaDecrypt = (buffer, key) => {
   return privateDecrypt({ key, padding: constants.RSA_PKCS1_OAEP_PADDING }, buffer)
@@ -83,20 +92,17 @@ DaE3OO3AUN8voDBaHDII1YscbEBg
 // console.log(encrypted)
 // // const encrypted = 'lJVUCFSV2K90ZdCeosUbtek/wZPmqmKR7ShsP2vfheldde6o9e2Qrmj1QojEwsZtjvq61FCmwpX46LkbsLY/jpM17PUZeqQHhqCy4Rz/hIyMCyIQTPwH5907pIwcpQH2XpJ45/hrjkhLhGU9pkZXtr3qkJiRTi0nllu7z6p6Qf0Hx/zYGxe41VVVnq/9t5xkoUyAfknEn1LMAJyJVft4pD43vTn4tz34+cf7GuzlC4xPiUyKC/trDGBW0kEQBPIaRpd7q1ab9x5fg8mffhBSDR3o+PvVuq3UP02MwpoMDs2bnnwzYawuGv87VNsvEHcvTkZDnh8ME9vtbQboLWVD5w=='
 
-
 // console.log(rsaDecrypt(Buffer.from(encrypted, 'base64'), privateKey).toString())
-
 
 const aesEncrypt = (buffer, mode, key, iv) => {
   const cipher = createCipheriv(mode, key, iv)
   return Buffer.concat([cipher.update(buffer), cipher.final()])
 }
 
-const aesDecrypt = function(cipherBuffer, mode, key, iv) {
+const aesDecrypt = function (cipherBuffer, mode, key, iv) {
   let decipher = createDecipheriv(mode, key, iv)
   return Buffer.concat([decipher.update(cipherBuffer), decipher.final()])
 }
-
 
 // const aesKey = Buffer.from('123456789abcdefg')
 // const iv = Buffer.from('012345678901234a')

@@ -78,7 +78,11 @@ const Header = () => {
 
 type IdType = InitState['navActiveId'] | 'nav_exit' | 'back_home'
 
-const MenuItem = ({ id, icon, onPress }: {
+const MenuItem = ({
+  id,
+  icon,
+  onPress,
+}: {
   id: IdType
   icon: string
   onPress: (id: IdType) => void
@@ -87,19 +91,26 @@ const MenuItem = ({ id, icon, onPress }: {
   const activeId = useNavActiveId()
   const theme = useTheme()
 
-  return activeId == id
-    ? <View style={styles.menuItem}>
-        <View style={styles.iconContent}>
-          <Icon name={icon} size={20} color={theme['c-primary-font-active']} />
-        </View>
-        {/* <Text style={styles.text} size={14} color={theme['c-primary-font']}>{t(id)}</Text> */}
+  return activeId == id ? (
+    <View style={styles.menuItem}>
+      <View style={styles.iconContent}>
+        <Icon name={icon} size={20} color={theme['c-primary-font-active']} />
       </View>
-    : <TouchableOpacity style={styles.menuItem} onPress={() => { onPress(id) }}>
-        <View style={styles.iconContent}>
-          <Icon name={icon} size={20} color={theme['c-font-label']} />
-        </View>
-        {/* <Text style={styles.text} size={14}>{t(id)}</Text> */}
-      </TouchableOpacity>
+      {/* <Text style={styles.text} size={14} color={theme['c-primary-font']}>{t(id)}</Text> */}
+    </View>
+  ) : (
+    <TouchableOpacity
+      style={styles.menuItem}
+      onPress={() => {
+        onPress(id)
+      }}
+    >
+      <View style={styles.iconContent}>
+        <Icon name={icon} size={20} color={theme['c-font-label']} />
+      </View>
+      {/* <Text style={styles.text} size={14}>{t(id)}</Text> */}
+    </TouchableOpacity>
+  )
 }
 
 export default memo(() => {
@@ -114,7 +125,7 @@ export default memo(() => {
         void confirmDialog({
           message: global.i18n.t('exit_app_tip'),
           confirmButtonText: global.i18n.t('list_remove_tip_button'),
-        }).then(isExit => {
+        }).then((isExit) => {
           if (!isExit) return
           exitApp('Exit Btn')
         })
@@ -133,16 +144,13 @@ export default memo(() => {
       <Header />
       <ScrollView style={styles.menus}>
         <View style={styles.list}>
-          {NAV_MENUS.map(menu => <MenuItem key={menu.id} id={menu.id} icon={menu.icon} onPress={handlePress} />)}
+          {NAV_MENUS.map((menu) => (
+            <MenuItem key={menu.id} id={menu.id} icon={menu.icon} onPress={handlePress} />
+          ))}
         </View>
       </ScrollView>
-      {
-        showBackBtn ? <MenuItem id="back_home" icon="home" onPress={handlePress} /> : null
-      }
-      {
-        showExitBtn ? <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} /> : null
-      }
+      {showBackBtn ? <MenuItem id="back_home" icon="home" onPress={handlePress} /> : null}
+      {showExitBtn ? <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} /> : null}
     </View>
   )
 })
-

@@ -22,10 +22,7 @@ export interface ListType {
 }
 export type Status = 'loading' | 'refreshing' | 'end' | 'error' | 'idle'
 
-const List = forwardRef<ListType, ListProps>(({
-  onRefresh,
-  onLoadMore,
-}, ref) => {
+const List = forwardRef<ListType, ListProps>(({ onRefresh, onLoadMore }, ref) => {
   // const t = useI18n()
   const theme = useTheme()
   const flatListRef = useRef<FlatList>(null)
@@ -53,19 +50,24 @@ const List = forwardRef<ListType, ListProps>(({
 
   const renderItem: FlatListType['renderItem'] = ({ item }) => <CommentFloor comment={item} />
 
-  const getkey: FlatListType['keyExtractor'] = item => item.id
+  const getkey: FlatListType['keyExtractor'] = (item) => item.id
 
-  const refreshControl = useMemo(() => (
-    <RefreshControl
-      colors={[theme['c-primary']]}
-      // progressBackgroundColor={theme.primary}
-      refreshing={status == 'refreshing'}
-      onRefresh={onRefresh} />
-  ), [status, onRefresh, theme])
+  const refreshControl = useMemo(
+    () => (
+      <RefreshControl
+        colors={[theme['c-primary']]}
+        // progressBackgroundColor={theme.primary}
+        refreshing={status == 'refreshing'}
+        onRefresh={onRefresh}
+      />
+    ),
+    [status, onRefresh, theme]
+  )
   const footerComponent = useMemo(() => {
     let label: FooterLabel
     switch (status) {
-      case 'refreshing': return null
+      case 'refreshing':
+        return null
       case 'loading':
         label = 'list_loading'
         break
@@ -105,25 +107,20 @@ const List = forwardRef<ListType, ListProps>(({
 })
 
 type FooterLabel = 'list_loading' | 'list_end' | 'list_error' | null
-const Footer = ({ label, onLoadMore }: {
-  label: FooterLabel
-  onLoadMore: () => void
-}) => {
+const Footer = ({ label, onLoadMore }: { label: FooterLabel; onLoadMore: () => void }) => {
   const theme = useTheme()
   const t = useI18n()
   const handlePress = () => {
     if (label != 'list_error') return
     onLoadMore()
   }
-  return (
-    label
-      ? (
-          <View>
-            <Text onPress={handlePress} style={styles.footer} color={theme['c-font-label']}>{t(label)}</Text>
-          </View>
-        )
-      : null
-  )
+  return label ? (
+    <View>
+      <Text onPress={handlePress} style={styles.footer} color={theme['c-font-label']}>
+        {t(label)}
+      </Text>
+    </View>
+  ) : null
 }
 
 const styles = createStyle({

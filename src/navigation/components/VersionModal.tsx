@@ -10,7 +10,11 @@ import { useTheme } from '@/store/theme/hook'
 import { type VersionInfo } from '@/store/version/state'
 import Text from '@/components/common/Text'
 import { useI18n } from '@/lang'
-import { useVersionDownloadProgressUpdated, useVersionInfo, useVersionInfoIgnoreVersionUpdated } from '@/store/version/hook'
+import {
+  useVersionDownloadProgressUpdated,
+  useVersionInfo,
+  useVersionInfoIgnoreVersionUpdated,
+} from '@/store/version/hook'
 import ModalContent from './ModalContent'
 import { checkUpdate, downloadUpdate, hideModal, setIgnoreVersion } from '@/core/version'
 
@@ -18,60 +22,63 @@ const VersionItem = ({ version, desc }: VersionInfo) => {
   return (
     <View style={styles.versionItem}>
       <Text style={styles.label}>v{version}</Text>
-      <Text selectable style={styles.desc}>{desc}</Text>
+      <Text selectable style={styles.desc}>
+        {desc}
+      </Text>
     </View>
   )
 }
 
-const Content = memo(({ title, newVersionInfo }: {
-  title: string
-  newVersionInfo: VersionInfo | null
-}) => {
-  const t = useI18n()
+const Content = memo(
+  ({ title, newVersionInfo }: { title: string; newVersionInfo: VersionInfo | null }) => {
+    const t = useI18n()
 
-  const history = useMemo(() => {
-    if (!newVersionInfo?.history) return []
-    let arr = []
-    for (const ver of newVersionInfo?.history) {
-      if (compareVer(currentVer, ver.version) < 0) arr.push(ver)
-    }
-    return arr
-  }, [newVersionInfo])
+    const history = useMemo(() => {
+      if (!newVersionInfo?.history) return []
+      let arr = []
+      for (const ver of newVersionInfo?.history) {
+        if (compareVer(currentVer, ver.version) < 0) arr.push(ver)
+      }
+      return arr
+    }, [newVersionInfo])
 
-  return (
-    <View style={styles.main}>
-      <Text style={styles.title}>{title}</Text>
-      <ScrollView style={styles.content} keyboardShouldPersistTaps={'always'}>
-        <Text style={styles.label}>{t('version_label_latest_ver')}{newVersionInfo?.version}</Text>
-        <Text style={styles.label}>{t('version_label_current_ver')}{currentVer}</Text>
-        {
-          newVersionInfo?.desc
-            ? (
-                <View>
-                  <Text style={styles.label}>{t('version_label_change_log')}</Text>
-                  <View style={{ paddingLeft: 10, marginTop: 5 }}>
-                    <Text selectable style={styles.desc}>{newVersionInfo.desc}</Text>
-                  </View>
-                </View>
-              )
-            : null
-        }
-        {
-          history.length
-            ? (
-                <View style={styles.history}>
-                  <Text style={styles.label}>{t('version_label_history')}</Text>
-                  <View style={{ paddingLeft: 10, marginTop: 5 }}>
-                    {history.map((item, index) => <VersionItem key={index} version={item.version} desc={item.desc} />)}
-                  </View>
-                </View>
-              )
-            : null
-        }
-      </ScrollView>
-    </View>
-  )
-})
+    return (
+      <View style={styles.main}>
+        <Text style={styles.title}>{title}</Text>
+        <ScrollView style={styles.content} keyboardShouldPersistTaps={'always'}>
+          <Text style={styles.label}>
+            {t('version_label_latest_ver')}
+            {newVersionInfo?.version}
+          </Text>
+          <Text style={styles.label}>
+            {t('version_label_current_ver')}
+            {currentVer}
+          </Text>
+          {newVersionInfo?.desc ? (
+            <View>
+              <Text style={styles.label}>{t('version_label_change_log')}</Text>
+              <View style={{ paddingLeft: 10, marginTop: 5 }}>
+                <Text selectable style={styles.desc}>
+                  {newVersionInfo.desc}
+                </Text>
+              </View>
+            </View>
+          ) : null}
+          {history.length ? (
+            <View style={styles.history}>
+              <Text style={styles.label}>{t('version_label_history')}</Text>
+              <View style={{ paddingLeft: 10, marginTop: 5 }}>
+                {history.map((item, index) => (
+                  <VersionItem key={index} version={item.version} desc={item.desc} />
+                ))}
+              </View>
+            </View>
+          ) : null}
+        </ScrollView>
+      </View>
+    )
+  }
+)
 
 const currentVer = process.versions.app
 const VersionModal = ({ componentId }: { componentId: string }) => {
@@ -80,12 +87,15 @@ const VersionModal = ({ componentId }: { componentId: string }) => {
   const versionInfo = useVersionInfo()
   const progress = useVersionDownloadProgressUpdated()
   const ignoreVersion = useVersionInfoIgnoreVersionUpdated()
-  const [ignoreBtn, setIgnoreBtn] = useState({ text: t('version_btn_ignore'), show: true, disabled: false })
+  const [ignoreBtn, setIgnoreBtn] = useState({
+    text: t('version_btn_ignore'),
+    show: true,
+    disabled: false,
+  })
   const [closeBtnText, setCloseBtnText] = useState(t('version_btn_close'))
   const [confirmBtn, setConfirmBtn] = useState({ text: '', show: true, disabled: false })
   const [title, setTitle] = useState('')
   const [tip, setTip] = useState('')
-
 
   useEffect(() => {
     let ignoreBtnConfig = { ...ignoreBtn }
@@ -105,13 +115,18 @@ const VersionModal = ({ componentId }: { componentId: string }) => {
       switch (versionInfo.status) {
         case 'downloading':
           setTitle(t('version_title_new'))
-          setTip(t('version_btn_downloading', {
-            total: sizeFormate(progress.total),
-            current: sizeFormate(progress.current),
-            progress: progress.total ? (progress.current / progress.total * 100).toFixed(2) : '0',
-          }))
+          setTip(
+            t('version_btn_downloading', {
+              total: sizeFormate(progress.total),
+              current: sizeFormate(progress.current),
+              progress: progress.total
+                ? ((progress.current / progress.total) * 100).toFixed(2)
+                : '0',
+            })
+          )
           if (ignoreBtnConfig.show) ignoreBtnConfig.show = false
-          if (!confirmBtn.disabled) setConfirmBtn({ text: t('version_btn_update'), show: true, disabled: true })
+          if (!confirmBtn.disabled)
+            setConfirmBtn({ text: t('version_btn_update'), show: true, disabled: true })
           setCloseBtnText(t('version_btn_min'))
           break
         case 'downloaded':
@@ -149,17 +164,21 @@ const VersionModal = ({ componentId }: { componentId: string }) => {
           break
       }
     }
-    ignoreBtnConfig.text = t(ignoreVersion == versionInfo.newVersion?.version ? 'version_btn_ignore_cancel' : 'version_btn_ignore')
+    ignoreBtnConfig.text = t(
+      ignoreVersion == versionInfo.newVersion?.version
+        ? 'version_btn_ignore_cancel'
+        : 'version_btn_ignore'
+    )
     setIgnoreBtn(ignoreBtnConfig)
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t, versionInfo, ignoreVersion, progress])
 
   const handleCancel = () => {
     hideModal(componentId)
   }
   const handleIgnore = () => {
-    setIgnoreVersion(ignoreVersion != versionInfo.newVersion!.version ? versionInfo.newVersion!.version : null)
+    setIgnoreVersion(
+      ignoreVersion != versionInfo.newVersion!.version ? versionInfo.newVersion!.version : null
+    )
     // handleCancel()
   }
 
@@ -176,29 +195,36 @@ const VersionModal = ({ componentId }: { componentId: string }) => {
   return (
     <ModalContent>
       <Content title={title} newVersionInfo={versionInfo.newVersion} />
-      { tip.length ? <Text style={styles.tip} color={theme['c-primary-font']}>{tip}</Text> : null }
+      {tip.length ? (
+        <Text style={styles.tip} color={theme['c-primary-font']}>
+          {tip}
+        </Text>
+      ) : null}
       <View style={styles.btns}>
-        {
-          ignoreBtn.show
-            ? (
-                <Button disabled={ignoreBtn.disabled} style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleIgnore}>
-                  <Text color={theme['c-button-font']}>{ignoreBtn.text}</Text>
-                </Button>
-              )
-            : null
-        }
-        <Button style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleCancel}>
+        {ignoreBtn.show ? (
+          <Button
+            disabled={ignoreBtn.disabled}
+            style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }}
+            onPress={handleIgnore}
+          >
+            <Text color={theme['c-button-font']}>{ignoreBtn.text}</Text>
+          </Button>
+        ) : null}
+        <Button
+          style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }}
+          onPress={handleCancel}
+        >
           <Text color={theme['c-button-font']}>{closeBtnText}</Text>
         </Button>
-        {
-          confirmBtn.show
-            ? (
-                <Button disabled={confirmBtn.disabled} style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleConfirm}>
-                  <Text color={theme['c-button-font']}>{confirmBtn.text}</Text>
-                </Button>
-              )
-            : null
-        }
+        {confirmBtn.show ? (
+          <Button
+            disabled={confirmBtn.disabled}
+            style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }}
+            onPress={handleConfirm}
+          >
+            <Text color={theme['c-button-font']}>{confirmBtn.text}</Text>
+          </Button>
+        ) : null}
       </View>
     </ModalContent>
   )
@@ -260,4 +286,3 @@ const styles = createStyle({
 })
 
 export default VersionModal
-

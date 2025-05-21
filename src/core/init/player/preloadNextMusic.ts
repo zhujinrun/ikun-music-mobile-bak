@@ -4,7 +4,6 @@ import { checkUrl } from '@/utils/request'
 import playerState from '@/store/player/state'
 import { isCached } from '@/plugins/player/utils'
 
-
 const preloadMusicInfo = {
   isLoading: false,
   preProgress: 0,
@@ -15,7 +14,7 @@ const resetPreloadInfo = () => {
   preloadMusicInfo.info = null
   preloadMusicInfo.isLoading = false
 }
-const preloadNextMusicUrl = async(curTime: number) => {
+const preloadNextMusicUrl = async (curTime: number) => {
   if (preloadMusicInfo.isLoading || curTime - preloadMusicInfo.preProgress < 3) return
   preloadMusicInfo.isLoading = true
   console.log('preload next music url')
@@ -25,9 +24,16 @@ const preloadNextMusicUrl = async(curTime: number) => {
     const url = await getMusicUrl({ musicInfo: info.musicInfo }).catch(() => '')
     if (url) {
       console.log('preload url', url)
-      const [cached, available] = await Promise.all([isCached(url), checkUrl(url).then(() => true).catch(() => false)])
+      const [cached, available] = await Promise.all([
+        isCached(url),
+        checkUrl(url)
+          .then(() => true)
+          .catch(() => false),
+      ])
       if (!cached && !available) {
-        const url = await getMusicUrl({ musicInfo: info.musicInfo, isRefresh: true }).catch(() => '')
+        const url = await getMusicUrl({ musicInfo: info.musicInfo, isRefresh: true }).catch(
+          () => ''
+        )
         console.log('preload url refresh', url)
       }
     }

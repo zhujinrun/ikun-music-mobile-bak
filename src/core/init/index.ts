@@ -16,7 +16,7 @@ import { bootLog } from '@/utils/bootLog'
 import { cheatTip } from '@/utils/tools'
 
 let isFirstPush = true
-const handlePushedHomeScreen = async() => {
+const handlePushedHomeScreen = async () => {
   await cheatTip()
   if (settingState.setting['common.isAgreePact']) {
     if (isFirstPush) {
@@ -31,7 +31,7 @@ const handlePushedHomeScreen = async() => {
 }
 
 let isInited = false
-export default async() => {
+export default async () => {
   if (isInited) return handlePushedHomeScreen
   bootLog('Initing...')
   commonActions.setFontSize(global.lx.fontSize)

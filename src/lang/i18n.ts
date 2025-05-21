@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import type { Messages, Message } from './index'
 import { messages } from './index'
 
-
 type TranslateValues = Record<string, string | number | boolean>
 
 type Langs = keyof Messages
@@ -25,7 +24,6 @@ let locale: Langs = 'zh_cn'
 
 let i18n: I18n
 
-
 const hookTools = {
   hooks: [] as Hook[],
   add(hook: Hook) {
@@ -47,13 +45,17 @@ const useI18n = () => {
       updateLocale(locale)
     }
     hookTools.add(hook)
-    return () => { hookTools.remove(hook) }
+    return () => {
+      hookTools.remove(hook)
+    }
   }, [])
 
-  return useCallback((key: keyof Message, val?: TranslateValues): string => {
-    return i18n?.getMessage(key, val) ?? ''
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale])
+  return useCallback(
+    (key: keyof Message, val?: TranslateValues): string => {
+      return i18n?.getMessage(key, val) ?? ''
+    },
+    [locale]
+  )
 }
 
 const setLanguage = (lang: Langs) => {
@@ -63,7 +65,7 @@ const setLanguage = (lang: Langs) => {
 const createI18n = (_locale: Langs = locale): I18n => {
   locale = _locale
 
-  return i18n = {
+  return (i18n = {
     locale,
     fallbackLocale: 'zh_cn',
     availableLocales: Object.keys(messages) as Langs[],
@@ -87,12 +89,7 @@ const createI18n = (_locale: Langs = locale): I18n => {
     t(key: keyof Message, val?: TranslateValues): string {
       return this.getMessage(key, val)
     },
-  }
+  })
 }
 
-
-export {
-  setLanguage,
-  useI18n,
-  createI18n,
-}
+export { setLanguage, useI18n, createI18n }

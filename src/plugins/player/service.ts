@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import TrackPlayer, { State as TPState, Event as TPEvent } from 'react-native-track-player'
 // import { store } from '@/store'
 // import { action as playerAction, STATUS } from '@/store/modules/player'
@@ -18,13 +17,12 @@ let isInitialized = false
 // let isPlaying = false
 
 // 销毁播放器并退出
-const handleExitApp = async(reason: string) => {
+const handleExitApp = async (reason: string) => {
   global.lx.isPlayedStop = false
   exitApp(reason)
 }
 
-
-const registerPlaybackService = async() => {
+const registerPlaybackService = async () => {
   if (isInitialized) return
 
   console.log('reg services...')
@@ -66,17 +64,17 @@ const registerPlaybackService = async() => {
   //   }
   // })
 
-  TrackPlayer.addEventListener(TPEvent.PlaybackError, async(err: any) => {
+  TrackPlayer.addEventListener(TPEvent.PlaybackError, async (err: any) => {
     console.log('playback-error', err)
     global.app_event.error()
     global.app_event.playerError()
   })
 
-  TrackPlayer.addEventListener(TPEvent.RemoteSeek, async({ position }) => {
+  TrackPlayer.addEventListener(TPEvent.RemoteSeek, async ({ position }) => {
     global.app_event.setProgress(position as number)
   })
 
-  TrackPlayer.addEventListener(TPEvent.PlaybackState, async info => {
+  TrackPlayer.addEventListener(TPEvent.PlaybackState, async (info) => {
     if (global.lx.gettingUrlId || isTempId()) return
     // let currentIsPlaying = false
 
@@ -110,7 +108,7 @@ const registerPlaybackService = async() => {
     // console.log('currentIsPlaying', currentIsPlaying, global.lx.playInfo.isPlaying)
     // void updateMetaData(global.lx.store_playMusicInfo.musicInfo, currentIsPlaying)
   })
-  TrackPlayer.addEventListener(TPEvent.PlaybackTrackChanged, async info => {
+  TrackPlayer.addEventListener(TPEvent.PlaybackTrackChanged, async (info) => {
     // console.log('PlaybackTrackChanged====>', info)
     global.lx.playerTrackId = await getCurrentTrackId()
     if (info.track == null) return
@@ -141,38 +139,38 @@ const registerPlaybackService = async() => {
       //   store.dispatch(playerAction.playNext(true))
       // }
     }
-  //   // if (!info.nextTrack) return
-  //   // if (info.track) {
-  //   //   const track = info.track.substring(0, info.track.lastIndexOf('__//'))
-  //   //   const nextTrack = info.track.substring(0, info.nextTrack.lastIndexOf('__//'))
-  //   //   console.log(nextTrack, track)
-  //   //   if (nextTrack == track) return
-  //   // }
-  //   // const track = await TrackPlayer.getTrack(info.nextTrack)
-  //   // if (!track) return
-  //   // let newTrack
-  //   // if (track.url == defaultUrl) {
-  //   //   TrackPlayer.pause().then(async() => {
-  //   //     isRefreshUrl = true
-  //   //     retryGetUrlId = track.id
-  //   //     retryGetUrlNum = 0
-  //   //     try {
-  //   //       newTrack = await updateTrackUrl(track)
-  //   //       console.log('++++newTrack++++', newTrack)
-  //   //     } catch (error) {
-  //   //       console.log('error', error)
-  //   //       if (error.message != '跳过播放') TrackPlayer.skipToNext()
-  //   //       isRefreshUrl = false
-  //   //       retryGetUrlId = null
-  //   //       return
-  //   //     }
-  //   //     retryGetUrlId = null
-  //   //     isRefreshUrl = false
-  //   //     console.log(await TrackPlayer.getQueue(), null, 2)
-  //   //     await TrackPlayer.play()
-  //   //   })
-  //   // }
-  //   // store.dispatch(playerAction.playNext())
+    //   // if (!info.nextTrack) return
+    //   // if (info.track) {
+    //   //   const track = info.track.substring(0, info.track.lastIndexOf('__//'))
+    //   //   const nextTrack = info.track.substring(0, info.nextTrack.lastIndexOf('__//'))
+    //   //   console.log(nextTrack, track)
+    //   //   if (nextTrack == track) return
+    //   // }
+    //   // const track = await TrackPlayer.getTrack(info.nextTrack)
+    //   // if (!track) return
+    //   // let newTrack
+    //   // if (track.url == defaultUrl) {
+    //   //   TrackPlayer.pause().then(async() => {
+    //   //     isRefreshUrl = true
+    //   //     retryGetUrlId = track.id
+    //   //     retryGetUrlNum = 0
+    //   //     try {
+    //   //       newTrack = await updateTrackUrl(track)
+    //   //       console.log('++++newTrack++++', newTrack)
+    //   //     } catch (error) {
+    //   //       console.log('error', error)
+    //   //       if (error.message != '跳过播放') TrackPlayer.skipToNext()
+    //   //       isRefreshUrl = false
+    //   //       retryGetUrlId = null
+    //   //       return
+    //   //     }
+    //   //     retryGetUrlId = null
+    //   //     isRefreshUrl = false
+    //   //     console.log(await TrackPlayer.getQueue(), null, 2)
+    //   //     await TrackPlayer.play()
+    //   //   })
+    //   // }
+    //   // store.dispatch(playerAction.playNext())
   })
   // TrackPlayer.addEventListener('playback-queue-ended', async info => {
   //   // console.log('playback-queue-ended', info)
@@ -204,7 +202,6 @@ const registerPlaybackService = async() => {
   // })
   isInitialized = true
 }
-
 
 export default () => {
   if (global.lx.playerStatus.isRegisteredService) return

@@ -32,7 +32,9 @@ export default {
   },
   async getSingerSongList(singerid, page, limit) {
     if (singerid == 0) throw new Error('歌手不存在') // kg源某些歌曲在歌手没被kg收录时返回的歌手id为0
-    const requestObj = httpFetch(`http://mobiles.kugou.com/api/v5/singer/song?singerid=${singerid}&page=${page}&pagesize=${limit}`)
+    const requestObj = httpFetch(
+      `http://mobiles.kugou.com/api/v5/singer/song?singerid=${singerid}&page=${page}&pagesize=${limit}`
+    )
     let { body, statusCode } = await requestObj.promise
     if (statusCode !== 200) throw new Error('获取歌手歌曲列表失败')
     let listData = await getMusicInfosByList(body.data.info)
@@ -47,7 +49,9 @@ export default {
   },
   async getSingerAlbumList(singerid, page, limit) {
     if (singerid == 0) throw new Error('歌手不存在') // kg源某些歌曲在歌手没被kg收录时返回的歌手id为0
-    const requestObj = httpFetch(`http://mobiles.kugou.com/api/v5/singer/song?singerid=${singerid}&page=${page}&pagesize=${limit}`)
+    const requestObj = httpFetch(
+      `http://mobiles.kugou.com/api/v5/singer/song?singerid=${singerid}&page=${page}&pagesize=${limit}`
+    )
     let { body, statusCode } = await requestObj.promise
     if (statusCode !== 200) throw new Error('获取歌手专辑列表失败')
     return {

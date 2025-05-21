@@ -9,10 +9,7 @@ import { useTheme } from '@/store/theme/hook'
 import { getSearchSetting } from '@/utils/data'
 import { BorderWidths } from '@/theme'
 
-const SEARCH_TYPE_LIST = [
-  'music',
-  'songlist',
-] as const
+const SEARCH_TYPE_LIST = ['music', 'songlist'] as const
 
 export default () => {
   const t = useI18n()
@@ -20,13 +17,13 @@ export default () => {
   const [type, setType] = useState<SearchType>('music')
 
   useEffect(() => {
-    void getSearchSetting().then(info => {
+    void getSearchSetting().then((info) => {
       setType(info.type)
     })
   }, [])
 
   const list = useMemo(() => {
-    return SEARCH_TYPE_LIST.map(type => ({ label: t(`search_type_${type}`), id: type }))
+    return SEARCH_TYPE_LIST.map((type) => ({ label: t(`search_type_${type}`), id: type }))
   }, [t])
 
   const handleTypeChange = (type: SearchType) => {
@@ -36,13 +33,26 @@ export default () => {
 
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'} horizontal={true}>
-      {
-        list.map(t => (
-          <TouchableOpacity style={styles.button} onPress={() => { handleTypeChange(t.id) }} key={t.id}>
-            <Text style={{ ...styles.buttonText, borderBottomColor: type == t.id ? theme['c-primary-background-active'] : 'transparent' }} color={type == t.id ? theme['c-primary-font-active'] : theme['c-font']}>{t.label}</Text>
-          </TouchableOpacity>
-        ))
-      }
+      {list.map((t) => (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            handleTypeChange(t.id)
+          }}
+          key={t.id}
+        >
+          <Text
+            style={{
+              ...styles.buttonText,
+              borderBottomColor:
+                type == t.id ? theme['c-primary-background-active'] : 'transparent',
+            }}
+            color={type == t.id ? theme['c-primary-font-active'] : theme['c-font']}
+          >
+            {t.label}
+          </Text>
+        </TouchableOpacity>
+      ))}
     </ScrollView>
   )
 }

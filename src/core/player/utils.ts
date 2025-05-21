@@ -67,36 +67,35 @@ export const filterMusicList = ({
   }
 
   let isDislike = false
-  const filteredList: Array<LX.Music.MusicInfo | LX.Download.ListItem> =
-    list.filter((s) => {
-      // if (!assertApiSupport(s.source)) return false
-      if ('progress' in s) {
-        if (!s.isComplate) return false
-      } else if (hasDislike(s)) {
-        if (s.id != playerMusicInfo?.id) return false
-        isDislike = true
-      }
+  const filteredList: Array<LX.Music.MusicInfo | LX.Download.ListItem> = list.filter((s) => {
+    // if (!assertApiSupport(s.source)) return false
+    if ('progress' in s) {
+      if (!s.isComplate) return false
+    } else if (hasDislike(s)) {
+      if (s.id != playerMusicInfo?.id) return false
+      isDislike = true
+    }
 
-      canPlayList.push(s)
+    canPlayList.push(s)
 
-      let index = filteredPlayedList.findIndex((m) => m.id == s.id)
-      if (index > -1) {
-        filteredPlayedList.splice(index, 1)
-        return false
-      }
-      return true
-    })
+    let index = filteredPlayedList.findIndex((m) => m.id == s.id)
+    if (index > -1) {
+      filteredPlayedList.splice(index, 1)
+      return false
+    }
+    return true
+  })
   if (playerMusicInfo) {
     if (isDislike) {
       if (filteredList.length <= 1) {
         filteredList.splice(0, 1)
         if (canPlayList.length > 1) {
-          let currentMusicIndex = canPlayList.findIndex(
-            (m) => m.id == playerMusicInfo.id,
-          )
+          let currentMusicIndex = canPlayList.findIndex((m) => m.id == playerMusicInfo.id)
           if (isNext) {
             playerIndex = currentMusicIndex - 1
-            if (playerIndex < 0 && canPlayList.length > 1) { playerIndex = canPlayList.length - 2 }
+            if (playerIndex < 0 && canPlayList.length > 1) {
+              playerIndex = canPlayList.length - 2
+            }
           } else {
             playerIndex = currentMusicIndex
             if (canPlayList.length <= 1) playerIndex = -1
@@ -104,12 +103,12 @@ export const filterMusicList = ({
           canPlayList.splice(currentMusicIndex, 1)
         } else canPlayList.splice(0, 1)
       } else {
-        let currentMusicIndex = filteredList.findIndex(
-          (m) => m.id == playerMusicInfo.id,
-        )
+        let currentMusicIndex = filteredList.findIndex((m) => m.id == playerMusicInfo.id)
         if (isNext) {
           playerIndex = currentMusicIndex - 1
-          if (playerIndex < 0 && filteredList.length > 1) { playerIndex = filteredList.length - 2 }
+          if (playerIndex < 0 && filteredList.length > 1) {
+            playerIndex = filteredList.length - 2
+          }
         } else {
           playerIndex = currentMusicIndex
           if (filteredList.length <= 1) playerIndex = -1
@@ -117,9 +116,9 @@ export const filterMusicList = ({
         filteredList.splice(currentMusicIndex, 1)
       }
     } else {
-      playerIndex = (
-        filteredList.length ? filteredList : canPlayList
-      ).findIndex((m) => m.id == playerMusicInfo.id)
+      playerIndex = (filteredList.length ? filteredList : canPlayList).findIndex(
+        (m) => m.id == playerMusicInfo.id
+      )
     }
   }
   return {
@@ -132,7 +131,7 @@ export const filterMusicList = ({
 /**
  * 过滤列表中已播放的歌曲
  */
-export const filterList = async({
+export const filterList = async ({
   playedList,
   listId,
   list,

@@ -13,12 +13,14 @@ const errorHandler = (e: Error, isFatal: boolean) => {
 Error:
 ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
 `,
-      [{
-        text: '关闭 (Close)',
-        onPress: () => {
-          // exitApp()
+      [
+        {
+          text: '关闭 (Close)',
+          onPress: () => {
+            // exitApp()
+          },
         },
-      }],
+      ]
     )
   }
   log.error(e.stack)

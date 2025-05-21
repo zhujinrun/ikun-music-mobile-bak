@@ -15,13 +15,20 @@ const useActive = (id: LX.Quality) => {
   return isActive
 }
 
-const Item = ({ id, name }: {
-  id: LX.Quality
-  name: string
-}) => {
+const Item = ({ id, name }: { id: LX.Quality; name: string }) => {
   const isActive = useActive(id)
   // const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  return <CheckBox marginRight={8} check={isActive} label={name} onChange={() => { updateSetting({ 'player.playQuality': id }) }} need />
+  return (
+    <CheckBox
+      marginRight={8}
+      check={isActive}
+      label={name}
+      onChange={() => {
+        updateSetting({ 'player.playQuality': id })
+      }}
+      need
+    />
+  )
 }
 
 export default memo(() => {
@@ -33,9 +40,9 @@ export default memo(() => {
   return (
     <SubTitle title={t('setting_play_play_quality')}>
       <View style={styles.list}>
-        {
-          playQualityList.map((q) => <Item name={t(q)} id={q} key={q} />)
-        }
+        {playQualityList.map((q) => (
+          <Item name={t(q)} id={q} key={q} />
+        ))}
       </View>
     </SubTitle>
   )
@@ -47,7 +54,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
 })
-
 
 // export default memo(() => {
 //   const t = useI18n()
@@ -63,10 +69,8 @@ const styles = StyleSheet.create({
 //   )
 // })
 
-
 // const styles = createStyle({
 //   content: {
 //     marginTop: 5,
 //   },
 // })
-

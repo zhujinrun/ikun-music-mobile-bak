@@ -10,13 +10,8 @@
  */
 
 import { forwardRef } from 'react'
-import {
-  View,
-  StyleSheet,
-  Image,
-} from 'react-native'
+import { View, StyleSheet, Image } from 'react-native'
 import type { ImageBackgroundProps as _ImageBackgroundProps } from 'react-native'
-
 
 /**
  * Very simple drop-in replacement for <Image> which supports nesting views.
@@ -49,24 +44,17 @@ export interface ImageBackgroundProps extends Omit<_ImageBackgroundProps, 'sourc
   source?: _ImageBackgroundProps['source'] | null
 }
 
-export default forwardRef<View, ImageBackgroundProps>(({
-  children,
-  style,
-  imageStyle,
-  imageRef,
-  importantForAccessibility,
-  source,
-  ...props
-}, ref) => {
-  const flattenedStyle = StyleSheet.flatten(style)
-  return (
-    <View
-      accessibilityIgnoresInvertColors={true}
-      importantForAccessibility={importantForAccessibility}
-      ref={ref}
-      style={style}>
-      {
-        source == null ? null : (
+export default forwardRef<View, ImageBackgroundProps>(
+  ({ children, style, imageStyle, imageRef, importantForAccessibility, source, ...props }, ref) => {
+    const flattenedStyle = StyleSheet.flatten(style)
+    return (
+      <View
+        accessibilityIgnoresInvertColors={true}
+        importantForAccessibility={importantForAccessibility}
+        ref={ref}
+        style={style}
+      >
+        {source == null ? null : (
           <Image
             {...props}
             source={source}
@@ -88,13 +76,13 @@ export default forwardRef<View, ImageBackgroundProps>(({
             ]}
             ref={imageRef}
           />
-        )
-      }
-      {children}
-    </View>
-  )
-})
+        )}
+        {children}
+      </View>
+    )
+  }
+)
 
-export const prefetch = async(url: string) => {
+export const prefetch = async (url: string) => {
   return Image.prefetch(url)
 }

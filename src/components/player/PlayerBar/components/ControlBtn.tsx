@@ -19,7 +19,7 @@ const PlayPrevBtn = () => {
 
   return (
     <TouchableOpacity style={styles.cotrolBtn} activeOpacity={0.5} onPress={handlePlayPrev}>
-      <Icon name='prevMusic' color={theme['c-button-font']} size={BTN_SIZE} />
+      <Icon name="prevMusic" color={theme['c-button-font']} size={BTN_SIZE} />
     </TouchableOpacity>
   )
 }
@@ -29,7 +29,7 @@ const PlayNextBtn = () => {
 
   return (
     <TouchableOpacity style={styles.cotrolBtn} activeOpacity={0.5} onPress={handlePlayNext}>
-      <Icon name='nextMusic' color={theme['c-button-font']} size={BTN_SIZE} />
+      <Icon name="nextMusic" color={theme['c-button-font']} size={BTN_SIZE} />
     </TouchableOpacity>
   )
 }
@@ -56,13 +56,12 @@ export default () => {
       </TouchableOpacity>
     */}
       {/* {btnPrev} */}
-      { isHorizontalMode ? <PlayPrevBtn /> : null }
+      {isHorizontalMode ? <PlayPrevBtn /> : null}
       <TogglePlayBtn />
       <PlayNextBtn />
     </>
   )
 }
-
 
 const styles = createStyle({
   cotrolBtn: {

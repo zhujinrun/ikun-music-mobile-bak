@@ -52,7 +52,6 @@ import ImportBtn from './ImportBtn'
 //   )
 // })
 
-
 // export interface UserApiEditModalProps {
 //   onSave: (rules: string) => void
 //   // onSourceChange: SourceSelectorProps['onSourceChange']
@@ -99,37 +98,48 @@ export default forwardRef<UserApiEditModalType, {}>((props, ref) => {
     void openUrl('https://lyswhut.github.io/lx-music-doc/mobile/custom-source')
   }
 
-  return (
-    visible
-      ? (
-          <Dialog ref={dialogRef} bgHide={false}>
-            <View style={styles.content}>
-              {/* <UrlInput ref={inputRef} /> */}
-              <Text size={16} style={styles.title}>{t('user_api_title')}</Text>
-              <List />
-              <View style={styles.tips}>
-                <Text style={styles.tipsText} size={12}>
-                  {t('user_api_readme')}
-                </Text>
-                <TouchableOpacity onPress={openFAQPage}>
-                  <Text style={{ ...styles.tipsText, textDecorationLine: 'underline' }} size={12} color={theme['c-primary-font']}>FAQ</Text>
-                </TouchableOpacity>
-                <View>
-                  <Text style={styles.tipsText} size={12}>{t('user_api_note')}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.btns}>
-              <Button style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleCancel}>
-                <Text size={14} color={theme['c-button-font']}>{t('close')}</Text>
-              </Button>
-              <ImportBtn btnStyle={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} />
-            </View>
-          </Dialog>
-        ) : null
-  )
+  return visible ? (
+    <Dialog ref={dialogRef} bgHide={false}>
+      <View style={styles.content}>
+        {/* <UrlInput ref={inputRef} /> */}
+        <Text size={16} style={styles.title}>
+          {t('user_api_title')}
+        </Text>
+        <List />
+        <View style={styles.tips}>
+          <Text style={styles.tipsText} size={12}>
+            {t('user_api_readme')}
+          </Text>
+          <TouchableOpacity onPress={openFAQPage}>
+            <Text
+              style={{ ...styles.tipsText, textDecorationLine: 'underline' }}
+              size={12}
+              color={theme['c-primary-font']}
+            >
+              FAQ
+            </Text>
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.tipsText} size={12}>
+              {t('user_api_note')}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.btns}>
+        <Button
+          style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }}
+          onPress={handleCancel}
+        >
+          <Text size={14} color={theme['c-button-font']}>
+            {t('close')}
+          </Text>
+        </Button>
+        <ImportBtn btnStyle={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} />
+      </View>
+    </Dialog>
+  ) : null
 })
-
 
 const styles = createStyle({
   content: {
@@ -172,5 +182,3 @@ const styles = createStyle({
     marginRight: 15,
   },
 })
-
-

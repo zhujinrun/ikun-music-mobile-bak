@@ -79,7 +79,6 @@ const defaultSetting: LX.AppSetting = {
   'theme.fontShadow': false,
 }
 
-
 // 使用新年皮肤
 if (new Date().getMonth() < 2) {
   defaultSetting['theme.id'] = 'happy_new_year'

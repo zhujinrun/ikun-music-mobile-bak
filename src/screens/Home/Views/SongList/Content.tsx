@@ -7,7 +7,6 @@ import HeaderBar, { type HeaderBarProps, type HeaderBarType } from './HeaderBar'
 import songlistState, { type InitState, type SortInfo } from '@/store/songlist/state'
 import List, { type ListType } from './List'
 
-
 interface SonglistInfo {
   source: InitState['sources'][number]
   sortId: SortInfo['id']
@@ -20,7 +19,7 @@ export default () => {
   const songlistInfo = useRef<SonglistInfo>({ source: 'kw', sortId: '5', tagId: '' })
 
   useEffect(() => {
-    void getSongListSetting().then(info => {
+    void getSongListSetting().then((info) => {
       songlistInfo.current.source = info.source
       songlistInfo.current.sortId = info.sortId
       songlistInfo.current.tagId = info.tagId
@@ -45,8 +44,18 @@ export default () => {
     songlistInfo.current.source = source
     songlistInfo.current.tagId = ''
     songlistInfo.current.sortId = songlistState.sortList[source]![0].id
-    void saveSongListSetting({ sortId: songlistInfo.current.sortId, source, tagId: '', tagName: '' })
-    headerBarRef.current?.setSource(source, songlistInfo.current.sortId, '', songlistInfo.current.tagId)
+    void saveSongListSetting({
+      sortId: songlistInfo.current.sortId,
+      source,
+      tagId: '',
+      tagName: '',
+    })
+    headerBarRef.current?.setSource(
+      source,
+      songlistInfo.current.sortId,
+      '',
+      songlistInfo.current.tagId
+    )
     listRef.current?.loadList(source, songlistInfo.current.sortId, songlistInfo.current.tagId)
   }
 
@@ -69,4 +78,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
-

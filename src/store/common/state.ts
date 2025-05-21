@@ -1,6 +1,5 @@
 import { type NAV_ID_Type, type COMPONENT_IDS } from '@/config/constant'
 
-
 export interface InitState {
   fontSize: number
   statusbarHeight: number
@@ -22,6 +21,5 @@ const state: InitState = {
   sourceNames: initData as InitState['sourceNames'],
   bgPic: null,
 }
-
 
 export default state

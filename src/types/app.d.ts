@@ -1,4 +1,3 @@
-/* eslint-disable no-var */
 import type { AppEventTypes } from '@/event/appEvent'
 import type { ListEventTypes } from '@/event/listEvent'
 import type { DislikeEventTypes } from '@/event/dislikeEvent'
@@ -58,7 +57,6 @@ interface GlobalData {
 
   // syncKeyInfo: LX.Sync.KeyInfo
 }
-
 
 declare global {
   var isDev: boolean

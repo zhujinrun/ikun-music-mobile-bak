@@ -14,7 +14,6 @@ import IsS2T from './IsS2T'
 import MaxCache from './MaxCache'
 import { useI18n } from '@/lang'
 
-
 export default memo(() => {
   const t = useI18n()
 

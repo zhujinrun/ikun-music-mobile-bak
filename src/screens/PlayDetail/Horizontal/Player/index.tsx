@@ -8,7 +8,6 @@ import PlayInfo from './PlayInfo'
 import ControlBtn from './ControlBtn'
 import { marginLeftRaw } from '../constant'
 
-
 export default memo(() => {
   return (
     <View style={styles.container} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_player}>

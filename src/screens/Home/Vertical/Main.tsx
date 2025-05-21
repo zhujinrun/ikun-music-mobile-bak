@@ -7,15 +7,16 @@ import Leaderboard from '../Views/Leaderboard'
 import Setting from '../Views/Setting'
 import commonState, { type InitState as CommonState } from '@/store/common/state'
 import { createStyle } from '@/utils/tools'
-import PagerView, { type PageScrollStateChangedNativeEvent, type PagerViewOnPageSelectedEvent } from 'react-native-pager-view'
+import PagerView, {
+  type PageScrollStateChangedNativeEvent,
+  type PagerViewOnPageSelectedEvent,
+} from 'react-native-pager-view'
 import { setNavActiveId } from '@/core/common'
 import settingState from '@/store/setting/state'
 
-const hideKeys = [
-  'list.isShowAlbumName',
-  'list.isShowInterval',
-  'theme.fontShadow',
-] as Readonly<Array<keyof LX.AppSetting>>
+const hideKeys = ['list.isShowAlbumName', 'list.isShowInterval', 'theme.fontShadow'] as Readonly<
+  Array<keyof LX.AppSetting>
+>
 
 const SearchPage = () => {
   const [visible, setVisible] = useState(commonState.navActiveId == 'nav_search')
@@ -35,7 +36,7 @@ const SearchPage = () => {
       setVisible(false)
     }
     const handleConfigUpdated = (keys: Array<keyof LX.AppSetting>) => {
-      if (keys.some(k => hideKeys.includes(k))) handleHide()
+      if (keys.some((k) => hideKeys.includes(k))) handleHide()
     }
     global.state_event.on('navActiveIdUpdated', handleNavIdUpdate)
     global.state_event.on('themeUpdated', handleHide)
@@ -70,7 +71,7 @@ const SongListPage = () => {
       setVisible(false)
     }
     const handleConfigUpdated = (keys: Array<keyof LX.AppSetting>) => {
-      if (keys.some(k => hideKeys.includes(k))) handleHide()
+      if (keys.some((k) => hideKeys.includes(k))) handleHide()
     }
     global.state_event.on('navActiveIdUpdated', handleNavIdUpdate)
     global.state_event.on('themeUpdated', handleHide)
@@ -106,7 +107,7 @@ const LeaderboardPage = () => {
       setVisible(false)
     }
     const handleConfigUpdated = (keys: Array<keyof LX.AppSetting>) => {
-      if (keys.some(k => hideKeys.includes(k))) handleHide()
+      if (keys.some((k) => hideKeys.includes(k))) handleHide()
     }
     global.state_event.on('navActiveIdUpdated', handleNavIdUpdate)
     global.state_event.on('themeUpdated', handleHide)
@@ -141,7 +142,7 @@ const MylistPage = () => {
       setVisible(false)
     }
     const handleConfigUpdated = (keys: Array<keyof LX.AppSetting>) => {
-      if (keys.some(k => hideKeys.includes(k))) handleHide()
+      if (keys.some((k) => hideKeys.includes(k))) handleHide()
     }
     global.state_event.on('navActiveIdUpdated', handleNavIdUpdate)
     global.state_event.on('themeUpdated', handleHide)
@@ -185,13 +186,7 @@ const viewMap = {
   nav_love: 3,
   nav_setting: 4,
 }
-const indexMap = [
-  'nav_search',
-  'nav_songlist',
-  'nav_top',
-  'nav_love',
-  'nav_setting',
-] as const
+const indexMap = ['nav_search', 'nav_songlist', 'nav_top', 'nav_love', 'nav_setting'] as const
 
 const Main = () => {
   const pagerViewRef = useRef<ComponentRef<typeof PagerView>>(null)
@@ -222,26 +217,29 @@ const Main = () => {
     }
   }, [])
 
-  const onPageScrollStateChanged = useCallback(({ nativeEvent }: PageScrollStateChangedNativeEvent) => {
-    // console.log(nativeEvent)
-    const idle = nativeEvent.pageScrollState == 'idle'
-    if (global.lx.homePagerIdle != idle) global.lx.homePagerIdle = idle
-    // if (nativeEvent.pageScrollState != 'idle') return
-    // if (scrollPositionRef.current != commonState.navActiveIndex) {
-    //   setNavActiveIndex(scrollPositionRef.current)
-    // }
-    // if (activeIndexRef.current == -1) return
-    // if (nativeEvent.offset == 0) {
-    //   isScrollingRef.current = false
+  const onPageScrollStateChanged = useCallback(
+    ({ nativeEvent }: PageScrollStateChangedNativeEvent) => {
+      // console.log(nativeEvent)
+      const idle = nativeEvent.pageScrollState == 'idle'
+      if (global.lx.homePagerIdle != idle) global.lx.homePagerIdle = idle
+      // if (nativeEvent.pageScrollState != 'idle') return
+      // if (scrollPositionRef.current != commonState.navActiveIndex) {
+      //   setNavActiveIndex(scrollPositionRef.current)
+      // }
+      // if (activeIndexRef.current == -1) return
+      // if (nativeEvent.offset == 0) {
+      //   isScrollingRef.current = false
 
-    //   const index = nativeEvent.position
-    //   if (activeIndexRef.current == index) return
-    //   activeIndexRef.current = index
-    //   setNavActiveIndex(index)
-    // } else if (!isScrollingRef.current) {
-    //   isScrollingRef.current = true
-    // }
-  }, [])
+      //   const index = nativeEvent.position
+      //   if (activeIndexRef.current == index) return
+      //   activeIndexRef.current = index
+      //   setNavActiveIndex(index)
+      // } else if (!isScrollingRef.current) {
+      //   isScrollingRef.current = true
+      // }
+    },
+    []
+  )
 
   useEffect(() => {
     const handleUpdate = (id: CommonState['navActiveId']) => {
@@ -250,7 +248,10 @@ const Main = () => {
       activeIndexRef.current = index
       pagerViewRef.current?.setPageWithoutAnimation(index)
     }
-    const handleConfigUpdate = (keys: Array<keyof LX.AppSetting>, setting: Partial<LX.AppSetting>) => {
+    const handleConfigUpdate = (
+      keys: Array<keyof LX.AppSetting>,
+      setting: Partial<LX.AppSetting>
+    ) => {
       if (!keys.includes('common.homePageScroll')) return
       pagerViewRef.current?.setScrollEnabled(setting['common.homePageScroll']!)
     }
@@ -263,33 +264,34 @@ const Main = () => {
     }
   }, [])
 
-
-  const component = useMemo(() => (
-    <PagerView ref={pagerViewRef}
-      initialPage={activeIndexRef.current}
-      // onPageScroll={handlePageScroll}
-      offscreenPageLimit={1}
-      onPageSelected={onPageSelected}
-      onPageScrollStateChanged={onPageScrollStateChanged}
-      scrollEnabled={settingState.setting['common.homePageScroll']}
-      style={styles.pagerView}
-    >
-      <View collapsable={false} key="nav_search" style={styles.pageStyle}>
-        <SearchPage />
-      </View>
-      <View collapsable={false} key="nav_songlist" style={styles.pageStyle}>
-        <SongListPage />
-      </View>
-      <View collapsable={false} key="nav_top" style={styles.pageStyle}>
-        <LeaderboardPage />
-      </View>
-      <View collapsable={false} key="nav_love" style={styles.pageStyle}>
-        <MylistPage />
-      </View>
-      <View collapsable={false} key="nav_setting" style={styles.pageStyle}>
-        <SettingPage />
-      </View>
-      {/* <View collapsable={false} key="nav_search" style={styles.pageStyle}>
+  const component = useMemo(
+    () => (
+      <PagerView
+        ref={pagerViewRef}
+        initialPage={activeIndexRef.current}
+        // onPageScroll={handlePageScroll}
+        offscreenPageLimit={1}
+        onPageSelected={onPageSelected}
+        onPageScrollStateChanged={onPageScrollStateChanged}
+        scrollEnabled={settingState.setting['common.homePageScroll']}
+        style={styles.pagerView}
+      >
+        <View collapsable={false} key="nav_search" style={styles.pageStyle}>
+          <SearchPage />
+        </View>
+        <View collapsable={false} key="nav_songlist" style={styles.pageStyle}>
+          <SongListPage />
+        </View>
+        <View collapsable={false} key="nav_top" style={styles.pageStyle}>
+          <LeaderboardPage />
+        </View>
+        <View collapsable={false} key="nav_love" style={styles.pageStyle}>
+          <MylistPage />
+        </View>
+        <View collapsable={false} key="nav_setting" style={styles.pageStyle}>
+          <SettingPage />
+        </View>
+        {/* <View collapsable={false} key="nav_search" style={styles.pageStyle}>
         <Search />
       </View>
       <View collapsable={false} key="nav_songlist" style={styles.pageStyle}>
@@ -304,8 +306,10 @@ const Main = () => {
       <View collapsable={false} key="nav_setting" style={styles.pageStyle}>
         <Setting />
       </View> */}
-    </PagerView>
-  ), [onPageScrollStateChanged, onPageSelected])
+      </PagerView>
+    ),
+    [onPageScrollStateChanged, onPageSelected]
+  )
 
   return component
 }
@@ -321,6 +325,4 @@ const styles = createStyle({
   },
 })
 
-
 export default Main
-

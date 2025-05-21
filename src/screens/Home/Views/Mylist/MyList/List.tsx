@@ -1,5 +1,12 @@
 import { memo, useEffect, useRef } from 'react'
-import { View, TouchableOpacity, FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  FlatList,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  type FlatListProps,
+} from 'react-native'
 
 import { Icon } from '@/components/common/Icon'
 
@@ -18,60 +25,90 @@ type FlatListType = FlatListProps<LX.List.MyListInfo>
 
 const ITEM_HEIGHT = scaleSizeH(40)
 
-const ListItem = memo(({ item, index, activeId, onPress, onShowMenu }: {
-  onPress: (item: LX.List.MyListInfo) => void
-  index: number
-  activeId: string
-  item: LX.List.MyListInfo
-  onShowMenu: (item: LX.List.MyListInfo, index: number, position: { x: number, y: number, w: number, h: number }) => void
-}) => {
-  const theme = useTheme()
-  const moreButtonRef = useRef<TouchableOpacity>(null)
-  const fetching = useListFetching(item.id)
+const ListItem = memo(
+  ({
+    item,
+    index,
+    activeId,
+    onPress,
+    onShowMenu,
+  }: {
+    onPress: (item: LX.List.MyListInfo) => void
+    index: number
+    activeId: string
+    item: LX.List.MyListInfo
+    onShowMenu: (
+      item: LX.List.MyListInfo,
+      index: number,
+      position: { x: number; y: number; w: number; h: number }
+    ) => void
+  }) => {
+    const theme = useTheme()
+    const moreButtonRef = useRef<TouchableOpacity>(null)
+    const fetching = useListFetching(item.id)
 
-  const active = activeId == item.id
+    const active = activeId == item.id
 
-  const handleShowMenu = () => {
-    if (moreButtonRef.current?.measure) {
-      moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
-        // console.log(fx, fy, width, height, px, py)
-        onShowMenu(item, index, { x: Math.ceil(px), y: Math.ceil(py), w: Math.ceil(width), h: Math.ceil(height) })
-      })
-    }
-  }
-
-  const handlePress = () => {
-    onPress(item)
-  }
-
-  return (
-    <View style={{ ...styles.listItem, height: ITEM_HEIGHT }}>
-      {
-        active
-          ? <Icon style={styles.listActiveIcon} name="chevron-right" size={12} color={theme['c-primary-font']} />
-          : null
+    const handleShowMenu = () => {
+      if (moreButtonRef.current?.measure) {
+        moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
+          // console.log(fx, fy, width, height, px, py)
+          onShowMenu(item, index, {
+            x: Math.ceil(px),
+            y: Math.ceil(py),
+            w: Math.ceil(width),
+            h: Math.ceil(height),
+          })
+        })
       }
-      { fetching ? <Loading color={active ? theme['c-primary-font'] : theme['c-font']} style={styles.loading} /> : null }
-      <TouchableOpacity style={styles.listName} onPress={handlePress}>
-        <Text numberOfLines={1} color={active ? theme['c-primary-font'] : theme['c-font']}>{item.name}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.listMoreBtn}>
-        <Icon name="dots-vertical" color={theme['c-350']} size={12} />
-      </TouchableOpacity>
-    </View>
-  )
-}, (prevProps, nextProps) => {
-  return !!(prevProps.item === nextProps.item &&
-    prevProps.index === nextProps.index &&
-    prevProps.item.name == nextProps.item.name &&
-    prevProps.activeId != nextProps.item.id &&
-    nextProps.activeId != nextProps.item.id
-  )
-})
+    }
 
+    const handlePress = () => {
+      onPress(item)
+    }
 
-export default ({ onShowMenu }: {
-  onShowMenu: (info: { listInfo: LX.List.MyListInfo, index: number }, position: Position) => void
+    return (
+      <View style={{ ...styles.listItem, height: ITEM_HEIGHT }}>
+        {active ? (
+          <Icon
+            style={styles.listActiveIcon}
+            name="chevron-right"
+            size={12}
+            color={theme['c-primary-font']}
+          />
+        ) : null}
+        {fetching ? (
+          <Loading
+            color={active ? theme['c-primary-font'] : theme['c-font']}
+            style={styles.loading}
+          />
+        ) : null}
+        <TouchableOpacity style={styles.listName} onPress={handlePress}>
+          <Text numberOfLines={1} color={active ? theme['c-primary-font'] : theme['c-font']}>
+            {item.name}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.listMoreBtn}>
+          <Icon name="dots-vertical" color={theme['c-350']} size={12} />
+        </TouchableOpacity>
+      </View>
+    )
+  },
+  (prevProps, nextProps) => {
+    return !!(
+      prevProps.item === nextProps.item &&
+      prevProps.index === nextProps.index &&
+      prevProps.item.name == nextProps.item.name &&
+      prevProps.activeId != nextProps.item.id &&
+      nextProps.activeId != nextProps.item.id
+    )
+  }
+)
+
+export default ({
+  onShowMenu,
+}: {
+  onShowMenu: (info: { listInfo: LX.List.MyListInfo; index: number }, position: Position) => void
 }) => {
   const flatListRef = useRef<FlatList>(null)
   const allList = useMyList()
@@ -84,7 +121,6 @@ export default ({ onShowMenu }: {
       setActiveList(item.id)
     })
   }
-
 
   const handleScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
     void saveListPosition(LIST_SCROLL_POSITION_KEY, nativeEvent.contentOffset.y)
@@ -110,7 +146,7 @@ export default ({ onShowMenu }: {
       onShowMenu={showMenu}
     />
   )
-  const getkey: FlatListType['keyExtractor'] = item => item.id
+  const getkey: FlatListType['keyExtractor'] = (item) => item.id
   const getItemLayout: FlatListType['getItemLayout'] = (data, index) => {
     return { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
   }
@@ -133,7 +169,6 @@ export default ({ onShowMenu }: {
     />
   )
 }
-
 
 const styles = createStyle({
   container: {
@@ -187,4 +222,3 @@ const styles = createStyle({
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
 })
-

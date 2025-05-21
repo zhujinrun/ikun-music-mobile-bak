@@ -15,7 +15,6 @@ import TipList, { type TipListType } from './TipList'
 import List, { type ListType } from './List'
 import { addHistoryWord } from '@/core/search/search'
 
-
 interface SearchInfo {
   temp_source: LX.OnlineSource
   source: LX.OnlineSource | 'all'
@@ -31,7 +30,7 @@ export default () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    void getSearchSetting().then(info => {
+    void getSearchSetting().then((info) => {
       // info.type = 'music'
       searchInfo.current.temp_source = info.temp_source
       searchInfo.current.source = info.source
@@ -45,7 +44,11 @@ export default () => {
           break
       }
       headerBarRef.current?.setText(searchState.searchText)
-      listRef.current?.loadList(searchState.searchText, searchInfo.current.source, searchInfo.current.searchType)
+      listRef.current?.loadList(
+        searchState.searchText,
+        searchInfo.current.source,
+        searchInfo.current.searchType
+      )
     })
 
     const handleTypeChange = (type: SearchType) => {
@@ -59,7 +62,6 @@ export default () => {
       global.app_event.off('searchTypeChanged', handleTypeChange)
     }
   }, [])
-
 
   const handleLayout = (e: LayoutChangeEvent) => {
     layoutHeightRef.current = e.nativeEvent.layout.height

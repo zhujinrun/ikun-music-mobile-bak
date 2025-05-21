@@ -36,7 +36,6 @@ export enum NAV_SHEAR_NATIVE_IDS {
   songlistDetail_title = 'songlistDetail_title',
 }
 
-
 export const storageDataPrefix = {
   setting: '@setting_v1',
   userList: '@user_list',
@@ -97,7 +96,6 @@ export const storageDataPrefixOld = {
 
 export const APP_PROVIDER_NAME = 'com.ikunshare.music.mobile.provider'
 
-
 export const NAV_MENUS = [
   { id: 'nav_search', icon: 'search-2' },
   { id: 'nav_songlist', icon: 'album' },
@@ -107,7 +105,7 @@ export const NAV_MENUS = [
   { id: 'nav_setting', icon: 'setting' },
 ] as const
 
-export type NAV_ID_Type = typeof NAV_MENUS[number]['id']
+export type NAV_ID_Type = (typeof NAV_MENUS)[number]['id']
 
 export const LXM_FILE_EXT_RXP = ['json', 'lxmc', 'bin']
 export const USER_API_SOURCE_FILE_EXT_RXP = ['js']

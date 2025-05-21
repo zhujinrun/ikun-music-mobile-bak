@@ -4,10 +4,9 @@
 
 import { featureVersion } from '../modules'
 
-
 const handler: Omit<LX.Sync.ClientSyncHandlerActions<LX.Sync.Socket>, 'finished'> = {
   async getEnabledFeatures(socket, serverType, supportedFeatures) {
-  // const userSpace = getUserSpace(socket.userInfo.name)
+    // const userSpace = getUserSpace(socket.userInfo.name)
     const features: LX.Sync.EnabledFeatures = {}
     switch (serverType) {
       case 'server':

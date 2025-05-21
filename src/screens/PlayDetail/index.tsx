@@ -14,17 +14,16 @@ export default ({ componentId }: { componentId: string }) => {
 
   useEffect(() => {
     setComponentId(COMPONENT_IDS.playDetail, componentId)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <PageContent>
       <StatusBar />
-      {
-        isHorizontalMode
-          ? <Horizontal componentId={componentId} />
-          : <Vertical componentId={componentId} />
-      }
+      {isHorizontalMode ? (
+        <Horizontal componentId={componentId} />
+      ) : (
+        <Vertical componentId={componentId} />
+      )}
     </PageContent>
   )
 }

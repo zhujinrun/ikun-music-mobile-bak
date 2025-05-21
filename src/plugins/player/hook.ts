@@ -13,11 +13,13 @@ export const usePlaybackState = () => {
 
     void setPlayerState()
 
-    const sub = TrackPlayer.addEventListener(Event.PlaybackState, data => {
+    const sub = TrackPlayer.addEventListener(Event.PlaybackState, (data) => {
       setState(data.state as State)
     })
 
-    return () => { sub.remove() }
+    return () => {
+      sub.remove()
+    }
   }, [])
 
   return state
@@ -36,7 +38,6 @@ export const usePlaybackState = () => {
 //   }, [handler])
 
 //   useEffect(() => {
-//     // eslint-disable-next-line no-undef
 //     if (__DEV__) {
 //       const allowedTypes = Object.values(Event)
 //       const invalidTypes = events.filter(type => !allowedTypes.includes(type))
@@ -58,10 +59,7 @@ export const usePlaybackState = () => {
 //   }, [events])
 // }
 
-const pollTrackPlayerStates = [
-  State.Playing,
-  State.Buffering,
-] as const
+const pollTrackPlayerStates = [State.Playing, State.Buffering] as const
 /**
  * Poll for track progress for the given interval (in miliseconds)
  * @param updateInterval - ms interval
@@ -78,7 +76,7 @@ export function useProgress(updateInterval: number) {
     }
   }, [])
 
-  const getProgress = async() => {
+  const getProgress = async () => {
     const [position, duration, buffered] = await Promise.all([
       TrackPlayer.getPosition(),
       TrackPlayer.getDuration(),
@@ -91,7 +89,8 @@ export function useProgress(updateInterval: number) {
       position === stateRef.current.position &&
       duration === stateRef.current.duration &&
       buffered === stateRef.current.buffered
-    ) return
+    )
+      return
 
     const state = { position, duration, buffered }
     stateRef.current = state
@@ -104,9 +103,10 @@ export function useProgress(updateInterval: number) {
 
     void getProgress()
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const poll = setInterval(getProgress, updateInterval || 1000)
-    return () => { clearInterval(poll) }
+    return () => {
+      clearInterval(poll)
+    }
   }, [playerState, updateInterval])
 
   return state
@@ -126,20 +126,24 @@ export function useBufferProgress() {
       clearInterval(interval)
       interval = null
     }
-    const updateBuffer = async() => {
-      const buffered = await (duration ? TrackPlayer.getBufferedPosition() : Promise.all([TrackPlayer.getBufferedPosition(), TrackPlayer.getDuration()]).then(([buffered, _duration]) => {
-        duration = _duration
-        return buffered
-      }))
+    const updateBuffer = async () => {
+      const buffered = await (duration
+        ? TrackPlayer.getBufferedPosition()
+        : Promise.all([TrackPlayer.getBufferedPosition(), TrackPlayer.getDuration()]).then(
+            ([buffered, _duration]) => {
+              duration = _duration
+              return buffered
+            }
+          ))
       // console.log('updateBuffer', buffered, duration, buffered > 0, buffered == duration)
       // After the asynchronous code is executed, if the component has been uninstalled, do not update the status
       if (buffered > 0 && buffered == duration) clearItv()
       if (buffered == preBuffered || isUnmounted) return
       preBuffered = buffered
-      setProgress(duration ? (buffered / duration) : 0)
+      setProgress(duration ? buffered / duration : 0)
     }
 
-    const sub = TrackPlayer.addEventListener(Event.PlaybackState, data => {
+    const sub = TrackPlayer.addEventListener(Event.PlaybackState, (data) => {
       switch (data.state) {
         case State.None:
           // console.log('state', 'None')

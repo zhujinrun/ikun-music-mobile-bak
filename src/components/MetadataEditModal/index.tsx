@@ -17,9 +17,7 @@ import { log } from '@/utils/log'
 import { formatPlayTime2 } from '@/utils'
 import { unlink } from '@/utils/fs'
 
-export type {
-  Metadata,
-}
+export type { Metadata }
 
 export interface MetadataEditType {
   show: (filePath: string) => void
@@ -27,7 +25,6 @@ export interface MetadataEditType {
 export interface MetadataEditProps {
   onUpdate: (info: Metadata) => void
 }
-
 
 export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
   const alertRef = useRef<ConfirmAlertType>(null)
@@ -44,7 +41,7 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
       readMetadata(filePath),
       readPic(filePath).catch(() => ''),
       readLyric(filePath, false).catch(() => ''),
-    ]).then(async([_metadata, pic, lyric]) => {
+    ]).then(async ([_metadata, pic, lyric]) => {
       if (!_metadata) return
       if (isUnmounted.current) return
       metadata.current = {
@@ -73,7 +70,7 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
     },
   }))
 
-  const handleUpdate = async() => {
+  const handleUpdate = async () => {
     if (!metadataFormRef.current) return
     let _metadata = metadataFormRef.current.getForm()
     if (!_metadata.name) {
@@ -116,23 +113,24 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
     props.onUpdate(_metadata)
   }
 
-  return (
-    visible
-      ? <ConfirmAlert
-          ref={alertRef}
-          onConfirm={handleUpdate}
-          confirmText={processing ? global.i18n.t('metadata_edit_modal_processing') : global.i18n.t('metadata_edit_modal_confirm')}
-          disabledConfirm={processing}
-        >
-          <View style={styles.renameContent} onStartShouldSetResponder={() => true}>
-            <Text style={styles.title}>{global.i18n.t('metadata_edit_modal_title')}</Text>
-            <MetadataForm ref={metadataFormRef} />
-          </View>
-        </ConfirmAlert>
-      : null
-  )
+  return visible ? (
+    <ConfirmAlert
+      ref={alertRef}
+      onConfirm={handleUpdate}
+      confirmText={
+        processing
+          ? global.i18n.t('metadata_edit_modal_processing')
+          : global.i18n.t('metadata_edit_modal_confirm')
+      }
+      disabledConfirm={processing}
+    >
+      <View style={styles.renameContent} onStartShouldSetResponder={() => true}>
+        <Text style={styles.title}>{global.i18n.t('metadata_edit_modal_title')}</Text>
+        <MetadataForm ref={metadataFormRef} />
+      </View>
+    </ConfirmAlert>
+  ) : null
 })
-
 
 const styles = createStyle({
   renameContent: {
@@ -145,5 +143,3 @@ const styles = createStyle({
     textAlign: 'center',
   },
 })
-
-

@@ -184,7 +184,7 @@ export default {
     }
   },
   transformLrc(tags, lrclist) {
-    return `${tags.join('\n')}\n${lrclist ? lrclist.map(l => `[${l.time}]${l.text}\n`).join('') : '暂无歌词'}`
+    return `${tags.join('\n')}\n${lrclist ? lrclist.map((l) => `[${l.time}]${l.text}\n`).join('') : '暂无歌词'}`
   },
   parseLrc(lrc) {
     const lines = lrc.split(/\r\n|\r|\n/)
@@ -235,13 +235,16 @@ export default {
   // },
   getLyric(musicInfo, isGetLyricx = true) {
     // this.getLyric2(musicInfo)
-    const requestObj = httpFetch(`http://newlyric.kuwo.cn/newlyric.lrc?${buildParams(musicInfo.songmid, isGetLyricx)}`, {
-      cache: false,
-      binary: true,
-    })
+    const requestObj = httpFetch(
+      `http://newlyric.kuwo.cn/newlyric.lrc?${buildParams(musicInfo.songmid, isGetLyricx)}`,
+      {
+        cache: false,
+        binary: true,
+      }
+    )
     requestObj.promise = requestObj.promise.then(({ statusCode, body }) => {
       if (statusCode != 200) return Promise.reject(new Error(JSON.stringify(body)))
-      return decodeLyric({ lrcBuffer: body, isGetLyricx }).then(base64Data => {
+      return decodeLyric({ lrcBuffer: body, isGetLyricx }).then((base64Data) => {
         // let lrcInfo
         // try {
         //   lrcInfo = this.parseLrc(Buffer.from(base64Data, 'base64').toString())

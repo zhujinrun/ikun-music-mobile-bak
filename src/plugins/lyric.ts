@@ -62,8 +62,7 @@ const lrcTools = {
   },
 }
 
-
-export const init = async() => {
+export const init = async () => {
   lrcTools.init()
 }
 
@@ -129,9 +128,10 @@ export const useLrcSet = () => {
       setLines(lines)
     }
     lrcTools.addSetLyricHook(callback)
-    return () => { lrcTools.removeSetLyricHook(callback) }
+    return () => {
+      lrcTools.removeSetLyricHook(callback)
+    }
   }, [])
 
   return lines
 }
-

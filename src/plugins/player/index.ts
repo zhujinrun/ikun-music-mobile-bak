@@ -16,7 +16,13 @@ import { updateOptions, setVolume, setPlaybackRate, migratePlayerCache } from '.
 //   })
 // }
 
-const initial = async({ volume, playRate, cacheSize, isHandleAudioFocus, isEnableAudioOffload }: {
+const initial = async ({
+  volume,
+  playRate,
+  cacheSize,
+  isHandleAudioFocus,
+  isEnableAudioOffload,
+}: {
   volume: number
   playRate: number
   cacheSize: number
@@ -43,16 +49,9 @@ const initial = async({ volume, playRate, cacheSize, isHandleAudioFocus, isEnabl
   // listenEvent()
 }
 
-
 const isInitialized = () => global.lx.playerStatus.isInitialized
 
-
-export {
-  initial,
-  isInitialized,
-  setVolume,
-  setPlaybackRate,
-}
+export { initial, isInitialized, setVolume, setPlaybackRate }
 
 export {
   setResource,

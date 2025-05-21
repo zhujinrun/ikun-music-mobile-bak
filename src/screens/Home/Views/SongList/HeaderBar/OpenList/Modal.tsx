@@ -43,7 +43,6 @@ const IdInput = forwardRef<IdInputType, {}>((props, ref) => {
   )
 })
 
-
 export interface ModalProps {
   onOpenId: (id: string) => void
   // onSourceChange: SourceSelectorProps['onSourceChange']
@@ -90,24 +89,20 @@ export default forwardRef<ModalType, ModalProps>(({ onOpenId }, ref) => {
     onOpenId(id)
   }
 
-  return (
-    visible
-      ? <ConfirmAlert
-          ref={alertRef}
-          onConfirm={handleConfirm}
-        >
-          <View style={styles.content}>
-            <View style={styles.col}>
-              {/* <SourceSelector style={{ ...styles.selector, backgroundColor: theme['c-primary-input-background'] }} ref={sourceSelectorRef} onSourceChange={onSourceChange} /> */}
-              <IdInput ref={inputRef} />
-            </View>
-            <Text style={styles.inputTipText} size={13} color={theme['c-600']}>{t('songlist_open_input_tip')}</Text>
-          </View>
-        </ConfirmAlert>
-      : null
-  )
+  return visible ? (
+    <ConfirmAlert ref={alertRef} onConfirm={handleConfirm}>
+      <View style={styles.content}>
+        <View style={styles.col}>
+          {/* <SourceSelector style={{ ...styles.selector, backgroundColor: theme['c-primary-input-background'] }} ref={sourceSelectorRef} onSourceChange={onSourceChange} /> */}
+          <IdInput ref={inputRef} />
+        </View>
+        <Text style={styles.inputTipText} size={13} color={theme['c-600']}>
+          {t('songlist_open_input_tip')}
+        </Text>
+      </View>
+    </ConfirmAlert>
+  ) : null
 })
-
 
 const styles = createStyle({
   content: {
@@ -139,5 +134,3 @@ const styles = createStyle({
     // lineHeight: 18,
   },
 })
-
-

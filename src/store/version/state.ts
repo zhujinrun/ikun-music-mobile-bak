@@ -44,5 +44,4 @@ const state: InitState = {
   },
 }
 
-
 export default state

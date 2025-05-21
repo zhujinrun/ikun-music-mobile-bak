@@ -24,7 +24,7 @@ export const SETTING_SCREENS = [
   'about',
 ] as const
 
-export type SettingScreenIds = typeof SETTING_SCREENS[number]
+export type SettingScreenIds = (typeof SETTING_SCREENS)[number]
 
 // interface MainProps {
 //   onUpdateActiveId: (id: string) => void
@@ -48,23 +48,31 @@ const Main = forwardRef<MainType, {}>((props, ref) => {
 
   const component = useMemo(() => {
     switch (id) {
-      case 'player': return <Player />
-      case 'lyric_desktop': return <LyricDesktop />
-      case 'search': return <Search />
-      case 'list': return <List />
-      case 'sync': return <Sync />
-      case 'backup': return <Backup />
-      case 'other': return <Other />
-      case 'version': return <Version />
-      case 'about': return <About />
+      case 'player':
+        return <Player />
+      case 'lyric_desktop':
+        return <LyricDesktop />
+      case 'search':
+        return <Search />
+      case 'list':
+        return <List />
+      case 'sync':
+        return <Sync />
+      case 'backup':
+        return <Backup />
+      case 'other':
+        return <Other />
+      case 'version':
+        return <Version />
+      case 'about':
+        return <About />
       case 'basic':
-      default: return <Basic />
+      default:
+        return <Basic />
     }
   }, [id])
 
   return component
 })
 
-
 export default Main
-

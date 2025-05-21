@@ -12,9 +12,19 @@ import { scaleSizeH, scaleSizeW } from '@/utils/pixelRatio'
 const menuItemHeight = scaleSizeH(40)
 const menuItemWidth = scaleSizeW(100)
 
-export interface Position { w: number, h: number, x: number, y: number, menuWidth?: number, menuHeight?: number }
-export interface MenuSize { width?: number, height?: number }
-export type Menus = Readonly<Array<{ action: string, label: string, disabled?: boolean }>>
+export interface Position {
+  w: number
+  h: number
+  x: number
+  y: number
+  menuWidth?: number
+  menuHeight?: number
+}
+export interface MenuSize {
+  width?: number
+  height?: number
+}
+export type Menus = Readonly<Array<{ action: string; label: string; disabled?: boolean }>>
 
 const styles = createStyle({
   mask: {
@@ -90,7 +100,8 @@ const Menu = ({
     let menuHeight = menus.length * menuItemStyle.height
     const topHeight = buttonPosition.y - 20
     const bottomHeight = windowSize.height - buttonPosition.y - buttonPosition.h - 20
-    if (menuHeight > topHeight && menuHeight > bottomHeight) menuHeight = Math.max(topHeight, bottomHeight)
+    if (menuHeight > topHeight && menuHeight > bottomHeight)
+      menuHeight = Math.max(topHeight, bottomHeight)
 
     const menuWidth = menuItemStyle.width
     const bottomSpace = windowSize.height - buttonPosition.y - buttonPosition.h - 20
@@ -127,41 +138,71 @@ const Menu = ({
   // console.log(menuStyle)
   // console.log(menuItemStyle)
   return (
-    <View style={{ ...styles.menu, ...menuStyle, backgroundColor: theme['c-content-background'] }} onStartShouldSetResponder={() => true}>
+    <View
+      style={{ ...styles.menu, ...menuStyle, backgroundColor: theme['c-content-background'] }}
+      onStartShouldSetResponder={() => true}
+    >
       <Animated.ScrollView keyboardShouldPersistTaps={'always'}>
-        {
-          menus.map((menu, index) => (
-            menu.disabled
-              ? (
-                  <View
-                    key={menu.action}
-                    style={{ ...styles.menuItem, width: menuItemStyle.width, height: menuItemStyle.height, opacity: 0.4 }}
-                  >
-                    <Text style={{ textAlign: center ? 'center' : 'left' }} size={fontSize} numberOfLines={1}>{menu.label}</Text>
-                  </View>
-                )
-              : menu.action == activeId
-                ? (
-                    <View
-                      key={menu.action}
-                      style={{ ...styles.menuItem, width: menuItemStyle.width, height: menuItemStyle.height }}
-                    >
-                      <Text style={{ textAlign: center ? 'center' : 'left' }} color={theme['c-primary-font-active']} size={fontSize} numberOfLines={1}>{menu.label}</Text>
-                    </View>
-                  )
-                : (
-                    <TouchableHighlight
-                      key={menu.action}
-                      style={{ ...styles.menuItem, width: menuItemStyle.width, height: menuItemStyle.height }}
-                      underlayColor={theme['c-primary-background-active']}
-                      onPress={() => { menuPress(menu) }}
-                    >
-                      <Text style={{ textAlign: center ? 'center' : 'left' }} size={fontSize} numberOfLines={1}>{menu.label}</Text>
-                    </TouchableHighlight>
-                  )
-
-          ))
-        }
+        {menus.map((menu, index) =>
+          menu.disabled ? (
+            <View
+              key={menu.action}
+              style={{
+                ...styles.menuItem,
+                width: menuItemStyle.width,
+                height: menuItemStyle.height,
+                opacity: 0.4,
+              }}
+            >
+              <Text
+                style={{ textAlign: center ? 'center' : 'left' }}
+                size={fontSize}
+                numberOfLines={1}
+              >
+                {menu.label}
+              </Text>
+            </View>
+          ) : menu.action == activeId ? (
+            <View
+              key={menu.action}
+              style={{
+                ...styles.menuItem,
+                width: menuItemStyle.width,
+                height: menuItemStyle.height,
+              }}
+            >
+              <Text
+                style={{ textAlign: center ? 'center' : 'left' }}
+                color={theme['c-primary-font-active']}
+                size={fontSize}
+                numberOfLines={1}
+              >
+                {menu.label}
+              </Text>
+            </View>
+          ) : (
+            <TouchableHighlight
+              key={menu.action}
+              style={{
+                ...styles.menuItem,
+                width: menuItemStyle.width,
+                height: menuItemStyle.height,
+              }}
+              underlayColor={theme['c-primary-background-active']}
+              onPress={() => {
+                menuPress(menu)
+              }}
+            >
+              <Text
+                style={{ textAlign: center ? 'center' : 'left' }}
+                size={fontSize}
+                numberOfLines={1}
+              >
+                {menu.label}
+              </Text>
+            </TouchableHighlight>
+          )
+        )}
       </Animated.ScrollView>
     </View>
   )
@@ -183,11 +224,14 @@ export interface MenuType {
   hide: () => void
 }
 
-const Component = <M extends Menus>({ menus, width, height, activeId, onHide, onPress, fontSize, center }: MenuProps<M>, ref: Ref<MenuType>) => {
+const Component = <M extends Menus>(
+  { menus, width, height, activeId, onHide, onPress, fontSize, center }: MenuProps<M>,
+  ref: Ref<MenuType>
+) => {
   // console.log(visible)
   const modalRef = useRef<ModalType>(null)
   const [position, setPosition] = useState<Position>({ w: 0, h: 0, x: 0, y: 0 })
-  const [menuSize, setMenuSize] = useState<MenuSize>({ })
+  const [menuSize, setMenuSize] = useState<MenuSize>({})
   const hide = () => {
     modalRef.current?.setVisible(false)
   }
@@ -204,10 +248,23 @@ const Component = <M extends Menus>({ menus, width, height, activeId, onHide, on
 
   return (
     <Modal onHide={onHide} ref={modalRef}>
-      <Menu menus={menus} width={width} height={height} activeId={activeId} buttonPosition={position} menuSize={menuSize} onPress={onPress} onHide={hide} fontSize={fontSize} center={center} />
+      <Menu
+        menus={menus}
+        width={width}
+        height={height}
+        activeId={activeId}
+        buttonPosition={position}
+        menuSize={menuSize}
+        onPress={onPress}
+        onHide={hide}
+        fontSize={fontSize}
+        center={center}
+      />
     </Modal>
   )
 }
 
 // export default forwardRef(Component) as ForwardRefFn<MenuType>
-export default forwardRef(Component) as <M extends Menus>(p: MenuProps<M> & { ref?: Ref<MenuType> }) => JSX.Element | null
+export default forwardRef(Component) as <M extends Menus>(
+  p: MenuProps<M> & { ref?: Ref<MenuType> }
+) => JSX.Element | null
