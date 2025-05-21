@@ -30,10 +30,10 @@ import MetadataEditModal, {
   type MetadataEditType,
   type MetadataEditProps,
 } from '@/components/MetadataEditModal'
+import MusicDownloadModal, { type MusicDownloadModalType } from './MusicDownloadModal'
 import MusicToggleModal, { type MusicToggleModalType } from './MusicToggleModal'
 
 export default () => {
-  // const t = useI18n()
   const activeListRef = useRef<ActiveListType>(null)
   const listMusicSearchRef = useRef<ListMusicSearchType>(null)
   const listRef = useRef<ListType>(null)
@@ -42,6 +42,7 @@ export default () => {
   const listMusicAddRef = useRef<ListMusicAddType>(null)
   const listMusicMultiAddRef = useRef<ListAddMultiType>(null)
   const musicPositionModalRef = useRef<MusicPositionModalType>(null)
+  const musicDownloadModalRef = useRef<MusicDownloadModalType>(null)
   const metadataEditTypeRef = useRef<MetadataEditType>(null)
   const listMenuRef = useRef<ListMenuType>(null)
   const musicToggleModalRef = useRef<MusicToggleModalType>(null)
@@ -49,7 +50,6 @@ export default () => {
   const isShowMultipleModeBar = useRef(false)
   const isShowSearchBarModeBar = useRef(false)
   const selectedInfoRef = useRef<SelectInfo>()
-  // console.log('render index list')
 
   const hancelMultiSelect = useCallback(() => {
     if (isShowSearchBarModeBar.current) {
@@ -63,7 +63,6 @@ export default () => {
     if (isShowSearchBarModeBar.current) {
       multipleModeBarRef.current?.setVisibleBar(true)
     } else activeListRef.current?.setVisibleBar(true)
-    // console.log('hancelExitSelect', isShowSearchBarModeBar.current)
     multipleModeBarRef.current?.exitSelectMode()
     listRef.current?.setIsMultiSelectMode(false)
     isShowMultipleModeBar.current = false
@@ -203,6 +202,7 @@ export default () => {
           )
         }}
       />
+      <MusicDownloadModal ref={musicDownloadModalRef} onDownloadInfo={(info) => {}} />
       <ListMenu
         ref={listMenuRef}
         onPlay={(info) => {
@@ -222,6 +222,7 @@ export default () => {
         onCopyName={(info) => {
           handleShare(info.musicInfo)
         }}
+        onDownload={(info) => musicDownloadModalRef.current?.show(info.musicInfo)}
         onMusicSourceDetail={(info) => {
           void handleShowMusicSourceDetail(info.musicInfo)
         }}

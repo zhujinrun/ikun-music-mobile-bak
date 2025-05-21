@@ -1,6 +1,5 @@
 import { useRef, forwardRef, useImperativeHandle } from 'react'
 import { View } from 'react-native'
-// import LoadingMask, { LoadingMaskType } from '@/components/common/LoadingMask'
 import List, { type ListProps, type ListType, type Status, type RowInfoType } from './List'
 import ListMenu, { type ListMenuType, type Position, type SelectInfo } from './ListMenu'
 import ListMusicMultiAdd, {
@@ -17,6 +16,7 @@ import {
   handleShare,
   handleShowMusicSourceDetail,
 } from './listAction'
+import MusicDownloadModal, { type MusicDownloadModalType } from '@/screens/Home/Views/Mylist/MusicList/MusicDownloadModal'
 import { createStyle } from '@/utils/tools'
 
 export interface OnlineListProps {
@@ -51,7 +51,7 @@ export default forwardRef<OnlineListType, OnlineListProps>(
     const listMusicAddRef = useRef<ListMusicAddType>(null)
     const listMusicMultiAddRef = useRef<ListAddMultiType>(null)
     const listMenuRef = useRef<ListMenuType>(null)
-    // const loadingMaskRef = useRef<LoadingMaskType>(null)
+    const musicDownloadModalRef = useRef<MusicDownloadModalType>(null)
 
     useImperativeHandle(ref, () => ({
       setList(list, isAppend = false, showSource = false) {
@@ -121,6 +121,7 @@ export default forwardRef<OnlineListType, OnlineListProps>(
             onSelectAll={(isAll) => listRef.current?.selectAll(isAll)}
             onExitSelectMode={hancelExitSelect}
           />
+          <MusicDownloadModal ref={musicDownloadModalRef} onDownloadInfo={(info) => {}} />
         </View>
         <ListMusicAdd
           ref={listMusicAddRef}
@@ -153,11 +154,9 @@ export default forwardRef<OnlineListType, OnlineListProps>(
           onDislikeMusic={(info) => {
             void handleDislikeMusic(info.musicInfo)
           }}
-          onDownload={function (selectInfo: SelectInfo): void {
-            throw new Error('Function not implemented.')
-          }}
+          onDownload={(info) => musicDownloadModalRef.current?.show(info.musicInfo)}
         />
-        {/* <LoadingMask ref={loadingMaskRef} /> */}
+        {}
       </View>
     )
   }

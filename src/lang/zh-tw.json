@@ -489,6 +489,7 @@
   "user_api_title": "自訂來源 API 管理（實驗性）",
   "user_api_update_alert": "自訂來源 API「{name}」發現新版本",
   "user_api_update_alert_open_url": "開啟更新位址",
+  "download_music_title": "下載 {name} - {artist}",
   "version_btn_close": "關閉",
   "version_btn_downloading": "正在努力下載中... {current}/{total} ({progress}%)",
   "version_btn_failed": "重試",

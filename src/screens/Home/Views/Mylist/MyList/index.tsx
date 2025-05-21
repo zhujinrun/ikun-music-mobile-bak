@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-
 import ListMenu, { type ListMenuType } from './ListMenu'
 import ListNameEdit, { type ListNameEditType } from './ListNameEdit'
 import List from './List'

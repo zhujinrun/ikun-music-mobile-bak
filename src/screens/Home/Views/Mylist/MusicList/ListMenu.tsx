@@ -19,7 +19,7 @@ export interface ListMenuProps {
   onAdd: (selectInfo: SelectInfo) => void
   onMove: (selectInfo: SelectInfo) => void
   onEditMetadata: (selectInfo: SelectInfo) => void
-  // onDownload: (selectInfo: SelectInfo) => void
+  onDownload: (selectInfo: SelectInfo) => void
   onCopyName: (selectInfo: SelectInfo) => void
   onChangePosition: (selectInfo: SelectInfo) => void
   onToggleSource: (selectInfo: SelectInfo) => void
@@ -63,7 +63,7 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
     const menu = [
       { action: 'play', label: t('play') },
       { action: 'playLater', label: t('play_later') },
-      // { action: 'download', label: '下载' },
+      { action: 'download', label: '下载' },
       { action: 'add', label: t('add_to') },
       { action: 'move', label: t('move_to') },
       { action: 'changePosition', label: t('change_position') },
@@ -74,7 +74,6 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
         disabled: musicInfo.source == 'local',
         label: t('music_source_detail'),
       },
-      // { action: 'musicSearch', label: t('music_search') },
       { action: 'dislike', disabled: hasDislike(musicInfo), label: t('dislike') },
       { action: 'remove', label: t('delete') },
     ]
@@ -86,7 +85,6 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
       })
     setMenus(menu)
     void Promise.all([hasEditMetadata(musicInfo)]).then(([_edit_metadata]) => {
-      // console.log(_edit_metadata)
       let isUpdated = false
       if (edit_metadata != _edit_metadata) {
         edit_metadata = _edit_metadata
@@ -109,22 +107,14 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
       case 'playLater':
         props.onPlayLater(selectInfo)
         break
-      // case 'download':
-      //   props.onDownload(selectInfo)
-      //   break
+      case 'download':
+        props.onDownload(selectInfo)
+        break
       case 'add':
         props.onAdd(selectInfo)
-        // isMoveRef.current = false
-        // selectedListRef.current.length
-        //   ? setVisibleMusicMultiAddModal(true)
-        //   : setVisibleMusicAddModal(true)
         break
       case 'move':
         props.onMove(selectInfo)
-        // isMoveRef.current = true
-        // selectedListRef.current.length
-        //   ? setVisibleMusicMultiAddModal(true)
-        //   : setVisibleMusicAddModal(true)
         break
       case 'editMetadata':
         props.onEditMetadata(selectInfo)
@@ -134,15 +124,12 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
         break
       case 'changePosition':
         props.onChangePosition(selectInfo)
-        // setVIsibleMusicPosition(true)
         break
       case 'toggleSource':
         props.onToggleSource(selectInfo)
-        // setVIsibleMusicPosition(true)
         break
       case 'musicSourceDetail':
         props.onMusicSourceDetail(selectInfo)
-        // setVIsibleMusicPosition(true)
         break
       case 'dislike':
         props.onDislikeMusic(selectInfo)

@@ -237,8 +237,8 @@ export default {
         info.size = info.size?.toLocaleUpperCase()
         switch (info.bitrate) {
           case '4000':
-            types.push({ type: 'flac24bit', size: info.size })
-            _types.flac24bit = {
+            types.push({ type: 'hires', size: info.size })
+            _types.hires = {
               size: info.size,
             }
             break
@@ -436,7 +436,7 @@ export default {
               break
             case '4000':
               types.push({ type: 'hires', size: info[4] })
-              _types.flac24bit = {
+              _types.hires = {
                 size: info[4].toLocaleUpperCase(),
               }
               break

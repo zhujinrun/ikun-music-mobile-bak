@@ -6,11 +6,13 @@ import { similar, sortInsert, toOldMusicInfo } from '@/utils'
 import { confirmDialog, openUrl, shareMusic, toast } from '@/utils/tools'
 import { addDislikeInfo, hasDislike } from '@/core/dislikeList'
 import playerState from '@/store/player/state'
-
 import type { SelectInfo } from './ListMenu'
 import { type Metadata } from '@/components/MetadataEditModal'
 import musicSdk from '@/utils/musicSdk'
 import { getListMusicSync } from '@/utils/listManage'
+import { requestStoragePermission } from '@/utils/tools'
+import { getMusicUrl } from '@/core/music/online'
+import RNFetchBlob from 'rn-fetch-blob'
 
 export const handlePlay = (listId: SelectInfo['listId'], index: SelectInfo['index']) => {
   void playList(listId, index)
@@ -67,7 +69,6 @@ export const handleUpdateMusicPosition = (
     )
     onCancelSelect()
   } else {
-    // console.log(listId, position, [musicInfo.id])
     void updateListMusicPosition(listId, position, [musicInfo.id])
   }
 }
@@ -187,4 +188,53 @@ export const handleToggleSource = (
     void playList(listId, idx)
   }
   return newInfo as LX.Music.MusicInfo
+}
+
+export function getFileExtension(url: string) {
+  const match = url.match(/\.([0-9a-z]+)(?=[?#]|$)/i)
+  return match ? match[1] : 'mp3'
+}
+
+export const handleDownload = async (musicInfo: any, quality: LX.Quality) => {
+  try {
+    await requestStoragePermission()
+    try {
+      getMusicUrl({
+        musicInfo,
+        quality,
+        isRefresh: true,
+        allowToggleSource: true,
+      })
+        .then((url) => {
+          const extension = getFileExtension(url)
+          const fileName = `${musicInfo.name} - ${musicInfo.singer} - ${quality}`
+          const downloadDir = RNFetchBlob.fs.dirs.MusicDir + '/IKUN Music'
+          const path = `${downloadDir}/${fileName}.${extension}`
+          RNFetchBlob.config({
+            fileCache: true,
+            addAndroidDownloads: {
+              useDownloadManager: true,
+              notification: true,
+              path: path,
+              title: `${musicInfo.name} - ${musicInfo.singer}`,
+              description: '正在下载文件...',
+            },
+          })
+            .fetch('GET', url)
+            .then((res) => {
+              toast(`${fileName} 下载成功! 请使用音乐标签写入Metadata`, 'long')
+            })
+            .catch((error) => {
+              toast(`文件下载失败：${error}`)
+            })
+        })
+        .catch((e) => {
+          toast(`获取播放链接失败：${e}`)
+        })
+    } catch (e_1) {
+      toast(`文件下载失败：${e_1}`)
+    }
+  } catch (e_2) {
+    return await Promise.reject(e_2 ?? '权限获取失败')
+  }
 }

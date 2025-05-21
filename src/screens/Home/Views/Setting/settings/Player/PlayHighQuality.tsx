@@ -17,7 +17,6 @@ const useActive = (id: LX.Quality) => {
 
 const Item = ({ id, name }: { id: LX.Quality; name: string }) => {
   const isActive = useActive(id)
-  // const [toggleCheckBox, setToggleCheckBox] = useState(false)
   return (
     <CheckBox
       marginRight={8}
@@ -50,27 +49,7 @@ export default memo(() => {
 
 const styles = StyleSheet.create({
   list: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     flexWrap: 'wrap',
   },
 })
-
-// export default memo(() => {
-//   const t = useI18n()
-//   const isPlayHighQuality = useSettingValue('player.isPlayHighQuality')
-//   const setPlayHighQuality = (isPlayHighQuality: boolean) => {
-//     updateSetting({ 'player.isPlayHighQuality': isPlayHighQuality })
-//   }
-
-//   return (
-//     <View style={styles.content}>
-//       <CheckBoxItem check={isPlayHighQuality} onChange={setPlayHighQuality} label={t('setting_play_quality')} />
-//     </View>
-//   )
-// })
-
-// const styles = createStyle({
-//   content: {
-//     marginTop: 5,
-//   },
-// })
