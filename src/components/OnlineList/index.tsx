@@ -16,7 +16,9 @@ import {
   handleShare,
   handleShowMusicSourceDetail,
 } from './listAction'
-import MusicDownloadModal, { type MusicDownloadModalType } from '@/screens/Home/Views/Mylist/MusicList/MusicDownloadModal'
+import MusicDownloadModal, {
+  type MusicDownloadModalType,
+} from '@/screens/Home/Views/Mylist/MusicList/MusicDownloadModal'
 import { createStyle } from '@/utils/tools'
 
 export interface OnlineListProps {

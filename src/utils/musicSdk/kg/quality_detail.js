@@ -11,6 +11,8 @@ export const getBatchMusicQualityInfo = (hashList) => {
     hash,
   }))
 
+  console.log(resources)
+
   const requestObj = httpFetch(
     `https://gateway.kugou.com/goodsmstore/v1/get_res_privilege?appid=1005&clientver=20049&clienttime=${Date.now()}&mid=NeZha`,
     {
