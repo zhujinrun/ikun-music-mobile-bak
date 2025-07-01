@@ -2,19 +2,16 @@ import { memo } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 
 import Section from '../components/Section'
-// import Button from './components/Button'
 
 import { createStyle, openUrl } from '@/utils/tools'
-// import { showPactModal } from '@/navigation'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
-import { showPactModal } from '@/core/common'
 
-// const qqGroupUrl = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3Du1zyxek8roQAwic44nOkBXtG9CfbAxFw'
-// const qqGroupUrl2 = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3D-l4kNZ2bPQAuvfCQFFhl1UoibvF5wcrQ'
-// const qqGroupWebUrl = 'https://qm.qq.com/cgi-bin/qm/qr?k=jRZkyFSZ4FmUuTHA3P_RAXbbUO_Rrn5e&jump_from=webapi'
-// const qqGroupWebUrl2 = 'https://qm.qq.com/cgi-bin/qm/qr?k=HPNJEfrZpBZ9T8szYWbe2d5JrAAeOt_l&jump_from=webapi'
+const qqGroupUrl =
+  'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3Du1zyxek8roQAwic44nOkBXtG9CfbAxFw'
+const qqGroupWebUrl =
+  'https://qm.qq.com/cgi-bin/qm/qr?k=jRZkyFSZ4FmUuTHA3P_RAXbbUO_Rrn5e&jump_from=webapi'
 
 export default memo(() => {
   const theme = useTheme()
@@ -22,43 +19,16 @@ export default memo(() => {
   const openHomePage = () => {
     void openUrl('https://github.com/ikunshare/ikun-music-mobile#readme')
   }
-  const openIssuePage = () => {
-    void openUrl('https://github.com/ikunshare/ikun-music-mobile/issues?q=is%3Aissue+')
+  const goToQQGroup = () => {
+    openUrl(qqGroupUrl).catch(() => {
+      void openUrl(qqGroupWebUrl)
+    })
   }
-  const openGHReleasePage = () => {
-    void openUrl('https://github.com/ikunshare/ikun-music-mobile/releases')
-  }
-  const openFAQPage = () => {
-    void openUrl('https://lyswhut.github.io/lx-music-doc/mobile/faq')
-  }
-  // const openIssuesPage = () => {
-  //   openUrl('https://github.com/ikunshare/ikun-music-mobile/issues')
-  // }
-  const openPactModal = () => {
-    showPactModal()
-  }
-  const openPartPage = () => {
-    void openUrl(
-      'https://github.com/ikunshare/ikun-music-mobile#%E9%A1%B9%E7%9B%AE%E5%8D%8F%E8%AE%AE'
-    )
-  }
-
-  // const goToQQGroup = () => {
-  //   openUrl(qqGroupUrl).catch(() => {
-  //     void openUrl(qqGroupWebUrl)
-  //   })
-  // }
-  // const goToQQGroup2 = () => {
-  //   openUrl(qqGroupUrl2).catch(() => {
-  //     void openUrl(qqGroupWebUrl2)
-  //   })
-  // }
 
   const textLinkStyle = {
     ...styles.text,
     textDecorationLine: 'underline',
     color: theme['c-primary-font'],
-    // fontSize: 14,
   } as const
 
   return (
@@ -70,27 +40,10 @@ export default memo(() => {
         </TouchableOpacity>
       </View>
       <View style={styles.part}>
-        <Text style={styles.text}>最新版下载地址：</Text>
-        <TouchableOpacity onPress={openGHReleasePage}>
-          <Text style={textLinkStyle}>GitHub Releases</Text>
+        <Text style={styles.text}>唯一交流QQ群：</Text>
+        <TouchableOpacity onPress={goToQQGroup}>
+          <Text style={textLinkStyle}>951962664</Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.part}>
-        <Text style={styles.text}>软件的常见问题可转至：</Text>
-        <TouchableOpacity onPress={openFAQPage}>
-          <Text style={textLinkStyle}>移动版常见问题</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.part}>
-        <Text style={styles.text}>
-          <Text style={styles.boldText}>本软件没有客服</Text>，但我们整理了一些常见的使用问题。
-          <Text style={styles.boldText}>仔细、仔细、仔细</Text>地阅读常见问题后，
-        </Text>
-        <Text style={styles.text}>仍有问题可到 GitHub </Text>
-        <TouchableOpacity onPress={openIssuePage}>
-          <Text style={textLinkStyle}>提交 Issue</Text>
-        </TouchableOpacity>
-        <Text style={styles.text}>。</Text>
       </View>
       <View style={styles.part}>
         <Text style={styles.text}>
@@ -99,7 +52,7 @@ export default memo(() => {
       </View>
       <View style={styles.part}>
         <Text style={styles.text}>
-          目前本项目的原始发布地址<Text style={styles.boldText}>只有 GitHub</Text>
+          目前本项目的原始发布地址<Text style={styles.boldText}>只有 GitHub QQ</Text>
           ，其他渠道均为第三方转载发布，可信度请自行鉴别。
         </Text>
       </View>
@@ -125,23 +78,6 @@ export default memo(() => {
           <Text style={styles.boldText}>有一方</Text>是「
           <Text style={styles.boldText}>第三方修改版</Text>」。
         </Text>
-      </View>
-      <View style={styles.part}>
-        <Text style={styles.text}>你已签署本软件的</Text>
-        <TouchableOpacity onPress={openPactModal}>
-          <Text style={styles.text} color={theme['c-primary-font']}>
-            许可协议
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.text}>，协议的在线版本在</Text>
-        <TouchableOpacity onPress={openPartPage}>
-          <Text style={textLinkStyle}>这里</Text>
-        </TouchableOpacity>
-        <Text style={styles.text}>。</Text>
-      </View>
-      <View style={styles.part}>
-        <Text style={styles.text}>By: </Text>
-        <Text style={styles.text}>落雪无痕</Text>
       </View>
     </Section>
   )

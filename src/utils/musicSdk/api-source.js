@@ -1,9 +1,9 @@
 import apiSourceInfo from './api-source-info'
-import api_mobi_kw from './kw/api-mobi'
+// import api_mobi_kw from './kw/api-mobi'
 import settingState from '@/store/setting/state'
 
 const apiList = {
-  mobi_api_kw: api_mobi_kw,
+  // mobi_api_kw: api_mobi_kw,
 }
 const supportQuality = {}
 
