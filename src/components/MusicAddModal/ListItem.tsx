@@ -10,22 +10,24 @@ export default ({
   listInfo,
   onPress,
   musicInfo,
+  isMove,
   width,
 }: {
   listInfo: LX.List.MyListInfo
-  onPress: (listInfo: LX.List.MyListInfo) => void
+  onPress: (listInfo: LX.List.MyListInfo, isExists: boolean) => void
   musicInfo: LX.Music.MusicInfo
+  isMove: boolean
   width: number
 }) => {
   const theme = useTheme()
   const isExists = useMusicExistsList(listInfo, musicInfo)
 
   const handlePress = () => {
-    if (isExists) {
+    if (isMove && isExists) {
       toast(global.i18n.t('list_add_tip_exists'))
       return
     }
-    onPress(listInfo)
+    onPress(listInfo, isExists)
   }
 
   return (

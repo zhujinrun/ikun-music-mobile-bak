@@ -64,6 +64,7 @@
   "list_edit_action_tip_exist": "該清單已經有這首歌啦",
   "list_edit_action_tip_move_failed": "移動失敗",
   "list_edit_action_tip_move_success": "移動成功",
+  "list_edit_action_tip_remove_failed": "移除失敗",
   "list_edit_action_tip_remove_success": "移除成功",
   "list_end": "到底啦~",
   "list_error": "載入失敗😥，點擊嘗試重新載入",

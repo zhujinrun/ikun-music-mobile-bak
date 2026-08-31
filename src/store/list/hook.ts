@@ -73,9 +73,25 @@ export const useMusicExistsList = (list: LX.List.MyListInfo, musicInfo: LX.Music
   const [isExists, setExists] = useState(false)
 
   useEffect(() => {
-    void getListMusics(list.id).then((musics) => {
-      setExists(musics.some((s) => s.id == musicInfo.id))
-    })
+    let isUnmounted = false
+    const updateExists = () => {
+      void getListMusics(list.id).then((musics) => {
+        if (isUnmounted) return
+        setExists(musics.some((s) => s.id == musicInfo.id))
+      })
+    }
+    const handleChange = (ids: string[]) => {
+      if (!ids.includes(list.id)) return
+      updateExists()
+    }
+
+    global.app_event.on('myListMusicUpdate', handleChange)
+    updateExists()
+
+    return () => {
+      isUnmounted = true
+      global.app_event.off('myListMusicUpdate', handleChange)
+    }
   }, [list.id, musicInfo.id])
 
   return isExists

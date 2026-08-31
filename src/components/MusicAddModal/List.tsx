@@ -66,9 +66,11 @@ const EditListItem = ({ itemWidth }: { itemWidth: number }) => {
 export default ({
   musicInfo,
   onPress,
+  isMove,
 }: {
   musicInfo: LX.Music.MusicInfo
-  onPress: (listInfo: LX.List.MyListInfo) => void
+  onPress: (listInfo: LX.List.MyListInfo, isExists: boolean) => void
+  isMove: boolean
 }) => {
   const windowSize = useWindowSize()
   const allList = useMyList()
@@ -87,6 +89,7 @@ export default ({
             key={info.id}
             listInfo={info}
             musicInfo={musicInfo}
+            isMove={isMove}
             onPress={onPress}
             width={itemWidth}
           />

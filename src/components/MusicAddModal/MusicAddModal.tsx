@@ -4,7 +4,7 @@ import { toast } from '@/utils/tools'
 import Title from './Title'
 import List from './List'
 import { useI18n } from '@/lang'
-import { addListMusics, moveListMusics } from '@/core/list'
+import { addListMusics, moveListMusics, removeListMusics } from '@/core/list'
 import settingState from '@/store/setting/state'
 
 export interface SelectInfo {
@@ -48,7 +48,19 @@ export default forwardRef<MusicAddModalType, MusicAddModalProps>(({ onAdded }, r
     })
   }
 
-  const handleSelect = (listInfo: LX.List.MyListInfo) => {
+  const handleSelect = (listInfo: LX.List.MyListInfo, isExists: boolean) => {
+    if (isExists && !selectInfo.isMove) {
+      void removeListMusics(listInfo.id, [selectInfo.musicInfo!.id])
+        .then(() => {
+          onAdded?.()
+          toast(t('list_edit_action_tip_remove_success'))
+        })
+        .catch(() => {
+          toast(t('list_edit_action_tip_remove_failed'))
+        })
+      return
+    }
+
     dialogRef.current?.setVisible(false)
     if (selectInfo.isMove) {
       void moveListMusics(
@@ -85,7 +97,11 @@ export default forwardRef<MusicAddModalType, MusicAddModalProps>(({ onAdded }, r
       {selectInfo.musicInfo ? (
         <>
           <Title musicInfo={selectInfo.musicInfo} isMove={selectInfo.isMove} />
-          <List musicInfo={selectInfo.musicInfo} onPress={handleSelect} />
+          <List
+            musicInfo={selectInfo.musicInfo}
+            isMove={selectInfo.isMove}
+            onPress={handleSelect}
+          />
         </>
       ) : null}
     </Dialog>
